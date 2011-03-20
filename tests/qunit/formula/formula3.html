@@ -1,0 +1,506 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html xmlns:v="urn:schemas-microsoft-com:vml">
+
+<head>
+	<title>Formula test</title>
+	<link rel="stylesheet" href="../../../lib/unit.css" type="text/css" />
+	<!--<link rel="stylesheet" href="../../../styles.css" type="text/css" />-->
+	<script type="text/javascript" src="../../../lib/jquery.js"></script>
+	<script type="text/javascript" src="../../../lib/qunit.js"></script>
+	<script type="text/javascript" src="../../../naturaleditor.js"></script>
+	<script type="text/javascript" src="../tool.js"></script>
+</head>
+
+<body>
+	<h1 id="qunit-header">Formula test 3</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+
+	<span id = "frame" style='left:50px'></span>
+
+	<script type="text/javascript">
+		var nte;
+		
+		$(document).ready(function()
+		  {
+		    nte = new NaturalEditor(document.getElementById("frame"), "themes/classic/theme.js", 600, 200);
+
+				test("Formula 1", function()
+					{
+						expect(101);
+						
+						nte.parse(
+							"<p>" + 
+								"Left" + 
+								"<span class='formula'>" + 
+									"<span class='formula_text'>78</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_text'>55</span>" + 
+								"</span>" + 
+								"Right" + 
+							"</p>" + 
+							"<p>" + 
+								"Left" + 
+								"<span class='formula'>" + 
+									"<span class='formula_text'>78</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_exponentiation'>" + 
+										"<span class='formula_text'>123</span>" + 
+										"<span class='formula_group'>" + 
+											"<span class='formula_text'>456</span>" + 
+											"<span class='formula_plus'></span>" + 
+											"<span class='formula_plus'></span>" + 
+											"<span class='formula_text'>sum</span>" + 
+										"</span>" + 
+									"</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_text'>55</span>" + 
+								"</span>" + 
+								"Right" + 
+							"</p>" +
+							
+							"<p>" + 
+								"Left" + 
+								"<span class='formula'>" + 
+									"<span class='formula_text'>678</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_text'>55</span>" + 
+									"<span class='formula_minus'></span>" + 
+									"<span class='formula_text'>67</span>" + 
+									"<span class='formula_multiply'></span>" + 
+									"<span class='formula_text'>77</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_division'>" + 
+										"<span class='formula_group'>" + 
+											"<span class='formula_text'>3</span>" + 
+										"</span>" + 
+										"<span class='formula_group'>" + 
+											"<span class='formula_text'>888</span>" + 
+										"</span>" + 
+									"</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_division'>" + 
+										"<span class='formula_group'>" + 
+											"<span class='formula_text'>555</span>" + 
+											"<span class='formula_plus'></span>" + 
+											"<span class='formula_division'>" + 
+												"<span class='formula_group'>" + 
+													"<span class='formula_text'>5</span>" + 
+													"<span class='formula_multiply'></span>" + 
+													"<span class='formula_text'>98</span>" + 
+												"</span>" + 
+												"<span class='formula_group'>" + 
+													"<span class='formula_text'>3</span>" + 
+												"</span>" + 
+											"</span>" + 
+										"</span>" + 
+										"<span class='formula_group'>" + 
+											"<span class='formula_text'>123</span>" + 
+										"</span>" + 
+									"</span>" + 
+								"</span>" + 
+								"Right" + 
+							"</p>" + 
+						
+							"<p>" + 
+								"Left" + 
+								"<span class='formula'>" + 
+									"<span class='formula_text'>78</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_exponentiation'>" + 
+										"<span class='formula_group'>" + 
+											"<span class='formula_text'>123</span>" +
+										"</span>" + 
+										"<span class='formula_group'>" + 
+											"<span class='formula_text'>456</span>" + 
+											"<span class='formula_plus'></span>" + 
+											"<span class='formula_plus'></span>" + 
+											"<span class='formula_text'>sum</span>" + 
+										"</span>" + 
+									"</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_text'>55</span>" + 
+								"</span>" + 
+								"Right" + 
+							"</p>" + 
+							"<p>" + 
+								"Left" + 
+								"<span class='formula'>" + 
+									"<span class='formula_text'>78</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_exponentiation'>" + 
+										"<span class='formula_group'>" + 
+											"<span class='formula_text'>123</span>" +
+										"</span>" + 
+										"<span class='formula_group'>" + 
+											"<span class='formula_text'>456</span>" + 
+											"<span class='formula_plus'></span>" + 
+											"<span class='formula_exponentiation'>" + 
+												"<span class='formula_group'>" + 
+													"<span class='formula_text'>sum</span>" + 
+												"</span>" +
+												"<span class='formula_group'>" + 
+													"<span class='formula_text'>555</span>" + 
+												"</span>" +
+											"</span>" + 
+										"</span>" + 
+									"</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_text'>55</span>" + 
+								"</span>" + 
+								"Right" + 
+							"</p>" + 
+							"<p>" + 
+								"Left" + 
+								"<span class='formula'>" + 
+									"<span class='formula_text'>78</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_exponentiation'>" + 
+										"<span class='formula_group'>" + 
+											"<span class='formula_text'>123</span>" +
+										"</span>" + 
+										"<span class='formula_group'>" + 
+											"<span class='formula_text'>456</span>" + 
+											"<span class='formula_plus'></span>" + 
+											"<span class='formula_exponentiation'>" + 
+												"<span class='formula_group'>" + 
+													"<span class='formula_text'>sum</span>" + 
+												"</span>" +
+												"<span class='formula_group'>" + 
+													"<span class='formula_text'>555</span>" + 
+													"<span class='formula_plus'></span>" + 
+													"<span class='formula_text'>888</span>" + 
+												"</span>" +
+											"</span>" + 
+											"<span class='formula_plus'></span>" + 
+											"<span class='formula_text'>5</span>" + 
+										"</span>" + 
+									"</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_text'>55</span>" + 
+								"</span>" + 
+								"Right" + 
+							"</p>"
+							);
+						
+						nte.setCaret(0, 0);
+						ok(testCaretPosition(0));
+						
+						nte.moveCaretRight(5);
+						ok(testCaretPosition(0));
+						
+						nte.moveCaretRight(7);
+						ok(testCaretPosition(2));
+						
+						nte.moveCaretRight(12);
+						ok(testCaretPosition(0));
+						
+						nte.moveCaretRight(5);
+						ok(testCaretPosition(0));
+
+						nte.moveCaretRight(5);
+						ok(testCaretPosition(0));
+
+						nte.moveCaretRight(5);
+						ok(testCaretPosition(2));
+
+						nte.moveCaretRight(4);
+						ok(testCaretPosition(3));
+
+						nte.moveCaretRight(1);
+						ok(testCaretPosition(3));
+
+						nte.moveCaretRight(10);
+						ok(testCaretPosition(0));
+						
+						nte.moveCaretRight(5);
+						ok(testCaretPosition(0));
+						
+						nte.moveCaretRight(17);
+						ok(testCaretPosition(8));
+						
+						nte.moveCaretRight(1);
+						ok(testCaretPosition(0));
+
+						nte.moveCaretRight(2);
+						ok(testCaretPosition(1));
+
+						nte.moveCaretRight(1);
+						ok(testCaretPosition(0));
+
+						nte.moveCaretRight(3);
+						ok(testCaretPosition(3));
+
+						nte.moveCaretRight(1);
+						ok(testCaretPosition(9));
+
+						nte.moveCaretRight(1);
+						ok(testCaretPosition(10));
+
+						nte.moveCaretRight(1);
+						ok(testCaretPosition(0));
+
+						nte.moveCaretRight(5);
+						ok(testCaretPosition(2));
+
+						nte.moveCaretRight(7);
+						ok(testCaretPosition(1));
+
+						nte.moveCaretRight(3);
+						ok(testCaretPosition(3));
+
+						nte.moveCaretRight(1);
+						ok(testCaretPosition(1));
+
+						nte.moveCaretRight(4);
+						ok(testCaretPosition(3));
+
+						nte.moveCaretRight(1);
+						ok(testCaretPosition(11));
+
+						nte.moveCaretRight(6);
+						ok(testCaretPosition(5));
+
+						nte.moveCaretRight(6);
+						ok(testCaretPosition(0));
+
+						nte.moveCaretRight(4);
+						ok(testCaretPosition(2));
+
+						nte.moveCaretRight(5);
+						ok(testCaretPosition(1));
+
+						nte.moveCaretRight(1);
+						ok(testCaretPosition(0));
+
+						nte.moveCaretRight(4);
+						ok(testCaretPosition(1));
+
+						nte.moveCaretRight(5);
+						ok(testCaretPosition(3));
+
+						nte.moveCaretRight(1);
+						ok(testCaretPosition(3));
+
+						nte.moveCaretRight(15);
+						ok(testCaretPosition(0));
+
+						nte.moveCaretRight(4);
+						ok(testCaretPosition(2));
+
+						nte.moveCaretRight(5);
+						ok(testCaretPosition(1));
+
+						nte.moveCaretRight(5);
+						ok(testCaretPosition(1));
+
+						nte.moveCaretRight(1);
+						ok(testCaretPosition(2));
+
+						nte.moveCaretRight(4);
+						ok(testCaretPosition(3));
+
+						nte.moveCaretRight(2);
+						ok(testCaretPosition(0));
+
+						nte.moveCaretRight(3);
+						ok(testCaretPosition(3));
+
+						nte.moveCaretRight(1);
+						ok(testCaretPosition(3));
+
+						nte.moveCaretRight(1);
+						ok(testCaretPosition(3));
+
+						nte.moveCaretRight(15);
+						ok(testCaretPosition(0));
+
+						nte.moveCaretRight(4);
+						ok(testCaretPosition(2));
+
+						nte.moveCaretRight(6);
+						ok(testCaretPosition(0));
+
+						nte.moveCaretRight(5);
+						ok(testCaretPosition(2));
+
+						nte.moveCaretRight(6);
+						ok(testCaretPosition(0));
+
+						nte.moveCaretRight(8);
+						ok(testCaretPosition(3));
+
+						nte.moveCaretRight(1);
+						ok(testCaretPosition(3));
+
+						nte.moveCaretRight(2);
+						ok(testCaretPosition(1));
+
+						nte.moveCaretRight(1);
+						ok(testCaretPosition(3));
+
+						nte.moveCaretRight(10);
+						ok(testCaretPosition(5));
+
+						nte.moveCaretLeft(6);
+						ok(testCaretPosition(2));
+
+						nte.moveCaretLeft(3);
+						ok(testCaretPosition(3));
+						
+						nte.moveCaretLeft(1);
+						ok(testCaretPosition(1));
+
+						nte.moveCaretLeft(3);
+						ok(testCaretPosition(3));
+
+						nte.moveCaretLeft(8);
+						ok(testCaretPosition(0));
+
+						nte.moveCaretLeft(6);
+						ok(testCaretPosition(2));
+
+						nte.moveCaretLeft(5);
+						ok(testCaretPosition(0));
+
+						nte.moveCaretLeft(6);
+						ok(testCaretPosition(2));
+
+						nte.moveCaretLeft(19);
+						ok(testCaretPosition(3));
+
+						nte.moveCaretLeft(1);
+						ok(testCaretPosition(3));
+
+						nte.moveCaretLeft(1);
+						ok(testCaretPosition(3));
+
+						nte.moveCaretLeft(9);
+						ok(testCaretPosition(2));
+
+						nte.moveCaretLeft(11);
+						ok(testCaretPosition(2));
+
+						nte.moveCaretLeft(19);
+						ok(testCaretPosition(3));
+
+						nte.moveCaretLeft(1);
+						ok(testCaretPosition(3));
+
+						nte.moveCaretLeft(15);
+						ok(testCaretPosition(2));
+						
+						nte.moveCaretLeft(16);
+						ok(testCaretPosition(11));
+
+						nte.moveCaretLeft(1);
+						ok(testCaretPosition(3));
+
+						nte.moveCaretLeft(4);
+						ok(testCaretPosition(1));
+
+						nte.moveCaretLeft(1);
+						ok(testCaretPosition(3));
+
+						nte.moveCaretLeft(3);
+						ok(testCaretPosition(1));
+
+						nte.moveCaretLeft(6);
+						ok(testCaretPosition(0));
+
+						nte.moveCaretLeft(1);
+						ok(testCaretPosition(2));
+
+						nte.moveCaretLeft(6);
+						ok(testCaretPosition(10));
+
+						nte.moveCaretLeft(9);
+						ok(testCaretPosition(8));
+
+						nte.moveCaretLeft(29);
+						ok(testCaretPosition(2));
+
+						nte.moveCaretLeft(7);
+						ok(testCaretPosition(0));
+
+						nte.moveCaretLeft(12);
+						ok(testCaretPosition(2));
+
+						nte.moveCaretLeft(16);
+						ok(testCaretPosition(2));
+
+						nte.moveCaretLeft(12);
+						ok(testCaretPosition(0));
+
+						nte.moveCaretLeft(1);
+						ok(testCaretPosition(0));
+						
+						nte.moveCaretDown(2);
+						nte.moveCaretRight(24);
+						nte.moveCaretDown(1);
+						ok(testCaretPosition(1));
+
+						nte.moveCaretDown(1);
+						ok(testCaretPosition(0));
+
+						nte.moveCaretDown(1);
+						ok(testCaretPosition(0));
+
+						nte.moveCaretDown(1);
+						ok(testCaretPosition(0));
+
+						nte.moveCaretDown(1);
+						ok(testCaretPosition(1));
+
+						nte.moveCaretDown(1);
+						ok(testCaretPosition(1));
+						
+						nte.moveCaretLeft(10);
+						ok(testCaretPosition(1));
+						
+						nte.moveCaretUp(1);
+						ok(testCaretPosition(1));
+
+						nte.moveCaretUp(1);
+						ok(testCaretPosition(2));
+						
+						nte.moveCaretUp(1);
+						ok(testCaretPosition(5));
+
+						nte.moveCaretRight(34);
+						ok(testCaretPosition(2));
+
+						nte.moveCaretUp(1);
+						ok(testCaretPosition(1));
+
+						nte.moveCaretUp(1);
+						ok(testCaretPosition(0));
+
+						nte.onEnd();
+						nte.onEnd();
+						nte.onEnd();
+						nte.onEnd();
+						nte.moveCaretRight(1);
+						nte.moveCaretDown(1);
+						nte.moveCaretDown(1);
+						ok(testCaretPosition(0));
+
+						nte.moveCaretUp(1);
+						ok(testCaretPosition(0));
+
+						nte.moveCaretUp(1);
+						ok(testCaretPosition(0));
+
+						nte.moveCaretUp(1);
+						ok(testCaretPosition(0));
+					}
+					);
+		  }
+		);
+	</script>
+</body>
+
+</html>

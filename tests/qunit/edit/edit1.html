@@ -1,0 +1,239 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html xmlns:v="urn:schemas-microsoft-com:vml">
+
+<head>
+	<title>Insertion test</title>
+	<link rel="stylesheet" href="../../../lib/unit.css" type="text/css" />
+	<script type="text/javascript" src="../../../lib/jquery.js"></script>
+	<script type="text/javascript" src="../../../lib/qunit.js"></script>
+	<script type="text/javascript" src="../../../naturaleditor.js"></script>
+	<script type="text/javascript" src="../tool.js"></script>
+</head>
+
+<body>
+	<h1 id="qunit-header">Edit test 1</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+
+	<span id = "frame"></span>
+
+	<script type="text/javascript">
+		var nte;
+		
+		$(document).ready(function()
+		  {
+		    nte = new NaturalEditor(document.getElementById("frame"), "themes/classic/theme.js", 600, 200);
+
+				test("Edit 1", function()
+					{
+						expect(22);
+						
+						nte.parse(
+							"<p>Lorem <b>ipsum</b> dolor sit amet, <i>consectetur</i> adipiscing elit.</p>" + 
+							"<p><b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>"
+							);
+						
+						nte.setCaret(0, 0);
+						nte.onDelete();
+ 						ok(testHtml("<p>orem <b>ipsum</b> dolor sit amet, <i>consectetur</i> adipiscing elit.</p><p><b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 0));
+ 						
+ 						for (var i = 0; i < 5; ++i)
+							nte.onDelete();
+ 						ok(testHtml("<p><b>ipsum</b> dolor sit amet, <i>consectetur</i> adipiscing elit.</p><p><b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 0));
+
+						nte.onDelete();
+ 						ok(testHtml("<p><b>psum</b> dolor sit amet, <i>consectetur</i> adipiscing elit.</p><p><b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 0));
+
+ 						for (var i = 0; i < 4; ++i)
+							nte.onDelete();
+ 						ok(testHtml("<p> dolor sit amet, <i>consectetur</i> adipiscing elit.</p><p><b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 0));
+
+ 						for (var i = 0; i < 17; ++i)
+							nte.onDelete();
+ 						ok(testHtml("<p><i>consectetur</i> adipiscing elit.</p><p><b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 0));
+
+						nte.setCaret(28, 0);
+						nte.onDelete();
+ 						ok(testHtml("<p><i>consectetur</i> adipiscing elit.<b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 17));
+
+ 						nte.onUndo();
+ 						ok(testHtml("<p><i>consectetur</i> adipiscing elit.</p><p><b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 17));
+
+ 						nte.onRedo();
+ 						ok(testHtml("<p><i>consectetur</i> adipiscing elit.<b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 17));
+
+ 						nte.onUndo();
+ 						ok(testHtml("<p><i>consectetur</i> adipiscing elit.</p><p><b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 17));
+
+ 						nte.onDelete();
+ 						nte.onDelete();
+ 						ok(testHtml("<p><i>consectetur</i> adipiscing elit.<b><i>orbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 0));
+
+ 						nte.onUndo();
+ 						nte.onUndo();
+ 						ok(testHtml("<p><i>consectetur</i> adipiscing elit.</p><p><b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 17));
+
+ 						nte.setCaret(0, 0);
+ 						for (var i = 0; i < 27; ++i)
+							nte.onDelete();
+ 						ok(testHtml("<p>.</p><p><b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 0));
+
+						nte.onDelete();
+ 						ok(testHtml("<p><br></p><p><b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 0));
+
+						nte.onDelete();
+ 						ok(testHtml("<p><b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 0));
+
+						nte.onDelete();
+ 						ok(testHtml("<p><b><i>orbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 0));
+
+ 						for (var i = 0; i < 5; ++i)
+							nte.onDelete();
+ 						ok(testHtml("<p>aliquam bibendum turpis eu consectetur.</p>", 0));
+
+ 						for (var i = 0; i < 38; ++i)
+							nte.onDelete();
+ 						ok(testHtml("<p>.</p>", 0));
+
+						nte.onDelete();
+ 						ok(testHtml("<p><br></p>", 0));
+ 						
+						nte.onDelete();
+ 						ok(testHtml("<p><br></p>", 0));
+
+						nte.onChar('A');
+ 						ok(testHtml("<p>A</p>", 1));
+ 						
+ 						nte.onUndo();
+ 						ok(testHtml("<p><br></p>", 0));
+ 						
+ 						nte.onRedo();
+ 						ok(testHtml("<p>A</p>", 1));
+					}
+					);
+
+				test("Edit 2", function()
+					{
+						expect(22);
+						
+						nte.parse(
+							"<p>Lorem <b>ipsum</b> dolor sit amet, <i>consectetur</i> adipiscing elit.</p>" + 
+							"<p><b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>"
+							);
+						
+						nte.setCaret(0, 0);
+						nte.onBackspace();
+	 					ok(testHtml("<p>Lorem <b>ipsum</b> dolor sit amet, <i>consectetur</i> adipiscing elit.</p><p><b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 0));
+
+						nte.setCaret(1, 0);
+						nte.onBackspace();
+	 					ok(testHtml("<p>orem <b>ipsum</b> dolor sit amet, <i>consectetur</i> adipiscing elit.</p><p><b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 0));
+
+						nte.setCaret(5, 0);
+						nte.onBackspace();
+	 					ok(testHtml("<p>orem<b>ipsum</b> dolor sit amet, <i>consectetur</i> adipiscing elit.</p><p><b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 4));
+
+						nte.setCaret(4, 0);
+						nte.onBackspace();
+						nte.onBackspace();
+	 					ok(testHtml("<p>or<b>ipsum</b> dolor sit amet, <i>consectetur</i> adipiscing elit.</p><p><b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 2));
+
+						nte.setCaret(4, 0);
+						nte.onBackspace();
+						nte.onBackspace();
+	 					ok(testHtml("<p>or<b>sum</b> dolor sit amet, <i>consectetur</i> adipiscing elit.</p><p><b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 0));
+
+						nte.onBackspace();
+						nte.onBackspace();
+	 					ok(testHtml("<p><b>sum</b> dolor sit amet, <i>consectetur</i> adipiscing elit.</p><p><b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 0));
+
+						nte.setCaret(5, 0);
+						nte.onBackspace();
+						nte.onBackspace();
+	 					ok(testHtml("<p><b>sum</b>olor sit amet, <i>consectetur</i> adipiscing elit.</p><p><b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 0));
+
+						nte.onBackspace();
+	 					ok(testHtml("<p><b>su</b>olor sit amet, <i>consectetur</i> adipiscing elit.</p><p><b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 2));
+
+						nte.onBackspace();
+						nte.onBackspace();
+	 					ok(testHtml("<p>olor sit amet, <i>consectetur</i> adipiscing elit.</p><p><b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 0));
+
+						nte.onBackspace();
+	 					ok(testHtml("<p>olor sit amet, <i>consectetur</i> adipiscing elit.</p><p><b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 0));
+	 					
+						nte.setCaret(16, 0);
+	 					for (var i = 0; i < 16; ++i)
+	 						nte.onBackspace();
+	 					ok(testHtml("<p><i>onsectetur</i> adipiscing elit.</p><p><b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 0));
+
+	 					nte.setCaretPos(new Array(0, 0, 0, 1));
+ 						nte.onBackspace();
+	 					ok(testHtml("<p><i>onsectetur</i> adipiscing elit.<b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 0));
+	 					
+	 					nte.onUndo();
+	 					ok(testHtml("<p><i>onsectetur</i> adipiscing elit.</p><p><b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 0));
+
+	 					nte.onRedo();
+	 					ok(testHtml("<p><i>onsectetur</i> adipiscing elit.<b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 0));
+
+	 					nte.onUndo();
+	 					ok(testHtml("<p><i>onsectetur</i> adipiscing elit.</p><p><b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 0));
+	 					
+						nte.setCaret(11, 0);
+ 						nte.onBackspace();
+	 					ok(testHtml("<p><i>onsectetur</i>adipiscing elit.</p><p><b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 0));
+	 					
+	 					nte.onUndo();
+	 					ok(testHtml("<p><i>onsectetur</i> adipiscing elit.</p><p><b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 1));
+
+	 					nte.onRedo();
+	 					ok(testHtml("<p><i>onsectetur</i>adipiscing elit.</p><p><b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 0));
+
+	 					nte.onUndo();
+	 					ok(testHtml("<p><i>onsectetur</i> adipiscing elit.</p><p><b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 1));
+
+						nte.setCaret(10, 0);
+	 					for (var i = 0; i < 10; ++i)
+	 						nte.onBackspace();
+	 					ok(testHtml("<p> adipiscing elit.</p><p><b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 0));
+
+						nte.setCaret(17, 0);
+	 					for (var i = 0; i < 17; ++i)
+	 						nte.onBackspace();
+	 					ok(testHtml("<p><br></p><p><b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 0));
+
+	 					nte.setCaretPos(new Array(0, 0, 0, 1));
+ 						nte.onBackspace();
+	 					ok(testHtml("<p><b><i>Morbi</i></b> aliquam bibendum turpis eu consectetur.</p>", 0));
+					}
+					);
+
+				test("Edit 2", function()
+					{
+						//expect(1);
+						
+						nte.parse(
+							"<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi aliquam bibendum turpis eu consectetur.</p>" + 
+							"<p>Aliquam lobortis magna sed leo laoreet rutrum. Maecenas aliquam pellentesque mi, sit amet feugiat neque adipiscing in. Proin sit amet ante at turpis auctor adipiscing.</p>" + 
+							"<p>Vestibulum quis tortor urna, dictum adipiscing lectus. Fusce dolor nisi, mattis eu posuere vel, fermentum ac elit. Cras ut nunc lacus.</p>" + 
+							"<p>Curabitur porttitor mi elementum nisl rhoncus in accumsan augue varius.</p>" + 
+							"<p>Fusce consectetur erat ipsum.</p>" + 
+							"<p>Sed eu ipsum sit amet purus ullamcorper condimentum. Suspendisse tincidunt sollicitudin dui, sit amet molestie libero ultrices eu.</p>" + 
+							"<p>Cras tincidunt lacus sed ante aliquam eu tempor neque consequat. Donec tortor enim, dictum et consequat et, luctus at mauris. Donec vulputate vulputate leo.</p>" + 
+							"<p>Nulla arcu massa, ullamcorper et euismod at, imperdiet sed nisi. Donec nec libero nisl. Donec ac augue eu lorem egestas hendrerit.</p>"
+							);
+
+						//nte.setCaret(0, 0);
+						//nte.insertHtml("A");
+						//ok(testHtml("<p>AText</p>", 1));
+					}
+				);
+			}
+		);
+	</script>
+</body>
+
+</html>

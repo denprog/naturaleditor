@@ -1,0 +1,563 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html xmlns:v="urn:schemas-microsoft-com:vml">
+
+<head>
+	<title>Formula test</title>
+	<link rel="stylesheet" href="../../../lib/unit.css" type="text/css" />
+	<!--<link rel="stylesheet" href="../../../styles.css" type="text/css" />-->
+	<script type="text/javascript" src="../../../lib/jquery.js"></script>
+	<script type="text/javascript" src="../../../lib/qunit.js"></script>
+	<script type="text/javascript" src="../../../naturaleditor.js"></script>
+	<script type="text/javascript" src="../tool.js"></script>
+</head>
+
+<body>
+	<h1 id="qunit-header">Formula test 1</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+
+	<span id = "frame"></span>
+
+	<script type="text/javascript">
+		var nte;
+		
+		$(document).ready(function()
+		  {
+		    nte = new NaturalEditor(document.getElementById("frame"), "themes/classic/theme.js", 600, 200);
+
+				test("Formula 1", function()
+					{
+						expect(15);
+						
+						nte.parse(
+							"<p>" + 
+								"Left" + 
+								"<span class='formula'>" + 
+									"<span class='formula_text'>78</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_exponentiation'>" + 
+										"<span class='formula_text'>123</span>" + 
+										"<span class='formula_group'>" + 
+											"<span class='formula_text'>456</span>" + 
+											"<span class='formula_plus'></span>" + 
+											"<span class='formula_plus'></span>" + 
+											"<span class='formula_text'>sum</span>" + 
+										"</span>" + 
+									"</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_text'>55</span>" + 
+								"</span>" + 
+								"Right" + 
+							"</p>"
+							);
+						
+						nte.setCaret(0, 0);
+						ok(testCaretPosition(0));
+						ok(testFormula(new Array(1, 0), "$78+123^{456++sum}+55$"));
+						
+						for (var i = 0; i < 5; ++i)
+							nte.onRight();
+						nte.insertText("5");
+						ok(testFormula(new Array(1, 0), "$578+123^{456++sum}+55$"), 1);
+						
+						nte.onRight();
+						nte.onRight();
+						nte.insertText("88");
+						ok(testFormula(new Array(1, 0), "$57888+123^{456++sum}+55$"), 5);
+						
+						nte.deleteHtml(true);
+						ok(testFormula(new Array(1, 0), "$57888+123^{456++sum}+55$"), 5);
+
+						nte.deleteHtml(false);
+						ok(testFormula(new Array(1, 0), "$5788+123^{456++sum}+55$"), 4);
+
+						nte.onLeft();
+						nte.onLeft();
+						nte.deleteHtml(false);
+						ok(testFormula(new Array(1, 0), "$588+123^{456++sum}+55$"), 1);
+
+						nte.deleteHtml(false);
+						ok(testFormula(new Array(1, 0), "$88+123^{456++sum}+55$"), 0);
+
+						nte.deleteHtml(false);
+						ok(testFormula(new Array(1, 0), "$88+123^{456++sum}+55$"), 0);
+
+						for (var i = 0; i < 14; ++i)
+							nte.onRight();
+						nte.deleteHtml(true);
+						ok(testFormula(new Array(1, 0), "$88+123^{456+sum}+55$"), 1);
+
+						nte.deleteHtml(true);
+						ok(testFormula(new Array(1, 0), "$88+123^{456sum}+55$"), 3);
+							
+						nte.onRight();
+						ok(testFormula(new Array(1, 0), "$88+123^{456sum}+55$"), 4);
+							
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$88+123^{456+sum}+55$"), 1);
+						
+						nte.onLeft();
+						ok(testFormula(new Array(1, 0), "$88+123^{456+sum}+55$"), 3);
+
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$88+123^{456++sum}+55$"), 1);
+					}
+				);
+
+				test("Formula 2", function()
+					{
+						expect(16);
+						
+						nte.parse(
+							"<p>" + 
+								"Left" + 
+								"<span class='formula'>" + 
+									"<span class='formula_text'>78</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_exponentiation'>" + 
+										"<span class='formula_text'>123</span>" + 
+										"<span class='formula_group'>" + 
+											"<span class='formula_text'>456</span>" + 
+											"<span class='formula_plus'></span>" + 
+											"<span class='formula_text'>sum</span>" + 
+										"</span>" + 
+									"</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_text'>55</span>" + 
+								"</span>" + 
+								"Right" + 
+							"</p>"
+							);
+
+						nte.setCaret(0, 0);
+						ok(testCaretPosition(0));
+						ok(testFormula(new Array(1, 0), "$78+123^{456+sum}+55$"));
+						
+						for (var i = 0; i < 5; ++i)
+							nte.onRight();
+						nte.insertText("5");
+						ok(testFormula(new Array(1, 0), "$578+123^{456+sum}+55$", 1));
+						
+						nte.onRight();
+						nte.onRight();
+						nte.insertText("88");
+						ok(testFormula(new Array(1, 0), "$57888+123^{456+sum}+55$", 5));
+
+						nte.deleteHtml(true);
+						ok(testFormula(new Array(1, 0), "$57888+123^{456+sum}+55$", 5));
+
+						nte.deleteHtml(false);
+						ok(testFormula(new Array(1, 0), "$5788+123^{456+sum}+55$", 4));
+
+						nte.onLeft();
+						nte.onLeft();
+						nte.deleteHtml(false);
+						ok(testFormula(new Array(1, 0), "$588+123^{456+sum}+55$", 1));
+
+						nte.deleteHtml(false);
+						ok(testFormula(new Array(1, 0), "$88+123^{456+sum}+55$", 0));
+
+						nte.deleteHtml(false);
+						ok(testFormula(new Array(1, 0), "$88+123^{456+sum}+55$", 0));
+
+						for (var i = 0; i < 14; ++i)
+							nte.onRight();
+						nte.deleteHtml(true);
+						ok(testFormula(new Array(1, 0), "$88+123^{456sum}+55$", 3));
+						
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$88+123^{456+sum}+55$", 1));
+
+						nte.onRedo();
+						ok(testFormula(new Array(1, 0), "$88+123^{456sum}+55$", 3));
+
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$88+123^{456+sum}+55$", 1));
+						
+						nte.onRight();
+						ok(testCaretPosition(0));
+
+						nte.onRight();
+						ok(testCaretPosition(1));
+						
+						nte.onLeft();
+						nte.onLeft();
+						nte.onLeft();
+						ok(testCaretPosition(3));
+					}
+					);
+				
+				test("Formula 3", function()
+					{
+						expect(20);
+						
+						nte.parse(
+							"<p>" + 
+								"Left" + 
+								"<span class='formula'>" + 
+									"<span class='formula_text'>78</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_exponentiation'>" + 
+										"<span class='formula_text'>123</span>" + 
+										"<span class='formula_group'>" + 
+											"<span class='formula_text'>456</span>" + 
+											"<span class='formula_plus'></span>" + 
+											"<span class='formula_text'>sum</span>" + 
+											"<span class='formula_plus'></span>" + 
+											"<span class='formula_plus'></span>" + 
+										"</span>" + 
+									"</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_text'>55</span>" + 
+								"</span>" + 
+								"Right" + 
+							"</p>"
+							);
+						
+						nte.setCaret(0, 0);
+						ok(testFormula(new Array(1, 0), "$78+123^{456+sum++}+55$", 0));
+						
+						for (var i = 0; i < 25; ++i)
+							nte.onRight();
+						ok(testCaretPosition(4));
+						
+						nte.deleteHtml(true);
+						ok(testFormula(new Array(1, 0), "$78+123^{456+sum+}+55$", 4));
+						
+						nte.onLeft();
+						nte.deleteHtml(true);
+						ok(testFormula(new Array(1, 0), "$78+123^{456+sum}+55$", 3));
+						
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$78+123^{456+sum+}+55$", 3));
+						
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$78+123^{456+sum++}+55$", 4));
+						
+						nte.onRight();
+						nte.deleteHtml(false);
+						ok(testFormula(new Array(1, 0), "$78+123^{456+sum+}+55$", 4));
+
+						nte.deleteHtml(false);
+						ok(testFormula(new Array(1, 0), "$78+123^{456+sum}+55$", 3));
+						
+						nte.onLeft();
+						ok(testFormula(new Array(1, 0), "$78+123^{456+sum}+55$", 2));
+						
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$78+123^{456+sum+}+55$", 4));
+						
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$78+123^{456+sum++}+55$", 5));
+						
+						nte.deleteHtml(true);
+						ok(testFormula(new Array(1, 0), "$78+123^{456+sum++}+55$", 5));
+						
+						nte.moveCaretLeft(17);
+						nte.deleteHtml(true);
+						ok(testFormula(new Array(1, 0), "$78++55$", 2));
+						
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$78+123^{456+sum++}+55$", 2));
+						
+						nte.onRight();
+						ok(testCaretPosition(0));
+						
+						nte.moveCaretRight(4);
+						ok(testCaretPosition(1));
+
+						nte.moveCaretRight(12);
+						ok(testCaretPosition(5));
+
+						nte.onRight();
+						ok(testCaretPosition(3));
+						
+						nte.onRedo();
+						ok(testFormula(new Array(1, 0), "$78++55$", 2));
+						
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$78+123^{456+sum++}+55$", 2));
+					}
+					);
+					
+				test("Formula 4", function()
+					{
+						expect(45);
+						
+						nte.parse(
+							"<p>" + 
+								"Left" + 
+								"<span class='formula'>" + 
+									"<span class='formula_text'>78</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_exponentiation'>" + 
+										"<span class='formula_group'>" + 
+											"<span class='formula_text'>123</span>" + 
+										"</span>" + 
+										"<span class='formula_group'>" + 
+											"<span class='formula_text'>456</span>" + 
+											"<span class='formula_plus'></span>" + 
+											"<span class='formula_text'>sum</span>" + 
+											"<span class='formula_plus'></span>" + 
+											"<span class='formula_plus'></span>" + 
+										"</span>" + 
+									"</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_text'>55</span>" + 
+								"</span>" + 
+								"Right" + 
+							"</p>"
+							);
+						
+						nte.setCaret(0, 0);
+						ok(testFormula(new Array(1, 0), "$78+{123}^{456+sum++}+55$", 0));
+						
+						nte.moveCaretRight(5);
+						nte.deleteHtml(true);
+						nte.deleteHtml(true);
+						ok(testFormula(new Array(1, 0), "$+{123}^{456+sum++}+55$", 0));
+						
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$8+{123}^{456+sum++}+55$", 0));
+						
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$78+{123}^{456+sum++}+55$", 0));
+						
+						nte.onRedo();
+						ok(testFormula(new Array(1, 0), "$8+{123}^{456+sum++}+55$", 0));
+						
+						nte.onRedo();
+						ok(testFormula(new Array(1, 0), "$+{123}^{456+sum++}+55$", 0));
+						
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$8+{123}^{456+sum++}+55$", 0));
+						
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$78+{123}^{456+sum++}+55$", 0));
+						
+						nte.moveCaretRight(5);
+						nte.deleteHtml(true);
+						nte.deleteHtml(true);
+						nte.deleteHtml(true);
+						ok(testFormula(new Array(1, 0), "$78+{}^{456+sum++}+55$", 0));
+						
+						nte.onRight();
+						ok(testCaretPosition(1));
+						
+						nte.onRight();
+						ok(testCaretPosition(0));
+
+						nte.onLeft();
+						ok(testCaretPosition(1));
+						
+						nte.onLeft();
+						ok(testCaretPosition(0));
+						
+						nte.onLeft();
+						ok(testCaretPosition(2));
+
+						nte.onLeft();
+						ok(testCaretPosition(1));
+						
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$78+{3}^{456+sum++}+55$", 0));
+
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$78+{23}^{456+sum++}+55$", 0));
+						
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$78+{123}^{456+sum++}+55$", 0));
+						
+						nte.moveCaretRight(5);
+						nte.moveCaretLeft(2);
+						ok(testCaretPosition(3));
+
+						nte.moveCaretLeft(4);
+						ok(testCaretPosition(2));
+
+						nte.moveCaretLeft(1);
+						ok(testCaretPosition(1));
+						
+						nte.onRedo();
+						ok(testFormula(new Array(1, 0), "$78+{23}^{456+sum++}+55$", 0));
+
+						nte.onRedo();
+						ok(testFormula(new Array(1, 0), "$78+{3}^{456+sum++}+55$", 0));
+
+						nte.onRedo();
+						ok(testFormula(new Array(1, 0), "$78+{}^{456+sum++}+55$", 0));
+
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$78+{3}^{456+sum++}+55$", 0));
+
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$78+{23}^{456+sum++}+55$", 0));
+						
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$78+{123}^{456+sum++}+55$", 0));
+
+						nte.moveCaretRight(8);
+						nte.deleteHtml(false);
+						nte.deleteHtml(false);
+						nte.deleteHtml(false);
+						ok(testFormula(new Array(1, 0), "$78+{123}^{+sum++}+55$", 0));
+						
+						nte.deleteHtml(true);
+						ok(testFormula(new Array(1, 0), "$78+{123}^{sum++}+55$", 0));
+
+						nte.deleteHtml(true);
+						ok(testFormula(new Array(1, 0), "$78+{123}^{um++}+55$", 0));
+
+						nte.deleteHtml(true);
+						ok(testFormula(new Array(1, 0), "$78+{123}^{m++}+55$", 0));
+
+						nte.deleteHtml(true);
+						ok(testFormula(new Array(1, 0), "$78+{123}^{++}+55$", 0));
+
+						nte.deleteHtml(true);
+						ok(testFormula(new Array(1, 0), "$78+{123}^{+}+55$", 0));
+
+						nte.deleteHtml(true);
+						ok(testFormula(new Array(1, 0), "$78+{123}^{}+55$", 0));
+
+						nte.deleteHtml(true);
+						ok(testFormula(new Array(1, 0), "$78+{123}^{}+55$", 0));
+
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$78+{123}^{+}+55$", 0));
+						
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$78+{123}^{++}+55$", 0));
+
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$78+{123}^{m++}+55$", 0));
+
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$78+{123}^{um++}+55$", 0));
+
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$78+{123}^{sum++}+55$", 0));
+
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$78+{123}^{+sum++}+55$", 0));
+
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$78+{123}^{4+sum++}+55$", 1));
+
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$78+{123}^{45+sum++}+55$", 2));
+
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$78+{123}^{456+sum++}+55$", 3));
+
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$78+{123}^{456+sum++}+55$", 3));
+					}
+					);
+				
+				test("Formula 5", function()
+					{
+						expect(16);
+						
+						nte.parse(
+							"<p>" + 
+								"Left" + 
+								"<span class='formula'>" + 
+									"<span class='formula_text'>78</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_exponentiation'>" + 
+										"<span class='formula_group'>" + 
+											"<span class='formula_text'>123</span>" + 
+										"</span>" + 
+										"<span class='formula_group'>" + 
+											"<span class='formula_text'>456</span>" +
+											"<span class='formula_plus'></span>" + 
+											"<span class='formula_exponentiation'>" +
+												"<span class='formula_group'>" + 
+													"<span class='formula_text'>sum</span>" + 
+												"</span>" + 
+												"<span class='formula_group'>" + 
+													"<span class='formula_text'>567</span>" + 
+												"</span>" + 
+											"</span>" + 
+										"</span>" + 
+									"</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_text'>55</span>" + 
+								"</span>" + 
+								"Right" + 
+							"</p>"
+							);
+						
+						nte.setCaret(0, 0);
+						ok(testCaretPosition(0));
+						ok(testFormula(new Array(1, 0), "$78+{123}^{456+{sum}^{567}}+55$"));
+						
+						nte.moveCaretRight(20);
+						//nte.moveCaretRight(9);
+						//nte.onRight();
+						//ok(testCaretPosition(3));
+						
+						nte.deleteHtml(true);
+						ok(testFormula(new Array(1, 0), "$78+{123}^{456+}+55$", 2));
+						
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$78+{123}^{456+{sum}^{567}}+55$", 2));
+
+						nte.onRedo();
+						ok(testFormula(new Array(1, 0), "$78+{123}^{456+}+55$", 2));
+						
+						//nte.onUndo();
+						//ok(testFormula(new Array(1, 0), "$78+123^{456+{sum}^{567}}+55$", 2));
+						
+						nte.deleteHtml(false);
+						ok(testFormula(new Array(1, 0), "$78+{123}^{456}+55$", 3));
+						
+						nte.deleteHtml(false);
+						nte.deleteHtml(false);
+						nte.deleteHtml(false);
+						ok(testFormula(new Array(1, 0), "$78+{123}^{}+55$", 0));
+						
+						nte.moveCaretLeft(5);
+						nte.deleteHtml(true);
+						nte.deleteHtml(true);
+						nte.deleteHtml(true);
+						ok(testFormula(new Array(1, 0), "$78+{}^{}+55$", 0));
+						
+						nte.onLeft();
+						nte.deleteHtml(true);
+						ok(testFormula(new Array(1, 0), "$78++55$", 2));
+						
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$78+{}^{}+55$", 2));
+
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$78+{3}^{}+55$", 0));
+						
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$78+{23}^{}+55$", 0));
+
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$78+{123}^{}+55$", 0));
+
+						nte.onUndo();
+						nte.onUndo();
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$78+{123}^{456}+55$", 3));
+
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$78+{123}^{456+}+55$", 2));
+
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$78+{123}^{456+{sum}^{567}}+55$", 2));
+
+					}
+					);
+		  }
+		);
+	</script>
+</body>
+
+</html>

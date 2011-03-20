@@ -1,0 +1,52 @@
+{% load cms_tags %}
+<!doctype html>
+<head>
+  <title>{{ request.current_page.get_title }}</title>
+  <link rel="stylesheet" type="text/css" href="../media/style.css" />
+	<!--<script type="text/javascript" src="../media/s1.js"></script>-->
+	<script type="text/javascript" src="../media/naturaleditor/naturaleditor.js"></script>
+  {% plugins_media %}
+</head>
+
+<body onload="onLoad();">
+  <div id="page">
+    <div id="main">
+      <div id="content">
+        {% placeholder "main" %}
+      </div>
+			<span id = "frame"></span>
+      <script type="text/javascript">
+        function onLoad()
+        {
+					nte = new NaturalEditor(document.getElementById("frame"), "../media/naturaleditor/themes/classic/theme.js", 600, 200);
+					nte.parse(
+						"<p>Aliquam <b>lobortis</b> magna sed leo laoreet rutrum. Maecenas aliquam <i>pellentesque</i> mi, sit amet feugiat neque adipiscing in. Proin sit amet ante at turpis auctor adipiscing.</p>" + 
+						"<p>Vestibulum " + 
+						"<span class='formula'>" + 
+							"<span class='formula_text'>78</span>" + 
+							"<span class='formula_plus'></span>" + 
+							"<span class='formula_exponentiation'>" + 
+								"<span class='formula_text'>123</span>" + 
+								"<span class='formula_group'>" + 
+									"<span class='formula_text'>456</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_text'>sum</span>" + 
+									"<span class='formula_plus'></span>" + 
+								"</span>" + 
+							"</span>" + 
+							"<span class='formula_plus'></span>" + 
+							"<span class='formula_text'>55</span>" + 
+						"</span>" + 
+						"quis tortor urna, dictum adipiscing lectus. Fusce dolor nisi, mattis eu posuere vel, fermentum ac elit. Cras ut nunc lacus.</p>" + 
+						"<p>Curabitur porttitor mi elementum nisl rhoncus in accumsan <u>augue</u> varius.</p>" + 
+						"<p>Fusce consectetur erat ipsum.</p>" + 
+						"<p>Sed eu ipsum sit amet purus ullamcorper condimentum. Suspendisse tincidunt sollicitudin dui, sit amet molestie libero ultrices eu.</p>" + 
+						"<p>Cras tincidunt lacus sed ante aliquam eu tempor neque consequat. Donec tortor enim, dictum et consequat et, luctus at mauris. Donec vulputate vulputate leo.</p>" + 
+						"<p>Nulla arcu massa, ullamcorper et euismod at, imperdiet sed nisi. Donec nec libero nisl. Donec ac augue eu lorem egestas hendrerit.</p>"
+						);
+        }
+      </script>
+    </div>
+  </div>
+</body>
+</html>

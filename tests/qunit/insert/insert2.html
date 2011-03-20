@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html xmlns:v="urn:schemas-microsoft-com:vml">
+
+<head>
+	<title>Insertion test</title>
+	<link rel="stylesheet" href="../../../lib/unit.css" type="text/css" />
+	<script type="text/javascript" src="../../../lib/jquery.js"></script>
+	<script type="text/javascript" src="../../../lib/qunit.js"></script>
+	<script type="text/javascript" src="../../../naturaleditor.js"></script>
+	<script type="text/javascript" src="../tool.js"></script>
+</head>
+
+<body>
+	<h1 id="qunit-header">Insert test 2</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+
+	<span id = "frame"></span>
+
+	<script type="text/javascript">
+		var nte;
+
+		$(document).ready(function()
+		  {
+		    nte = new NaturalEditor(document.getElementById("frame"), "themes/classic/theme.js", 600, 200);
+ 		    
+				test("Insertion 1", function()
+					{
+						expect(16);
+						
+	 					nte.parse("<p>Text</p>");
+
+ 						nte.setCaret(2, 1);
+ 						nte.insertHtml("A");
+ 						ok(testSelectedHtml("<p>TeAt</p>", 3, new Array("")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text</p>", 2, new Array("x")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p>TeAt</p>", 3, new Array("")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text</p>", 2, new Array("x")));
+
+ 						nte.setCaret(1, 2);
+ 						nte.insertHtml("Ab");
+ 						ok(testSelectedHtml("<p>TAbt</p>", 3, new Array("")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text</p>", 1, new Array("ex")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p>TAbt</p>", 3, new Array("")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text</p>", 1, new Array("ex")));
+
+ 						nte.setCaret(0, 4);
+ 						nte.insertHtml("Normal");
+ 						ok(testSelectedHtml("<p>Normal</p>", 6, new Array("")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text</p>", 0, new Array("Text")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p>Normal</p>", 6, new Array("")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text</p>", 0, new Array("Text")));
+
+ 						nte.setCaret(2, 2);
+ 						nte.insertHtml("Normal");
+ 						ok(testSelectedHtml("<p>TeNormal</p>", 8, new Array("")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text</p>", 2, new Array("xt")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p>TeNormal</p>", 8, new Array("")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text</p>", 2, new Array("xt")));
+					}
+				);
+
+				test("Insertion 2", function()
+					{
+						expect(4);
+						
+	 					nte.parse("<p>Text<b>Bold</b></p>");
+
+ 						nte.setCaret(2, 2);
+ 						nte.insertHtml("Normal");
+ 						ok(testSelectedHtml("<p>TeNormal<b>Bold</b></p>", 8));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b></p>", 2, new Array("xt")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p>TeNormal<b>Bold</b></p>", 8));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b></p>", 2, new Array("xt")));
+ 					}
+ 					);
+
+				test("Insertion 3", function()
+					{
+						expect(4);
+						
+	 					nte.parse("<p>Text<b>Bold</b></p>");
+
+ 						nte.setCaret(2, 4);
+ 						nte.insertHtml("<i>Italic</i>");
+ 						ok(testSelectedHtml("<p>Te<i>Italic</i><b>ld</b></p>", 6));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b></p>", 2, new Array("xt", "Bo")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p>Te<i>Italic</i><b>ld</b></p>", 6));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b></p>", 2, new Array("xt", "Bo")));
+ 					}
+ 					);
+
+				test("Insertion 4", function()
+					{
+						expect(4);
+						
+	 					nte.parse("<p>Text<b>Bold</b>Normal</p>");
+
+ 						nte.setCaret(6, 5);
+ 						nte.insertHtml("<i>Italic</i>");
+ 						ok(testSelectedHtml("<p>Text<b>Bo</b><i>Italic</i>mal</p>", 6));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal</p>", 2, new Array("ld", "Nor")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p>Text<b>Bo</b><i>Italic</i>mal</p>", 6));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal</p>", 2, new Array("ld", "Nor")));
+ 					}
+ 					);
+		  }
+		);
+	</script>
+</body>
+
+</html>
