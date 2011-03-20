@@ -1,0 +1,177 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html xmlns:v="urn:schemas-microsoft-com:vml">
+
+<head>
+	<title>Type changing test</title>
+	<link rel="stylesheet" href="../../../lib/unit.css" type="text/css" />
+	<script type="text/javascript" src="../../../lib/jquery.js"></script>
+	<script type="text/javascript" src="../../../lib/qunit.js"></script>
+	<script type="text/javascript" src="../../../naturaleditor.js"></script>
+	<script type="text/javascript" src="../tool.js"></script>
+</head>
+
+<style>
+v\: * {
+	behavior: url(#default#VML);
+}
+
+.hideSpan {
+	visibility: hidden;
+}
+</style>
+
+<body>
+	<h1 id="qunit-header">Type changing test 1</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+
+	<span id = "frame"></span>
+
+	<script type="text/javascript">
+		var nte;
+
+		$(document).ready(function()
+		  {
+		    nte = new NaturalEditor(document.getElementById("frame"), "themes/classic/theme.js", 600, 200);
+ 		    
+				test("Type changing 1", function()
+					{
+						expect(4);
+						
+	 					nte.parse("<p>Text</p>");
+
+ 						nte.setCaret(0, 1);
+ 						nte.changeType("h1");
+ 						ok(testSelectedHtml("<h1>Text</h1>", 0, new Array("T"), "T"));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text</p>", 0, new Array("T"), "T"));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<h1>Text</h1>", 0, new Array("T"), "T"));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text</p>", 0, new Array("T"), "T"));
+					}
+					);
+
+				test("Type changing 2", function()
+					{
+						expect(12);
+						
+	 					nte.parse("<p>Text<b>Bold</b></p>");
+
+ 						nte.setCaret(4, 0);
+ 						nte.changeType("h1");
+ 						ok(testSelectedHtml("<h1>Text<b>Bold</b></h1>", 4));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b></p>", 4));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<h1>Text<b>Bold</b></h1>", 4));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b></p>", 4));
+
+ 						nte.setCaret(5, 0);
+ 						nte.changeType("h1");
+ 						ok(testSelectedHtml("<h1>Text<b>Bold</b></h1>", 1));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b></p>", 1));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<h1>Text<b>Bold</b></h1>", 1));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b></p>", 1));
+
+ 						nte.setCaret(4, 4);
+ 						nte.changeType("h1");
+ 						ok(testSelectedHtml("<h1>Text<b>Bold</b></h1>", 1, new Array("Bold"), "Bold"));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b></p>", 1, new Array("Bold"), "Bold"));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<h1>Text<b>Bold</b></h1>", 1, new Array("Bold"), "Bold"));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b></p>", 1, new Array("Bold"), "Bold"));
+					}
+					);
+					
+				test("Type changing 3", function()
+					{
+						expect(6);
+						
+	 					nte.parse("<p><i>Italic</i>Text<b>Bold</b></p>");
+
+ 						nte.setCaret(1, 0);
+ 						nte.changeType("h1");
+ 						ok(testSelectedHtml("<h1><i>Italic</i>Text<b>Bold</b></h1>", 1));
+ 						nte.changeType("h2");
+ 						ok(testSelectedHtml("<h2><i>Italic</i>Text<b>Bold</b></h2>", 1));
+ 						nte.changeType("h3");
+ 						ok(testSelectedHtml("<h3><i>Italic</i>Text<b>Bold</b></h3>", 1));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<h2><i>Italic</i>Text<b>Bold</b></h2>", 1));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<h1><i>Italic</i>Text<b>Bold</b></h1>", 1));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><i>Italic</i>Text<b>Bold</b></p>", 1));
+ 					}
+ 					);
+
+				test("Type changing 4", function()
+					{
+						expect(8);
+						
+	 					nte.parse("<p><i>Italic</i><b>Bold</b></p>");
+
+ 						nte.setCaret(1, 0);
+ 						nte.changeType("h1");
+ 						ok(testSelectedHtml("<h1><i>Italic</i><b>Bold</b></h1>", 1));
+ 						nte.changeType("h2");
+ 						ok(testSelectedHtml("<h2><i>Italic</i><b>Bold</b></h2>", 1));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<h1><i>Italic</i><b>Bold</b></h1>", 1));
+ 						nte.changeType("h3");
+ 						ok(testSelectedHtml("<h3><i>Italic</i><b>Bold</b></h3>", 1));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<h1><i>Italic</i><b>Bold</b></h1>", 1));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<h3><i>Italic</i><b>Bold</b></h3>", 1));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<h1><i>Italic</i><b>Bold</b></h1>", 1));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><i>Italic</i><b>Bold</b></p>", 1));
+ 					}
+ 					);
+				
+				test("Type changing 5", function()
+					{
+						expect(10);
+						
+	 					nte.parse("<p>Text<i>Italic</i><b>Bold</b></p>");
+	 					
+ 						nte.setCaret(1, 0);
+ 						nte.changeType("h1");
+ 						ok(testSelectedHtml("<h1>Text<i>Italic</i><b>Bold</b></h1>", 1));
+ 						nte.changeType("h2");
+	 					ok(testSelectedHtml("<h2>Text<i>Italic</i><b>Bold</b></h2>", 1));
+	 					nte.onUndo();
+	 					ok(testSelectedHtml("<h1>Text<i>Italic</i><b>Bold</b></h1>", 1));
+	 					nte.onRedo();
+ 						ok(testSelectedHtml("<h2>Text<i>Italic</i><b>Bold</b></h2>", 1));
+	 					nte.onUndo();
+	 					ok(testSelectedHtml("<h1>Text<i>Italic</i><b>Bold</b></h1>", 1));
+	 					nte.changeType("h3");
+	 					ok(testSelectedHtml("<h3>Text<i>Italic</i><b>Bold</b></h3>", 1));
+	 					nte.onUndo();
+	 					ok(testSelectedHtml("<h1>Text<i>Italic</i><b>Bold</b></h1>", 1));
+	 					nte.onRedo();
+	 					ok(testSelectedHtml("<h3>Text<i>Italic</i><b>Bold</b></h3>", 1));
+	 					nte.onUndo();
+	 					ok(testSelectedHtml("<h1>Text<i>Italic</i><b>Bold</b></h1>", 1));
+	 					nte.onUndo();
+	 					ok(testSelectedHtml("<p>Text<i>Italic</i><b>Bold</b></p>", 1));
+	 				}
+	 				);
+		  }
+		);
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,499 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html xmlns:v="urn:schemas-microsoft-com:vml">
+
+<head>
+	<title>Deletion test</title>
+	<link rel="stylesheet" href="../../../lib/unit.css" type="text/css" />
+	<script type="text/javascript" src="../../../lib/jquery.js"></script>
+	<script type="text/javascript" src="../../../lib/qunit.js"></script>
+	<script type="text/javascript" src="../../../naturaleditor.js"></script>
+	<script type="text/javascript" src="../tool.js"></script>
+</head>
+
+<style>
+v\: * {
+	behavior: url(#default#VML);
+}
+
+.hideSpan {
+	visibility: hidden;
+}
+</style>
+
+<body>
+	<h1 id="qunit-header">Unit test 1</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+
+	<span id = "frame"></span>
+
+	<script type="text/javascript">
+		var nte;
+
+		$(document).ready(function()
+		  {
+		    nte = new NaturalEditor(document.getElementById("frame"), "themes/classic/theme.js", 600, 200);
+ 		    
+				test("Deletion 1", function()
+					{
+						expect(10);
+						
+	 					nte.parse("<p>Text<b>Bold</b>Normal</p>");
+
+ 						nte.setCaret(0, 0);
+ 						nte.deleteHtml(true);
+ 						ok(testSelectedHtml("<p>ext<b>Bold</b>Normal</p>", 0));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal</p>", 0));
+
+ 						nte.setCaret(3, 0);
+ 						nte.deleteHtml(true);
+ 						ok(testSelectedHtml("<p>Tex<b>Bold</b>Normal</p>", 3));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal</p>", 3));
+
+ 						nte.setCaret(5, 0);
+ 						nte.deleteHtml(true);
+ 						ok(testSelectedHtml("<p>Text<b>Bld</b>Normal</p>", 1));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal</p>", 1));
+
+ 						nte.setCaret(4, 0);
+ 						nte.deleteHtml(true);
+ 						ok(testSelectedHtml("<p>Text<b>old</b>Normal</p>", 0));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal</p>", 4));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p>Text<b>old</b>Normal</p>", 0));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal</p>", 4));
+					}
+				);
+
+				test("Deletion 2", function()
+					{
+						expect(34);
+						
+	 					nte.parse("<p>Text<b>Bold</b>Normal</p>");
+
+ 						nte.setCaret(2, 2);
+ 						nte.deleteHtml();
+ 						ok(testSelectedHtml("<p>Te<b>Bold</b>Normal</p>", 2));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal</p>", 2, new Array("xt")));
+
+ 						nte.setCaret(0, 4);
+ 						nte.deleteHtml();
+ 						ok(testSelectedHtml("<p><b>Bold</b>Normal</p>", 0));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal</p>", 0, new Array("Text")));
+
+ 						nte.setCaret(4, 2);
+ 						nte.deleteHtml();
+ 						ok(testSelectedHtml("<p>Text<b>ld</b>Normal</p>", 0));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal</p>", 0, new Array("Bo")));
+
+ 						nte.setCaret(4, 4);
+ 						nte.deleteHtml();
+ 						ok(testSelectedHtml("<p>TextNormal</p>", 4));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal</p>", 1, new Array("Bold")));
+
+ 						nte.setCaret(2, 4);
+ 						nte.deleteHtml();
+ 						ok(testSelectedHtml("<p>Te<b>ld</b>Normal</p>", 2));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal</p>", 2, new Array("xt", "Bo")));
+
+ 						nte.setCaret(2, 6);
+ 						nte.deleteHtml();
+ 						ok(testSelectedHtml("<p>TeNormal</p>", 2));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal</p>", 2, new Array("xt", "Bold")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p>TeNormal</p>", 2));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal</p>", 2, new Array("xt", "Bold")));
+
+ 						nte.setCaret(2, 8);
+ 						nte.deleteHtml();
+ 						ok(testSelectedHtml("<p>Termal</p>", 2));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal</p>", 2, new Array("xt", "Bold", "No")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p>Termal</p>", 2));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal</p>", 2, new Array("xt", "Bold", "No")));
+
+ 						nte.setCaret(1, 8);
+ 						nte.deleteHtml();
+ 						ok(testSelectedHtml("<p>Tormal</p>", 1));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal</p>", 1, new Array("ext", "Bold", "N")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p>Tormal</p>", 1));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal</p>", 1, new Array("ext", "Bold", "N")));
+
+ 						nte.setCaret(2, 12);
+ 						nte.deleteHtml();
+ 						ok(testSelectedHtml("<p>Te</p>", 2));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal</p>", 2, new Array("xt", "BoldNormal")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p>Te</p>", 2));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal</p>", 2, new Array("xt", "BoldNormal")));
+
+ 						nte.setCaret(0, 14);
+ 						nte.deleteHtml();
+						//if (nte.isIE)
+ 						//	ok(testSelectedHtml("<p>&nbsp;</p>", 0));
+						//else
+ 						ok(testSelectedHtml("<p><br></p>", 0));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal</p>", 0, new Array("TextBoldNormal")));
+ 						nte.onRedo();
+						//if (nte.isIE)
+ 						//	ok(testSelectedHtml("<p>&nbsp;</p>", 0));
+						//else
+ 						ok(testSelectedHtml("<p><br></p>", 0));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal</p>", 0, new Array("TextBoldNormal")));
+
+ 						nte.setCaret(4, 6);
+ 						nte.deleteHtml();
+ 						ok(testSelectedHtml("<p>Textrmal</p>", 4));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal</p>", 1, new Array("Bold", "No")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p>Textrmal</p>", 4));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal</p>", 1, new Array("Bold", "No")));
+ 					}
+ 				);
+
+				test("Deletion 3", function()
+					{
+						expect(26);
+						
+	 					nte.parse("<p><b>Bold</b>Normal</p>");
+
+ 						nte.setCaret(0, 2);
+ 						nte.deleteHtml();
+ 						ok(testSelectedHtml("<p><b>ld</b>Normal</p>", 0));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><b>Bold</b>Normal</p>", 0, new Array("Bo")));
+
+ 						nte.setCaret(0, 4);
+ 						nte.deleteHtml();
+ 						ok(testSelectedHtml("<p>Normal</p>", 0));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><b>Bold</b>Normal</p>", 0, new Array("Bold")));
+
+ 						nte.setCaret(4, 2);
+ 						nte.deleteHtml();
+ 						ok(testSelectedHtml("<p><b>Bold</b>rmal</p>", 0));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><b>Bold</b>Normal</p>", 0, new Array("No")));
+
+ 						nte.setCaret(4, 4);
+ 						nte.deleteHtml();
+ 						ok(testSelectedHtml("<p><b>Bold</b>al</p>", 0));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><b>Bold</b>Normal</p>", 0, new Array("Norm")));
+
+ 						nte.setCaret(2, 4);
+ 						nte.deleteHtml();
+ 						ok(testSelectedHtml("<p><b>Bo</b>rmal</p>", 2));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><b>Bold</b>Normal</p>", 2, new Array("ld", "No")));
+
+ 						nte.setCaret(2, 6);
+ 						nte.deleteHtml();
+ 						ok(testSelectedHtml("<p><b>Bo</b>al</p>", 2));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><b>Bold</b>Normal</p>", 2, new Array("ld", "Norm")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p><b>Bo</b>al</p>", 2));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><b>Bold</b>Normal</p>", 2, new Array("ld", "Norm")));
+
+ 						nte.setCaret(2, 8);
+ 						nte.deleteHtml();
+ 						ok(testSelectedHtml("<p><b>Bo</b></p>", 2));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><b>Bold</b>Normal</p>", 2, new Array("ld", "Normal")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p><b>Bo</b></p>", 2));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><b>Bold</b>Normal</p>", 2, new Array("ld", "Normal")));
+
+ 						nte.setCaret(0, 10);
+ 						nte.deleteHtml();
+						//if (nte.isIE)
+ 						//	ok(testSelectedHtml("<p>&nbsp;</p>", 0));
+						//else
+ 						ok(testSelectedHtml("<p><br></p>", 0));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><b>Bold</b>Normal</p>", 0, new Array("BoldNormal")));
+ 						nte.onRedo();
+						//if (nte.isIE)
+ 						//	ok(testSelectedHtml("<p>&nbsp;</p>", 0));
+						//else
+ 						ok(testSelectedHtml("<p><br></p>", 0));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><b>Bold</b>Normal</p>", 0, new Array("BoldNormal")));
+
+ 						nte.setCaret(4, 6);
+ 						nte.deleteHtml();
+ 						ok(testSelectedHtml("<p><b>Bold</b></p>", 4));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><b>Bold</b>Normal</p>", 1, new Array("Normal")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p><b>Bold</b></p>", 4));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><b>Bold</b>Normal</p>", 1, new Array("Normal")));
+ 					}
+ 				);
+
+				test("Deletion 4", function()
+					{
+						expect(8);
+
+	 					nte.parse("<p>Text<b>B<i>ol</i>d</b>Normal</p>");
+
+ 						nte.setCaret(4, 4);
+ 						nte.deleteHtml();
+ 						ok(testSelectedHtml("<p>TextNormal</p>", 4));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>B<i>ol</i>d</b>Normal</p>", 1, new Array("Bold")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p>TextNormal</p>", 4));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>B<i>ol</i>d</b>Normal</p>", 1, new Array("Bold")));
+
+ 						nte.setCaret(2, 10);
+ 						nte.deleteHtml();
+ 						ok(testSelectedHtml("<p>Teal</p>", 2));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>B<i>ol</i>d</b>Normal</p>", 2, new Array("xt", "Bold", "Norm")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p>Teal</p>", 2));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>B<i>ol</i>d</b>Normal</p>", 2, new Array("xt", "Bold", "Norm")));
+					}
+					);
+
+				test("Deletion 5", function()
+					{
+						expect(24);
+
+	 					nte.parse("<p>Text<b>Bold</b>Normal<b>BoldText</b></p>");
+
+ 						nte.setCaret(8, 6);
+ 						nte.deleteHtml();
+ 						ok(testSelectedHtml("<p>Text<b>BoldBoldText</b></p>", 4));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal<b>BoldText</b></p>", 2, new Array("Normal")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p>Text<b>BoldBoldText</b></p>", 4));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal<b>BoldText</b></p>", 2, new Array("Normal")));
+
+ 						nte.setCaret(6, 8);
+ 						nte.deleteHtml();
+ 						ok(testSelectedHtml("<p>Text<b>BoBoldText</b></p>", 2));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal<b>BoldText</b></p>", 2, new Array("ld", "Normal")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p>Text<b>BoBoldText</b></p>", 2));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal<b>BoldText</b></p>", 2, new Array("ld", "Normal")));
+
+ 						nte.setCaret(6, 9);
+ 						nte.deleteHtml();
+ 						ok(testSelectedHtml("<p>Text<b>BooldText</b></p>", 2));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal<b>BoldText</b></p>", 2, new Array("ld", "Normal", "B")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p>Text<b>BooldText</b></p>", 2));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal<b>BoldText</b></p>", 2, new Array("ld", "Normal", "B")));
+
+ 						nte.setCaret(4, 18);
+ 						nte.deleteHtml();
+ 						ok(testSelectedHtml("<p>Text</p>", 4));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal<b>BoldText</b></p>", 1, new Array("BoldNormalBoldText")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p>Text</p>", 4));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal<b>BoldText</b></p>", 1, new Array("BoldNormalBoldText")));
+
+ 						nte.setCaret(8, 14);
+ 						nte.deleteHtml();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b></p>", 4));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal<b>BoldText</b></p>", 2, new Array("NormalBoldText")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b></p>", 4));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal<b>BoldText</b></p>", 2, new Array("NormalBoldText")));
+
+ 						nte.setCaret(4, 10);
+ 						nte.deleteHtml();
+ 						ok(testSelectedHtml("<p>Text<b>BoldText</b></p>", 4));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal<b>BoldText</b></p>", 1, new Array("BoldNormal")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p>Text<b>BoldText</b></p>", 4));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal<b>BoldText</b></p>", 1, new Array("BoldNormal")));
+ 					}
+ 					);
+
+				test("Deletion 6", function()
+					{
+						expect(4);
+
+	 					nte.parse("<p>Text<b>Bold<i>Italic</i></b>Normal<b>BoldText</b></p>");
+
+ 						nte.setCaret(14, 6);
+ 						nte.deleteHtml();
+ 						ok(testSelectedHtml("<p>Text<b>Bold<i>Italic</i>BoldText</b></p>", 6));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold<i>Italic</i></b>Normal<b>BoldText</b></p>", 2, new Array("Normal")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold<i>Italic</i>BoldText</b></p>", 6));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold<i>Italic</i></b>Normal<b>BoldText</b></p>", 2, new Array("Normal")));
+ 					}
+ 					);
+
+				test("Deletion 7", function()
+					{
+						expect(4);
+
+	 					nte.parse("<p>Text<b>Bold</b>Normal<b><i>Italic</i>BoldText</b></p>");
+
+ 						nte.setCaret(8, 6);
+ 						nte.deleteHtml();
+ 						ok(testSelectedHtml("<p>Text<b>Bold<i>Italic</i>BoldText</b></p>", 4));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal<b><i>Italic</i>BoldText</b></p>", 2, new Array("Normal")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold<i>Italic</i>BoldText</b></p>", 4));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal<b><i>Italic</i>BoldText</b></p>", 2, new Array("Normal")));
+ 					}
+ 					);
+
+				test("Deletion 8", function()
+					{
+						expect(4);
+
+	 					nte.parse("<p>Text<b>Bold</b>Normal<b>BoldText</b></p>");
+
+ 						nte.setCaret(5, 10);
+ 						nte.deleteHtml();
+ 						ok(testSelectedHtml("<p>Text<b>BoldText</b></p>", 1));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal<b>BoldText</b></p>", 1, new Array("old", "Normal", "B")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p>Text<b>BoldText</b></p>", 1));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal<b>BoldText</b></p>", 1, new Array("old", "Normal", "B")));
+ 					}
+ 					);
+
+				test("Deletion 9", function()
+					{
+						expect(4);
+
+	 					nte.parse("<p>Text<b>Bold</b>Normal<b>BoldText</b></p>");
+
+ 						nte.setCaret(6, 8);
+ 						nte.deleteHtml();
+ 						ok(testSelectedHtml("<p>Text<b>BoBoldText</b></p>", 2));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal<b>BoldText</b></p>", 2, new Array("ld", "Normal")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p>Text<b>BoBoldText</b></p>", 2));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold</b>Normal<b>BoldText</b></p>", 2, new Array("ld", "Normal")));
+ 					}
+ 					);
+
+				test("Deletion 10", function()
+					{
+						expect(4);
+						
+	 					nte.parse("<p><b>Bold</b><b>Text</b></p>");
+
+ 						nte.setCaret(2, 4);
+ 						nte.deleteHtml();
+ 						ok(testSelectedHtml("<p><b>Boxt</b></p>", 2));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><b>Bold</b><b>Text</b></p>", 2, new Array("ld", "Te")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p><b>Boxt</b></p>", 2));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><b>Bold</b><b>Text</b></p>", 2, new Array("ld", "Te")));
+ 					}
+ 					);
+
+				test("Deletion 11", function()
+					{
+						expect(8);
+						
+	 					nte.parse("<p>Text1</p><p>Text2</p>");
+
+ 						nte.setCaret(4, 7);
+ 						nte.deleteHtml();
+						ok(testSelectedHtml("<p>Text</p>", 4));
+ 						nte.onUndo();
+						ok(testSelectedHtml("<p>Text1</p><p>Text2</p>", 4, new Array("1", "Text2")));
+ 						nte.onRedo();
+						ok(testSelectedHtml("<p>Text</p>", 4));
+ 						nte.onUndo();
+						ok(testSelectedHtml("<p>Text1</p><p>Text2</p>", 4, new Array("1", "Text2")));
+
+ 						nte.setCaret(4, 6);
+ 						nte.deleteHtml();
+						ok(testSelectedHtml("<p>Text</p>", 4));
+ 						nte.onUndo();
+						ok(testSelectedHtml("<p>Text1</p><p>Text2</p>", 4, new Array("1", "Text2")));
+ 						nte.onRedo();
+						ok(testSelectedHtml("<p>Text</p>", 4));
+ 						nte.onUndo();
+						ok(testSelectedHtml("<p>Text1</p><p>Text2</p>", 4, new Array("1", "Text2")));
+ 					}
+ 					);
+
+				test("Deletion 12", function()
+					{
+						expect(4);
+
+	 					nte.parse("<p>Text<b>Bold<i>Italic</i></b>Normal<b><i>Font</i>BoldText</b></p>");
+
+ 						nte.setCaret(14, 6);
+ 						nte.deleteHtml();
+ 						ok(testSelectedHtml("<p>Text<b>Bold<i>ItalicFont</i>BoldText</b></p>", 6));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold<i>Italic</i></b>Normal<b><i>Font</i>BoldText</b></p>", 2, new Array("Normal")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold<i>ItalicFont</i>BoldText</b></p>", 6));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<b>Bold<i>Italic</i></b>Normal<b><i>Font</i>BoldText</b></p>", 2, new Array("Normal")));
+ 					}
+ 					);
+		  }
+		);
+	</script>
+</body>
+
+</html>

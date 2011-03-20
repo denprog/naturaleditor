@@ -1,0 +1,710 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html xmlns:v="urn:schemas-microsoft-com:vml">
+
+<head>
+	<title>Insertion test</title>
+	<link rel="stylesheet" href="../../../lib/unit.css" type="text/css" />
+	<script type="text/javascript" src="../../../lib/jquery.js"></script>
+	<script type="text/javascript" src="../../../lib/qunit.js"></script>
+	<script type="text/javascript" src="../../../naturaleditor.js"></script>
+	<script type="text/javascript" src="../tool.js"></script>
+</head>
+
+<body>
+	<h1 id="qunit-header">Test 1</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+
+	<span id = "frame"></span>
+
+	<script type="text/javascript">
+		var nte;
+
+		$(document).ready(function()
+		  {
+		    nte = new NaturalEditor(document.getElementById("frame"), "themes/classic/theme.js", 600, 200);
+		    
+				test("Caret moving in text to the left and to the right 1", function()
+					{
+						expect(16);
+						
+						nte.parse(
+							"<p>Lorem <b>ipsum</b> dolor sit amet, <b><i>con</i>sectetur</b> adipiscing elit. Morbi aliquam bibendum turpis eu consectetur.</p>" + 
+							"<p><b><i>Aliquam</i></b> lobortis magna sed leo laoreet rutrum. Maecenas aliquam pellentesque mi, sit amet feugiat neque adipiscing in. Proin sit amet ante at turpis auctor adipiscing.</p>" + 
+							"<p>Vestibulum quis tortor urna, dictum adipiscing lectus. Fusce dolor nisi, mattis eu posuere vel, fermentum ac elit. Cras ut nunc lacus.</p>" + 
+							"<p>Curabitur porttitor mi elementum nisl rhoncus in accumsan augue varius.</p>" + 
+							"<p>Fusce consectetur erat ipsum.</p>" + 
+							"<p>Sed eu ipsum sit amet purus ullamcorper condimentum. Suspendisse tincidunt sollicitudin dui, sit amet molestie libero ultrices eu.</p>" + 
+							"<p>Cras tincidunt lacus sed ante aliquam eu tempor neque consequat. Donec tortor enim, dictum et consequat et, luctus at mauris. Donec vulputate vulputate leo.</p>" + 
+							"<p>Nulla arcu massa, ullamcorper et euismod at, imperdiet sed nisi. Donec nec libero nisl. Donec ac augue eu lorem egestas hendrerit.</p>"
+							);
+						nte.setCaret(0, 0);
+						ok(testCaretPosition(0));
+						
+						nte.onRight();
+						ok(testCaretPosition(1));
+						
+						for (var i = 0; i < 6; ++i)
+							nte.onRight();
+						ok(testCaretPosition(1));
+
+						for (var i = 0; i < 5; ++i)
+							nte.onRight();
+						ok(testCaretPosition(1));
+						
+						nte.onLeft();
+						ok(testCaretPosition(5));
+
+						nte.onLeft();
+						ok(testCaretPosition(4));
+
+						for (var i = 0; i < 4; ++i)
+							nte.onLeft();
+						ok(testCaretPosition(6));
+
+						nte.onLeft();
+						ok(testCaretPosition(5));
+
+						for (var i = 0; i < 5; ++i)
+							nte.onLeft();
+						ok(testCaretPosition(0));
+
+						for (var i = 0; i < 28; ++i)
+							nte.onRight();
+						ok(testCaretPosition(17));
+
+						nte.onRight();
+						ok(testCaretPosition(1));
+
+						for (var i = 0; i < 3; ++i)
+							nte.onRight();
+						ok(testCaretPosition(1));
+
+						for (var i = 0; i < 70; ++i)
+							nte.onRight();
+						ok(testCaretPosition(63));
+
+						nte.onRight();
+						ok(testCaretPosition(0));
+
+						nte.onRight();
+						ok(testCaretPosition(1));
+
+						for (var i = 0; i < 7; ++i)
+							nte.onRight();
+						ok(testCaretPosition(1));
+					}
+					);
+				
+				test("Caret moving in text up and down 1", function()
+					{
+						expect(12);
+						
+						nte.setCaret(0, 0);
+						ok(testCaretPosition(0));
+						
+						nte.onDown();
+						ok(testCaretPosition(32));
+
+						nte.onDown();
+						ok(testCaretPosition(0));
+
+						nte.onDown();
+						ok(testCaretPosition(70));
+
+						nte.onUp();
+						ok(testCaretPosition(0));
+						
+						for (var i = 0; i < 38; ++i)
+							nte.onRight();
+						ok(testCaretPosition(31));
+
+						nte.onUp();
+						ok(testCaretPosition(63));
+						
+						nte.onDown();
+						ok(testCaretPosition(24));
+
+						for (var i = 0; i < 24; ++i)
+							nte.onLeft();
+						ok(testCaretPosition(7));
+						
+						nte.onDown();
+						ok(testCaretPosition(79));
+						
+						nte.onUp();
+						nte.onUp();
+						for (var i = 0; i < 3; ++i)
+							nte.onRight();
+						nte.onUp();
+						ok(testCaretPosition(4));
+
+						for (var i = 0; i < 4; ++i)
+							nte.onDown();
+						nte.onLeft();
+						nte.onLeft();
+						for (var i = 0; i < 2; ++i)
+							nte.onUp();
+						ok(testCaretPosition(7));
+					}
+					);
+
+				test("Caret moving in formula to the left and to the right 1", function()
+					{
+						expect(39);
+						
+						nte.parse(
+							"<p>" + 
+								"Text" + 
+								"<span class='formula'>" + 
+									"<span class='formula_text'>789</span>" + 
+										"<span class='formula_plus'></span>" + 
+										"<span class='formula_exponentiation'>" + 
+											"<span class='formula_text'>Text123</span>" + 
+											"<span class='formula_group'>" + 
+												"<span class='formula_text'>Text456</span>" + 
+												"<span class='formula_plus'></span>" + 
+												"<span class='formula_text'>sum</span>" + 
+											"</span>" + 
+										"</span>" + 
+										"<span class='formula_plus'></span>" + 
+										"<span class='formula_text'>555</span>" + 
+									"</span>" + 
+									"Text2" + 
+								"</p>"
+								);
+		
+						nte.setCaret(0, 0);
+						ok(testCaretPosition(0));
+						
+						for (var i = 0; i < 4; ++i)
+							nte.onRight();
+						ok(testCaretPosition(4));
+
+						nte.onRight();
+						ok(testCaretPosition(0));
+
+						for (var i = 0; i < 3; ++i)
+							nte.onRight();
+						ok(testCaretPosition(3));
+
+						nte.onRight();
+						ok(testCaretPosition(1));
+
+						nte.onRight();
+						ok(testCaretPosition(2));
+
+						nte.onRight();
+						ok(testCaretPosition(0));
+
+						for (var i = 0; i < 7; ++i)
+							nte.onRight();
+						ok(testCaretPosition(7));
+
+						nte.onRight();
+						ok(testCaretPosition(1));
+
+						nte.onRight();
+						ok(testCaretPosition(0));
+
+						for (var i = 0; i < 7; ++i)
+							nte.onRight();
+						ok(testCaretPosition(7));
+
+						nte.onRight();
+						ok(testCaretPosition(1));
+
+						nte.onRight();
+						ok(testCaretPosition(0));
+
+						for (var i = 0; i < 3; ++i)
+							nte.onRight();
+						ok(testCaretPosition(3));
+
+						nte.onRight();
+						ok(testCaretPosition(3));
+
+						nte.onRight();
+						ok(testCaretPosition(0));
+
+						for (var i = 0; i < 3; ++i)
+							nte.onRight();
+						ok(testCaretPosition(3));
+
+						nte.onRight();
+						ok(testCaretPosition(0));
+
+						for (var i = 0; i < 5; ++i)
+							nte.onRight();
+						ok(testCaretPosition(5));
+
+						nte.onRight();
+						ok(testCaretPosition(5));
+						
+						for (var i = 0; i < 5; ++i)
+							nte.onLeft();
+						ok(testCaretPosition(0));
+
+						nte.onLeft();
+						ok(testCaretPosition(3));
+
+						for (var i = 0; i < 3; ++i)
+							nte.onLeft();
+						ok(testCaretPosition(0));
+
+						nte.onLeft();
+						ok(testCaretPosition(3));
+						
+						nte.onLeft();
+						ok(testCaretPosition(3));
+
+						for (var i = 0; i < 3; ++i)
+							nte.onLeft();
+						ok(testCaretPosition(0));
+
+						nte.onLeft();
+						ok(testCaretPosition(1));
+
+						nte.onLeft();
+						ok(testCaretPosition(7));
+
+						for (var i = 0; i < 7; ++i)
+							nte.onLeft();
+						ok(testCaretPosition(0));
+
+						nte.onLeft();
+						ok(testCaretPosition(1));
+						
+						nte.onLeft();
+						ok(testCaretPosition(7));
+
+						for (var i = 0; i < 7; ++i)
+							nte.onLeft();
+						ok(testCaretPosition(0));
+
+						nte.onLeft();
+						ok(testCaretPosition(2));
+
+						nte.onLeft();
+						ok(testCaretPosition(1));
+
+						nte.onLeft();
+						ok(testCaretPosition(3));
+
+						for (var i = 0; i < 3; ++i)
+							nte.onLeft();
+						ok(testCaretPosition(0));
+
+						nte.onLeft();
+						ok(testCaretPosition(4));
+
+						for (var i = 0; i < 4; ++i)
+							nte.onLeft();
+						ok(testCaretPosition(0));
+
+						nte.onLeft();
+						ok(testCaretPosition(0));
+					}
+					);
+				
+				test("Caret moving in text and formula 1", function()
+					{
+						expect(30);
+						
+						nte.parse(
+							"<p>Aliquam scelerisque ante eget dolor volutpat ut aliquam elit rutrum. " + 
+							"Proin dictum, lacus vel <b><i>euismod</i> cursus</b>, enim metus molestie mauris, eu tincidunt mi ante eget orci. " + 
+							"<span class='formula'>" + 
+								"<span class='formula_text'>789</span>" + 
+								"<span class='formula_plus'></span>" + 
+								"<span class='formula_exponentiation'>" + 
+									"<span class='formula_text'>Text123</span>" + 
+									"<span class='formula_group'>" + 
+										"<span class='formula_text'>Text456</span>" + 
+										"<span class='formula_plus'></span>" + 
+										"<span class='formula_text'>sum</span>" + 
+									"</span>" + 
+								"</span>" + 
+								"<span class='formula_plus'></span>" + 
+								"<span class='formula_text'>555</span>" + 
+							"</span>" + 
+							" Mauris at pellentesque neque. Mauris sit amet est <i>vel</i> neque iaculis blandit. " + 
+							"Nullam tincidunt ligula id sapien vulputate id tempus erat pretium. Aliquam " + 
+							"erat volutpat.</p>" + 
+							"<p>Sed leo eros, condimentum et facilisis vel, scelerisque ac eros. Praesent non lorem ligula, eget varius dui. " + 
+							"Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; " + 
+							"Sed adipiscing feugiat neque, eget adipiscing tortor vehicula eu. Nam eget justo rutrum massa faucibus convallis."
+							);
+		
+						nte.setCaret(0, 0);
+						ok(testCaretPosition(0));
+						
+						nte.onDown();
+						nte.onDown();
+
+						for (var i = 0; i < 16; ++i)
+							nte.onRight();
+						nte.onUp();
+						nte.onRight();
+						nte.onRight();
+						ok(testCaretPosition(92));
+						
+						nte.onDown();
+						ok(testCaretPosition(1));
+						
+						nte.onUp();
+						ok(testCaretPosition(93));
+						
+						nte.onRight();
+						nte.onDown();
+						ok(testCaretPosition(2));
+
+						nte.onDown();
+						ok(testCaretPosition(50));
+						
+						nte.onUp();
+						ok(testCaretPosition(2));
+						
+						nte.onDown();
+						ok(testCaretPosition(50));
+
+						nte.onDown();
+						ok(testCaretPosition(76));
+
+						nte.onDown();
+						ok(testCaretPosition(19));
+
+						nte.onDown();
+						ok(testCaretPosition(98));
+
+						nte.onDown();
+						ok(testCaretPosition(182));
+
+						nte.onDown();
+						ok(testCaretPosition(263));
+
+						nte.onDown();
+						ok(testCaretPosition(263));
+
+						nte.onUp();
+						ok(testCaretPosition(182));
+
+						nte.onUp();
+						ok(testCaretPosition(98));
+
+						nte.onUp();
+						ok(testCaretPosition(19));
+
+						nte.onUp();
+						ok(testCaretPosition(76));
+
+						nte.onUp();
+						ok(testCaretPosition(51));
+
+						nte.onUp();
+						ok(testCaretPosition(3));
+
+						nte.onLeft();
+						nte.onLeft();
+						nte.onUp();
+						ok(testCaretPosition(93));
+
+						nte.onUp();
+						ok(testCaretPosition(17));
+
+						nte.onUp();
+						ok(testCaretPosition(17));
+						
+						nte.onRight();
+						nte.onDown();
+						nte.onDown();
+						nte.onRight();
+						nte.onUp();
+						ok(testCaretPosition(2));
+
+						nte.onDown();
+						nte.onRight();
+						nte.onDown();
+						ok(testCaretPosition(3));
+
+						for (var i = 0; i < 19; ++i)
+							nte.onRight();
+						nte.onUp();
+						ok(testCaretPosition(1));
+
+						nte.onUp();
+						ok(testCaretPosition(7));
+
+						for (var i = 0; i < 9; ++i)
+							nte.onLeft();
+						nte.onDown();
+						ok(testCaretPosition(1));
+
+						nte.onDown();
+						ok(testCaretPosition(9));
+
+						nte.onUp();
+						ok(testCaretPosition(1));
+					}
+					);
+				
+				test("Caret moving in text and formula 2", function()
+					{
+						expect(13);
+						
+						nte.parse(
+							"<p>Aliquam scelerisque ante eget dolor volutpat ut aliquam elit rutrum. " + 
+							"Proin dictum, lacus vel <b><i>euismod</i> cursus</b>, enim metus molestie mauris, eu tincidunt mi ante eget orci. " + 
+							"<span class='formula'>" + 
+								"<span class='formula_text'>789</span>" + 
+								"<span class='formula_plus'></span>" + 
+								"<span class='formula_exponentiation'>" + 
+									"<span class='formula_text'>Text123</span>" + 
+									"<span class='formula_group'>" + 
+										"<span class='formula_text'>Text456</span>" + 
+										"<span class='formula_plus'></span>" + 
+										"<span class='formula_text'>sum</span>" + 
+									"</span>" + 
+								"</span>" + 
+								"<span class='formula_plus'></span>" + 
+								"<span class='formula_text'>555</span>" + 
+							"</span>" + 
+							" Mauris at pellentesque neque. Mauris sit amet est <i>vel</i> neque iaculis blandit. " + 
+							"Nullam tincidunt ligula id sapien vulputate id tempus erat pretium. Aliquam " + 
+							"erat volutpat.</p>" + 
+							"<p>Sed leo eros, condimentum et facilisis vel, scelerisque ac eros. Praesent non lorem ligula, eget varius dui. " + 
+							"Vestibulum ante ipsum primis in faucibus orci luctus <i>et</i> ultrices posuere cubilia Curae; " + 
+							"Sed adipiscing feugiat neque, eget adipiscing tortor vehicula eu. Nam eget justo rutrum massa faucibus convallis."
+							);
+						
+						nte.setCaret(0, 0);
+						ok(testCaretPosition(0));
+						
+						for (var i = 0; i < 6; ++i)
+							nte.onDown();
+						nte.onDown();
+						ok(testCaretPosition(0));
+
+						nte.onDown();
+						ok(testCaretPosition(79));
+
+						nte.onUp();
+						ok(testCaretPosition(0));
+
+						nte.onUp();
+						ok(testCaretPosition(78));
+						
+						nte.onEnd();
+						ok(testCaretPosition(161));
+
+						nte.onDown();
+						ok(testCaretPosition(78));
+
+						nte.onDown();
+						ok(testCaretPosition(146));
+
+						nte.onUp();
+						ok(testCaretPosition(66));
+
+						nte.onUp();
+						ok(testCaretPosition(147));
+
+						nte.onEnd();
+						ok(testCaretPosition(161));
+
+						nte.onUp();
+						ok(testCaretPosition(77));
+
+						nte.onUp();
+						ok(testCaretPosition(114));
+					}
+					);
+					
+					test("Caret moving in text and formula 3", function()
+						{
+							expect(43);
+							
+							nte.parse(
+								"<p>Aliquam scelerisque ante eget dolor volutpat ut aliquam elit rutrum. " + 
+								"<b>Proin</b> <b>dictum</b>, lacus vel <b><i>euismod</i> cursus</b>, enim metus molestie mauris, eu tincidunt mi ante eget orci. " + 
+								"<span class='formula'>" + 
+									"<span class='formula_text'>789</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_exponentiation'>" + 
+										"<span class='formula_text'>Text123</span>" + 
+										"<span class='formula_group'>" + 
+											"<span class='formula_text'>Text456</span>" + 
+											"<span class='formula_plus'></span>" + 
+											"<span class='formula_text'>sum</span>" + 
+										"</span>" + 
+									"</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_text'>555</span>" + 
+								"</span>" + 
+								" Mauris at pellentesque neque. Mauris sit amet est <i>vel</i> neque iaculis blandit. " + 
+								"Nullam tincidunt ligula id <i>sapien</i> <b>vulputate</b> id tempus erat pretium. Aliquam " + 
+								"erat volutpat.</p>" + 
+								"<p>Sed leo eros, condimentum et facilisis vel, scelerisque ac eros. Praesent <b>non lorem</b> ligula, eget varius dui. " + 
+								"Vestibulum ante ipsum primis in faucibus orci luctus <i>et</i> ultrices posuere cubilia Curae; " + 
+								"Sed adipiscing feugiat neque, eget <b>adipiscing </b>tortor vehicula eu. Nam eget justo rutrum massa faucibus convallis."
+								);
+							
+						nte.setCaret(0, 0);
+						ok(testCaretPosition(0));
+						
+						nte.onEnd();
+						ok(testCaretPosition(5));
+						
+						nte.onRight();
+						ok(testCaretPosition(0));
+
+						nte.onRight();
+						ok(testCaretPosition(1));
+
+						nte.onLeft();
+						ok(testCaretPosition(0));
+
+						nte.onLeft();
+						ok(testCaretPosition(5));
+												
+						nte.onDown();
+						nte.onDown();
+						nte.onDown();
+						ok(testCaretPosition(3));
+
+						nte.onRight();
+						nte.onRight();
+						nte.onRight();
+						ok(testCaretPosition(6));
+
+						nte.onRight();
+						ok(testCaretPosition(0));
+
+						nte.onRight();
+						ok(testCaretPosition(1));
+						
+						nte.onLeft();
+						ok(testCaretPosition(0));
+
+						nte.onLeft();
+						ok(testCaretPosition(6));
+
+						nte.onLeft();
+						ok(testCaretPosition(5));
+
+						nte.onDown();
+						nte.onDown();
+						ok(testCaretPosition(58));
+
+						for (var i = 0; i < 19; ++i)
+							nte.onRight();
+						ok(testCaretPosition(3));
+
+						nte.onRight();
+						ok(testCaretPosition(4));
+
+						nte.onRight();
+						ok(testCaretPosition(5));
+
+						nte.onLeft();
+						ok(testCaretPosition(4));
+
+						nte.onLeft();
+						ok(testCaretPosition(3));
+
+						nte.onLeft();
+						ok(testCaretPosition(2));
+						
+						nte.onDown();
+						ok(testCaretPosition(72));
+
+						nte.onDown();
+						for (var i = 0; i < 4; ++i)
+							nte.onRight();
+						ok(testCaretPosition(10));
+
+						nte.onRight();
+						ok(testCaretPosition(0));
+
+						nte.onRight();
+						ok(testCaretPosition(1));
+
+						nte.onLeft();
+						ok(testCaretPosition(0));
+
+						nte.onLeft();
+						ok(testCaretPosition(10));
+						
+						nte.onHome();
+						ok(testCaretPosition(0));
+						
+						nte.onUp();
+						ok(testCaretPosition(4));
+
+						nte.onUp();
+						ok(testCaretPosition(0));
+
+						nte.onUp();
+						ok(testCaretPosition(0));
+
+						nte.onUp();
+						ok(testCaretPosition(31));
+
+						nte.onUp();
+						ok(testCaretPosition(46));
+						
+						
+						for (var i = 0; i < 17; ++i)
+							nte.onRight();
+						nte.onEnd();
+						ok(testCaretPosition(3));
+						
+						nte.onLeft();
+						nte.onEnd();
+						ok(testCaretPosition(3));
+
+						nte.onEnd();
+						ok(testCaretPosition(30));
+
+						for (var i = 0; i < 35; ++i)
+							nte.onLeft();
+						nte.onHome();
+						ok(testCaretPosition(0));
+
+						nte.onRight();
+						nte.onHome();
+						ok(testCaretPosition(0));
+
+						for (var i = 0; i < 5; ++i)
+							nte.onRight();
+						nte.onHome();
+						ok(testCaretPosition(0));
+
+						for (var i = 0; i < 20; ++i)
+							nte.onRight();
+						nte.onHome();
+						ok(testCaretPosition(0));
+
+						nte.onEnd();
+						ok(testCaretPosition(3));
+
+						nte.onHome();
+						nte.onHome();
+						nte.onHome();
+						ok(testCaretPosition(0));
+
+						nte.onHome();
+						ok(testCaretPosition(46));
+
+						nte.onHome();
+						ok(testCaretPosition(46));
+					}
+					);
+		  }
+			);
+	</script>
+</body>
+
+</html>

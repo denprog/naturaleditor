@@ -1,0 +1,7 @@
+Natural Editor is a web based javascript non-frame HTML editor. Non-frame means the editor do not use HTML frames to provide edit capabilites. All the editing features are implemented by the javascript engine of the editor. The browser only renders the content and executes the javascript program. Therefore following features become possible:
+The editor is a OOP-like framework, which may be expanded, inherited for having more features.
+Editing any content in WYSIWIG or WYSIWYM modes, including mathematical formulas, chemical equations, etc.
+Most clean resulting HTML code because of complete control over the editing.
+The real undo and redo commands.
+In-place editing of any node without changing pages.
+LGPL.

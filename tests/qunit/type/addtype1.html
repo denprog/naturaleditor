@@ -1,0 +1,337 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html xmlns:v="urn:schemas-microsoft-com:vml">
+
+<head>
+	<title>Type adding test</title>
+	<link rel="stylesheet" href="../../../lib/unit.css" type="text/css" />
+	<script type="text/javascript" src="../../../lib/jquery.js"></script>
+	<script type="text/javascript" src="../../../lib/qunit.js"></script>
+	<script type="text/javascript" src="../../../naturaleditor.js"></script>
+	<script type="text/javascript" src="../tool.js"></script>
+</head>
+
+<style>
+v\: * {
+	behavior: url(#default#VML);
+}
+
+.hideSpan {
+	visibility: hidden;
+}
+</style>
+
+<body>
+	<h1 id="qunit-header">Type adding test 1</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+
+	<!--<iframe id="naturaleditor" frameborder=1 style="width:800px; height:500px">
+	</iframe>-->
+	<span id = "frame"></span>
+
+	<script type="text/javascript">
+		var nte;
+
+		$(document).ready(function()
+		  {
+		    nte = new NaturalEditor(document.getElementById("frame"), "themes/classic/theme.js", 600, 200);
+ 		    
+				test("Type adding 1", function()
+					{
+						expect(12);
+						
+	 					nte.parse("<p>Text</p>");
+
+ 						nte.setCaret(0, 1);
+ 						nte.addType("b");
+ 						ok(testSelectedHtml("<p><b>T</b>ext</p>", 0, new Array("T")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text</p>", 0, new Array("T"), "T"));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p><b>T</b>ext</p>", 0, new Array("T")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text</p>", 0, new Array("T")));
+
+ 						nte.setCaret(1, 1);
+ 						nte.addType("b");
+ 						ok(testSelectedHtml("<p>T<b>e</b>xt</p>", 1, new Array("e")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text</p>", 1, new Array("e")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p>T<b>e</b>xt</p>", 1, new Array("e")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text</p>", 1, new Array("e")));
+
+ 						nte.setCaret(2, 2);
+ 						nte.addType("b");
+ 						ok(testSelectedHtml("<p>Te<b>xt</b></p>", 1, new Array("xt")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text</p>", 2, new Array("xt")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p>Te<b>xt</b></p>", 1, new Array("xt")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text</p>", 2, new Array("xt")));
+					}
+					);
+
+				test("Type adding 2", function()
+					{
+						expect(4);
+						
+	 					nte.parse("<p>Text<i>Italic</i></p>");
+
+ 						nte.setCaret(2, 4);
+ 						nte.addType("b");
+ 						ok(testSelectedHtml("<p>Te<b>xt</b><i><b>It</b>alic</i></p>", 1, new Array("xt", "It")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<i>Italic</i></p>", 2, new Array("xt", "It")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p>Te<b>xt</b><i><b>It</b>alic</i></p>", 1, new Array("xt", "It")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<i>Italic</i></p>", 2, new Array("xt", "It")));
+ 					}
+ 					);
+
+				test("Type adding 3", function()
+					{
+						expect(4);
+						
+	 					nte.parse("<p>Text</p>");
+
+ 						nte.setCaret(0, 4);
+ 						nte.addType("b");
+ 						ok(testSelectedHtml("<p><b>Text</b></p>", 0, new Array("Text")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text</p>", 0, new Array("Text")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p><b>Text</b></p>", 0, new Array("Text")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text</p>", 0, new Array("Text")));
+	 				}
+	 				);
+
+				test("Type adding 4", function()
+					{
+						expect(4);
+						
+	 					nte.parse("<p>Text<i>Italic</i></p>");
+
+ 						nte.setCaret(0, 10);
+ 						nte.addType("b");
+ 						ok(testSelectedHtml("<p><b>Text<i>Italic</i></b></p>", 0, new Array("TextItalic")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<i>Italic</i></p>", 0, new Array("TextItalic")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p><b>Text<i>Italic</i></b></p>", 0, new Array("TextItalic")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<i>Italic</i></p>", 0, new Array("TextItalic")));
+	 				}
+	 				);
+
+				test("Type adding 5", function()
+					{
+						expect(4);
+						
+	 					nte.parse("<p><i>Italic</i>Text</p>");
+
+ 						nte.setCaret(0, 10);
+ 						nte.addType("b");
+ 						ok(testSelectedHtml("<p><b><i>Italic</i>Text</b></p>", 0, new Array("ItalicText")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><i>Italic</i>Text</p>", 0, new Array("ItalicText")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p><b><i>Italic</i>Text</b></p>", 0, new Array("ItalicText")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><i>Italic</i>Text</p>", 0, new Array("ItalicText")));
+	 				}
+	 				);
+
+				test("Type adding 6", function()
+					{
+						expect(8);
+						
+	 					nte.parse("<p><i>Italic</i>Text<i>Type</i></p>");
+
+ 						nte.setCaret(0, 14);
+ 						nte.addType("b");
+ 						ok(testSelectedHtml("<p><b><i>Italic</i>Text<i>Type</i></b></p>", 0, new Array("ItalicTextType")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><i>Italic</i>Text<i>Type</i></p>", 0, new Array("ItalicTextType")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p><b><i>Italic</i>Text<i>Type</i></b></p>", 0, new Array("ItalicTextType")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><i>Italic</i>Text<i>Type</i></p>", 0, new Array("ItalicTextType")));
+
+ 						nte.setCaret(0, 6);
+ 						nte.addType("i");
+ 						ok(testSelectedHtml("<p><i>Italic</i>Text<i>Type</i></p>", 0, new Array("Italic")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><i>Italic</i>Text<i>Type</i></p>", 0, new Array("Italic")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p><i>Italic</i>Text<i>Type</i></p>", 0, new Array("Italic")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><i>Italic</i>Text<i>Type</i></p>", 0, new Array("Italic")));
+	 				}
+	 				);
+
+				test("Type adding 7", function()
+					{
+						expect(12);
+						
+	 					nte.parse("<p><i>Italic</i>Text<i>Type</i></p>");
+
+ 						nte.setCaret(6, 4);
+ 						nte.addType("i");
+ 						ok(testSelectedHtml("<p><i>ItalicTextType</i></p>", 6, new Array("Text")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><i>Italic</i>Text<i>Type</i></p>", 1, new Array("Text")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p><i>ItalicTextType</i></p>", 6, new Array("Text")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><i>Italic</i>Text<i>Type</i></p>", 1, new Array("Text")));
+
+ 						nte.setCaret(6, 2);
+ 						nte.addType("i");
+ 						ok(testSelectedHtml("<p><i>ItalicTe</i>xt<i>Type</i></p>", 6, new Array("Te")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><i>Italic</i>Text<i>Type</i></p>", 0, new Array("Te")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p><i>ItalicTe</i>xt<i>Type</i></p>", 6, new Array("Te")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><i>Italic</i>Text<i>Type</i></p>", 0, new Array("Te")));
+
+ 						nte.setCaret(8, 2);
+ 						nte.addType("i");
+ 						ok(testSelectedHtml("<p><i>Italic</i>Te<i>xtType</i></p>", 0, new Array("xt")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><i>Italic</i>Text<i>Type</i></p>", 2, new Array("xt")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p><i>Italic</i>Te<i>xtType</i></p>", 0, new Array("xt")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><i>Italic</i>Text<i>Type</i></p>", 2, new Array("xt")));
+	 				}
+	 				);
+
+				test("Type adding 8", function()
+					{
+						expect(4);
+						
+	 					nte.parse("<p><i>Ital<b>ic</b></i>Text<i>Type</i></p>");
+
+ 						nte.setCaret(6, 4);
+ 						nte.addType("i");
+ 						ok(testSelectedHtml("<p><i>Ital<b>ic</b>TextType</i></p>", 0, new Array("Text")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><i>Ital<b>ic</b></i>Text<i>Type</i></p>", 1, new Array("Text")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p><i>Ital<b>ic</b>TextType</i></p>", 0, new Array("Text")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><i>Ital<b>ic</b></i>Text<i>Type</i></p>", 1, new Array("Text")));
+ 					}
+ 					);
+
+				test("Type adding 9", function()
+					{
+						expect(4);
+						
+	 					nte.parse("<p><i>Italic</i>Text<i><b>Ty</b>pe</i></p>");
+
+ 						nte.setCaret(6, 4);
+ 						nte.addType("i");
+ 						ok(testSelectedHtml("<p><i>ItalicText<b>Ty</b>pe</i></p>", 6, new Array("Text")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><i>Italic</i>Text<i><b>Ty</b>pe</i></p>", 1, new Array("Text")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p><i>ItalicText<b>Ty</b>pe</i></p>", 6, new Array("Text")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><i>Italic</i>Text<i><b>Ty</b>pe</i></p>", 1, new Array("Text")));
+ 					}
+ 					);
+
+				test("Type adding 10", function()
+					{
+						expect(17);
+						
+	 					nte.parse("<p><i>Ital<b>ic</b></i>Text<i><b>Ty</b>pe</i></p>");
+
+ 						nte.setCaret(6, 4);
+ 						nte.addType("i");
+ 						ok(testSelectedHtml("<p><i>Ital<b>ic</b>Text<b>Ty</b>pe</i></p>", 2, new Array("Text")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><i>Ital<b>ic</b></i>Text<i><b>Ty</b>pe</i></p>", 1, new Array("Text")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p><i>Ital<b>ic</b>Text<b>Ty</b>pe</i></p>", 2, new Array("Text")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><i>Ital<b>ic</b></i>Text<i><b>Ty</b>pe</i></p>", 1, new Array("Text")));
+
+ 						nte.addType("i");
+ 						ok(testSelectedHtml("<p><i>Ital<b>ic</b>Text<b>Ty</b>pe</i></p>", 2, new Array("Text")));
+ 						nte.addType("b");
+ 						ok(testSelectedHtml("<p><i>Ital<b>icTextTy</b>pe</i></p>", 2, new Array("Text")));
+ 						nte.setCaret(0, 4);
+ 						nte.addType("b");
+ 						ok(testSelectedHtml("<p><i><b>ItalicTextTy</b>pe</i></p>", 0, new Array("Ital")));
+ 						nte.setCaret(12, 2);
+ 						nte.addType("b");
+ 						ok(testSelectedHtml("<p><i><b>ItalicTextType</b></i></p>", 12, new Array("pe")));
+ 						
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><i><b>ItalicTextTy</b>pe</i></p>", 1, new Array("pe")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><i>Ital<b>icTextTy</b>pe</i></p>", 0, new Array("Ital")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><i>Ital<b>ic</b>Text<b>Ty</b>pe</i></p>", 2, new Array("Text")));
+ 						
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p><i>Ital<b>icTextTy</b>pe</i></p>", 2, new Array("Text")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p><i><b>ItalicTextTy</b>pe</i></p>", 0, new Array("Ital")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p><i><b>ItalicTextType</b></i></p>", 12, new Array("pe")));
+ 						
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><i><b>ItalicTextTy</b>pe</i></p>", 1, new Array("pe")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><i>Ital<b>icTextTy</b>pe</i></p>", 0, new Array("Ital")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><i>Ital<b>ic</b>Text<b>Ty</b>pe</i></p>", 2, new Array("Text")));
+ 					}
+ 					);
+
+				test("Type adding 11", function()
+					{
+						expect(4);
+						
+	 					nte.parse("<p>Text<i>Italic</i><b>Bold</b>Normal</p>");
+
+ 						nte.setCaret(4, 10);
+ 						nte.addType("i");
+ 						ok(testSelectedHtml("<p>Text<i>Italic<b>Bold</b></i>Normal</p>", 1, new Array("ItalicBold")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<i>Italic</i><b>Bold</b>Normal</p>", 1, new Array("ItalicBold")));
+ 						nte.onRedo();
+ 						ok(testSelectedHtml("<p>Text<i>Italic<b>Bold</b></i>Normal</p>", 1, new Array("ItalicBold")));
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p>Text<i>Italic</i><b>Bold</b>Normal</p>", 1, new Array("ItalicBold")));
+ 					}
+ 					);
+
+				test("Type adding 12", function()
+					{
+						expect(1);
+						
+	 					nte.parse("<p>Text<b>Bold</b>Normal<i>Italic</i></p>");
+
+ 						nte.setCaret(6, 6);
+ 						nte.addType("i");
+ 						ok(testSelectedHtml("<p>Text<b>Bo<i>ld</i></b><i>Norm</i>al<i>Italic</i></p>", 1, new Array("ld", "Norm")));
+					}
+					);
+		  }
+		);
+	</script>
+</body>
+
+</html>

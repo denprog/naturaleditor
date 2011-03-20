@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html xmlns:v="urn:schemas-microsoft-com:vml">
+
+<head>
+	<title>Insertion test</title>
+	<!--<link rel="stylesheet" href="../../lib/unit.css" type="text/css" />
+	<script type="text/javascript" src="../../lib/jquery.js"></script>
+	<script type="text/javascript" src="../../lib/qunit.js"></script>-->
+	<script type="text/javascript" src="../../naturaleditor.js"></script>
+	<!--<script type="text/javascript" src="tool.js"></script>-->
+</head>
+
+<body onload="onLoad();">
+	<span id = "frame"></span>
+	
+	<script type="text/javascript">
+		var nte;
+		function onLoad()
+		{
+			nte = new NaturalEditor(document.getElementById("frame"), "themes/classic/theme.js", 600, 200);
+			if (nte.inited)
+			{
+				nte.parse(
+					"<p>Curabitur egestas, " + 
+					"<span class='formula'>" + 
+						"<span class='formula_text'>78</span>" + 
+						"<span class='formula_plus'></span>" + 
+						"<span class='formula_exponentiation'>" + 
+							"<span class='formula_text'>123</span>" + 
+							"<span class='formula_group'>" + 
+								"<span class='formula_text'>456</span>" + 
+								"<span class='formula_plus'></span>" + 
+								"<span class='formula_text'>sum</span>" + 
+							"</span>" + 
+						"</span>" + 
+						"<span class='formula_plus'></span>" + 
+						"<span class='formula_text'>55</span>" + 
+					"</span>" + 
+					"turpis quis pulvinar fringilla, diam est laoreet arcu, sed vestibulum est elit adipiscing nisl. Nullam mattis, justo vitae molestie ornare, elit ipsum vehicula nisl, eget condimentum erat odio et mi. Proin at velit sit amet urna lacinia vehicula. Nam vel mollis sem.</p>" + 
+					"<p>Cras hendrerit, neque commodo blandit suscipit, magna felis sollicitudin mi, ac lobortis nulla odio nec ipsum. Nulla aliquam viverra est, quis dignissim orci consectetur quis. Aenean vitae risus at velit dapibus bibendum. Integer accumsan eros porta nulla ornare consequat. Cras euismod ornare ipsum quis lobortis. Donec metus felis, elementum a tincidunt sed, tincidunt a risus. Duis tristique arcu a nisl pharetra euismod scelerisque magna sagittis. Sed tortor enim, dapibus rhoncus lacinia malesuada, tristique at magna. Maecenas nisl orci, auctor ac commodo laoreet, aliquet at dolor.</p>"
+					);
+			}
+		}
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html xmlns:v="urn:schemas-microsoft-com:vml">
+
+<head>
+	<title>Type adding test</title>
+	<link rel="stylesheet" href="../../../lib/unit.css" type="text/css" />
+	<script type="text/javascript" src="../../../lib/jquery.js"></script>
+	<script type="text/javascript" src="../../../lib/qunit.js"></script>
+	<script type="text/javascript" src="../tool.js"></script>
+	<script type="text/javascript" src="../../../naturaleditor.js"></script>
+</head>
+
+<style>
+v\: * {
+	behavior: url(#default#VML);
+}
+
+.hideSpan {
+	visibility: hidden;
+}
+</style>
+
+<body>
+	<h1 id="qunit-header">Complex test 1</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+
+	<span id = "frame"></span>
+
+	<script type="text/javascript">
+		var nte;
+
+		$(document).ready(function()
+		  {
+		    nte = new NaturalEditor(document.getElementById("frame"), "themes/classic/theme.js", 600, 200);
+ 		    
+				test("Complex test 1", function()
+					{
+						expect(6);
+						
+	 					nte.parse("<p><b>Bold</b>Text</p>");
+
+ 						nte.setCaret(1, 2);
+ 						nte.deleteHtml();
+ 						ok(testHtml("<p><b>Bd</b>Text</p>", 1, new Array("")));
+
+ 						nte.setCaret(1, 1);
+ 						nte.deleteHtml();
+ 						ok(testHtml("<p><b>B</b>Text</p>", 1, new Array("")));
+ 						
+						nte.setCaret(0, 1);
+ 						nte.addType("i");
+ 						ok(testSelectedHtml("<p><i><b>B</b></i>Text</p>", 0, new Array("B")));
+ 						
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><b>B</b>Text</p>", 0, new Array("B")));
+ 						
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><b>Bd</b>Text</p>", 1, new Array("d")));
+ 						
+ 						nte.onUndo();
+ 						ok(testSelectedHtml("<p><b>Bold</b>Text</p>", 1, new Array("ol")));
+					}
+					);
+		  }
+		);
+	</script>
+</body>
+
+</html>

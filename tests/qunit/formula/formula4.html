@@ -1,0 +1,243 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html xmlns:v="urn:schemas-microsoft-com:vml">
+
+<head>
+	<title>Formula test</title>
+	<link rel="stylesheet" href="../../../lib/unit.css" type="text/css" />
+	<!--<link rel="stylesheet" href="../../../styles.css" type="text/css" />-->
+	<script type="text/javascript" src="../../../lib/jquery.js"></script>
+	<script type="text/javascript" src="../../../lib/qunit.js"></script>
+	<script type="text/javascript" src="../../../naturaleditor.js"></script>
+	<script type="text/javascript" src="../tool.js"></script>
+</head>
+
+<body>
+	<h1 id="qunit-header">Formula test 4</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+
+	<span id = "frame"></span>
+
+	<script type="text/javascript">
+		var nte;
+		
+		$(document).ready(function()
+		  {
+		    nte = new NaturalEditor(document.getElementById("frame"), "themes/classic/theme.js", 600, 200);
+
+				test("Formula 1", function()
+					{
+						expect(33);
+						
+						nte.parse(
+							"<p>" + 
+								"Left" + 
+								"<span class='formula'>" + 
+									"<span class='formula_text'>678</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_text'>55</span>" + 
+								"</span>" + 
+								"Right" + 
+							"</p>");
+						
+						nte.setCaret(0, 0);
+						ok(testCaretPosition(0));
+						
+						nte.moveCaretRight(5);
+						nte.onPlus();
+						ok(testFormula(new Array(1, 0), "$+678+55$", 0));
+						
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$678+55$", 0));
+						
+						nte.onRedo();
+						ok(testFormula(new Array(1, 0), "$+678+55$", 0));
+
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$678+55$", 0));
+						
+						nte.moveCaretRight(4);
+						nte.onPlus();
+						ok(testFormula(new Array(1, 0), "$678++55$", 2));
+
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$678+55$", 1));
+
+						nte.onRedo();
+						ok(testFormula(new Array(1, 0), "$678++55$", 2));
+
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$678+55$", 1));
+						
+						nte.moveCaretLeft(1);
+						nte.onPlus();
+						ok(testFormula(new Array(1, 0), "$678++55$", 2));
+						
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$678+55$", 3));
+						
+						nte.onRedo();
+						ok(testFormula(new Array(1, 0), "$678++55$", 2));
+
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$678+55$", 3));
+
+						nte.moveCaretRight(4);
+						nte.onPlus();
+						ok(testFormula(new Array(1, 0), "$678+55+$", 4));
+						
+						nte.onPlus();
+						ok(testFormula(new Array(1, 0), "$678+55++$", 5));
+						
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$678+55+$", 4));
+
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$678+55$", 2));
+						
+						nte.onRedo();
+						ok(testFormula(new Array(1, 0), "$678+55+$", 4));
+						
+						nte.onRedo();
+						ok(testFormula(new Array(1, 0), "$678+55++$", 5));
+
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$678+55+$", 4));
+
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$678+55$", 2));
+						
+						nte.moveCaretLeft(6);
+						nte.onCircumflex();
+						ok(testFormula(new Array(1, 0), "${678}^{}+55$", 0));
+						
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$678+55$", 1));
+						
+						nte.onRedo();
+						ok(testFormula(new Array(1, 0), "${678}^{}+55$", 0));
+						
+						nte.insertText("123");
+						ok(testFormula(new Array(1, 0), "${678}^{123}+55$", 3));
+						
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "${678}^{}+55$", 0));
+						
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$678+55$", 1));
+						
+						nte.moveCaretRight(3);
+						nte.onCircumflex();
+						ok(testFormula(new Array(1, 0), "$678{}^{}+55$", 0));
+						
+						nte.insertText("2");
+						ok(testFormula(new Array(1, 0), "$678{2}^{}+55$", 1));
+						
+						nte.moveCaretRight(2);
+						nte.insertText("3");
+						ok(testFormula(new Array(1, 0), "$678{2}^{3}+55$", 1));
+						
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$678{2}^{}+55$", 0));
+
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$678{}^{}+55$", 0));
+
+						nte.onUndo();
+						ok(testFormula(new Array(1, 0), "$678+55$", 1));
+					}
+					);
+
+				test("Formula 2", function()
+					{
+						expect(22);
+						
+						nte.parse(
+							"<p>" + 
+								"Left" + 
+								"<span class='formula'>" + 
+									"<span class='formula_text'>678</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_text'>55</span>" + 
+								"</span>" + 
+								"Right" + 
+							"</p>");
+					
+						nte.setCaret(0, 0);
+						ok(testCaretPosition(0));
+						
+						nte.moveCaretRight(5);
+						nte.onMinus();
+						ok(testFormula(new Array(1, 0), "$-678+55$", 0));
+						
+						nte.moveCaretRight(4);
+						nte.onMultiply();
+						ok(testFormula(new Array(1, 0), "$-678*+55$", 3));
+						
+						nte.insertText("7");
+						nte.onDivision();
+						ok(testFormula(new Array(1, 0), "$-678*{7}/{}+55$", 0));
+
+						nte.insertText("8");
+						ok(testFormula(new Array(1, 0), "$-678*{7}/{8}+55$", 1));
+
+						nte.insertText("5");
+						ok(testFormula(new Array(1, 0), "$-678*{7}/{85}+55$", 2));
+
+						nte.onDivision();
+						ok(testFormula(new Array(1, 0), "$-678*{7}/{{85}/{}}+55$", 0));
+
+						nte.insertText("6");
+						ok(testFormula(new Array(1, 0), "$-678*{7}/{{85}/{6}}+55$", 1));
+						
+						nte.onPlus();
+						ok(testFormula(new Array(1, 0), "$-678*{7}/{{85}/{6+}}+55$", 2));
+
+						nte.insertText("5");
+						ok(testFormula(new Array(1, 0), "$-678*{7}/{{85}/{6+5}}+55$", 1));
+						
+						nte.moveCaretRight(1);
+						ok(testCaretPosition(1));
+						
+						nte.onHome();
+						ok(testCaretPosition(0));
+						
+						nte.onDown();
+						ok(testCaretPosition(1));
+
+						nte.onDown();
+						ok(testCaretPosition(0));
+						
+						nte.onUp();
+						ok(testCaretPosition(1));
+
+						nte.onUp();
+						ok(testCaretPosition(0));
+
+						nte.onUp();
+						ok(testCaretPosition(1));
+
+						nte.onUp();
+						ok(testCaretPosition(0));
+
+						nte.moveCaretRight(1);
+						ok(testCaretPosition(1));
+						
+						nte.onHome();
+						ok(testCaretPosition(0));
+
+						nte.onHome();
+						ok(testCaretPosition(0));
+
+						nte.onHome();
+						ok(testCaretPosition(0));
+					}
+					);
+		  }
+		);
+	</script>
+</body>
+
+</html>

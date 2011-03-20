@@ -1,0 +1,89 @@
+span .caret
+{
+	position: absolute;
+	/*border: 1px solid black;*/
+}
+
+.normalFormulaNode
+{
+	font-size : 100%;
+}
+
+.lessFormulaNode
+{
+	font-size : 80%;
+}
+
+.stillLessFormulaNode
+{
+	font-size : 60%;
+}
+
+svg g.normalPlusFormulaNode
+{
+	width : 10px;
+	height : 10px;
+}
+
+svg g.lessPlusFormulaNode
+{
+	width : 8px;
+	height : 8px;
+}
+
+svg g.stillLessPlusFormulaNode
+{
+	width : 6px;
+	height : 6px;
+}
+
+svg g.normalMinusFormulaNode
+{
+	width : 10px;
+	height : 10px;
+}
+
+svg g.lessMinusFormulaNode
+{
+	width : 8px;
+	height : 8px;
+}
+
+svg g.stillLessMinusFormulaNode
+{
+	width : 6px;
+	height : 6px;
+}
+
+svg g.normalMultiplyFormulaNode
+{
+	width : 8px;
+	height : 10px;
+}
+
+svg g.lessMultiplyFormulaNode
+{
+	width : 6px;
+	height : 8px;
+}
+
+svg g.stillLessMultiplyFormulaNode
+{
+	width : 5px;
+	height : 6px;
+}
+
+svg .normalEmptyFormulaNode
+{
+	font-size: 100%;
+}
+
+svg g.lessEmptyFormulaNode
+{
+	font-size: 80%;
+}
+
+svg g.stillLessEmptyFormulaNode
+{
+	font-size: 60%;
+}

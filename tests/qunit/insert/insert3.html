@@ -1,0 +1,447 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html xmlns:v="urn:schemas-microsoft-com:vml">
+
+<head>
+	<title>Insertion test</title>
+	<link rel="stylesheet" href="../../../lib/unit.css" type="text/css" />
+	<script type="text/javascript" src="../../../lib/jquery.js"></script>
+	<script type="text/javascript" src="../../../lib/qunit.js"></script>
+	<script type="text/javascript" src="../../../naturaleditor.js"></script>
+	<script type="text/javascript" src="../tool.js"></script>
+</head>
+
+<body>
+	<h1 id="qunit-header">Insert test 3</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+
+	<span id = "frame"></span>
+
+	<script type="text/javascript">
+		var nte;
+
+		$(document).ready(function()
+		  {
+		    nte = new NaturalEditor(document.getElementById("frame"), "themes/classic/theme.js", 600, 200);
+ 		    
+				test("Insertion 1", function()
+					{
+						expect(17);
+						
+	 					nte.parse("<p>Text</p>");
+
+ 						nte.setCaret(2, 0);
+ 						nte.insertLine();
+						ok(testHtml("<p>Te</p><p>xt</p>", 0));
+						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text</p>", 2));
+ 						
+ 						nte.onRedo();
+ 						ok(testHtml("<p>Te</p><p>xt</p>", 0));
+ 						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text</p>", 2));
+
+ 						nte.setCaret(0, 0);
+ 						nte.insertLine();
+ 						ok(testHtml("<p><br></p><p>Text</p>", 0));
+ 						
+ 						nte.moveCaretRight(1);
+ 						ok(testCaretPosition(1));
+
+ 						nte.moveCaretLeft(1);
+ 						ok(testCaretPosition(0));
+
+ 						nte.moveCaretUp(1);
+ 						ok(testCaretPosition(0));
+
+ 						nte.moveCaretRight(1);
+ 						ok(testCaretPosition(0));
+ 						
+ 						nte.moveCaretLeft(1);
+ 						ok(testCaretPosition(0));
+
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text</p>", 0));
+ 						
+ 						nte.onRedo();
+ 						ok(testHtml("<p><br></p><p>Text</p>", 0));
+ 						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text</p>", 0));
+
+ 						nte.setCaret(4, 0);
+ 						nte.insertLine();
+ 						ok(testHtml("<p>Text</p><p><br></p>", 0));
+ 						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text</p>", 4));
+ 						
+ 						nte.onRedo();
+ 						ok(testHtml("<p>Text</p><p><br></p>", 0));
+ 						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text</p>", 4));
+					}
+					);
+
+				test("Insertion 2", function()
+					{
+						expect(4);
+						
+	 					nte.parse("<p>Text<b>Bold</b></p>");
+
+ 						nte.setCaret(6, 0);
+ 						nte.insertLine();
+ 						ok(testHtml("<p>Text<b>Bo</b></p><p><b>ld</b></p>", 0));
+ 						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b></p>", 2));
+ 						
+ 						nte.onRedo();
+ 						ok(testHtml("<p>Text<b>Bo</b></p><p><b>ld</b></p>", 0));
+ 						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b></p>", 2));
+					}
+					);
+
+				test("Insertion 3", function()
+					{
+						expect(4);
+						
+	 					nte.parse("<p></p>");
+
+ 						nte.setCaret(0, 0);
+ 						nte.insertLine();
+ 						ok(testHtml("<p><br></p><p><br></p>", 0));
+ 						
+ 						nte.onUndo();
+ 						ok(testHtml("<p><br></p>", 0));
+ 						
+ 						nte.onRedo();
+ 						ok(testHtml("<p><br></p><p><br></p>", 0));
+ 						
+ 						nte.onUndo();
+						ok(testHtml("<p><br></p>", 0));
+					}
+					);
+
+				test("Insertion 4", function()
+					{
+						expect(4);
+						
+	 					nte.parse("<p>Text<b>Bold</b></p>");
+
+ 						nte.setCaret(8, 0);
+ 						nte.insertLine();
+ 						ok(testHtml("<p>Text<b>Bold</b></p><p><br></p>", 0));
+ 						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b></p>", 4));
+ 						
+ 						nte.onRedo();
+ 						ok(testHtml("<p>Text<b>Bold</b></p><p><br></p>", 0));
+ 						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b></p>", 4));
+					}
+					);
+
+				test("Insertion 5", function()
+					{
+						expect(4);
+						
+	 					nte.parse("<p>Text<b>Bold</b></p>");
+
+ 						nte.setCaret(0, 0);
+ 						nte.insertLine();
+ 						ok(testHtml("<p><br></p><p>Text<b>Bold</b></p>", 0));
+ 						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b></p>", 0));
+ 						
+ 						nte.onRedo();
+ 						ok(testHtml("<p><br></p><p>Text<b>Bold</b></p>", 0));
+ 						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b></p>", 0));
+					}
+					);
+
+				test("Insertion 6", function()
+					{
+						expect(4);
+						
+	 					nte.parse("<p><b>Bold</b></p>");
+
+ 						nte.setCaret(0, 0);
+ 						nte.insertLine();
+ 						ok(testHtml("<p><br></p><p><b>Bold</b></p>", 0));
+ 						
+ 						nte.onUndo();
+ 						ok(testHtml("<p><b>Bold</b></p>", 0));
+ 						
+ 						nte.onRedo();
+ 						ok(testHtml("<p><br></p><p><b>Bold</b></p>", 0));
+ 						
+ 						nte.onUndo();
+ 						ok(testHtml("<p><b>Bold</b></p>", 0));
+					}
+					);
+
+				test("Insertion 7", function()
+					{
+						expect(36);
+						
+	 					nte.parse("<p>Text<b>Bold</b>Normal<i>Italic</i></p>");
+
+ 						nte.setCaret(0, 0);
+ 						nte.insertLine();
+ 						ok(testHtml("<p><br></p><p>Text<b>Bold</b>Normal<i>Italic</i></p>", 0));
+ 						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b>Normal<i>Italic</i></p>", 0));
+ 						
+ 						nte.onRedo();
+ 						ok(testHtml("<p><br></p><p>Text<b>Bold</b>Normal<i>Italic</i></p>", 0));
+ 						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b>Normal<i>Italic</i></p>", 0));
+
+ 						nte.setCaret(2, 0);
+ 						nte.insertLine();
+ 						ok(testHtml("<p>Te</p><p>xt<b>Bold</b>Normal<i>Italic</i></p>", 0));
+ 						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b>Normal<i>Italic</i></p>", 2));
+ 						
+ 						nte.onRedo();
+ 						ok(testHtml("<p>Te</p><p>xt<b>Bold</b>Normal<i>Italic</i></p>", 0));
+ 						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b>Normal<i>Italic</i></p>", 2));
+
+ 						nte.setCaret(4, 0);
+ 						nte.insertLine();
+ 						ok(testHtml("<p>Text</p><p><b>Bold</b>Normal<i>Italic</i></p>", 0));
+ 						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b>Normal<i>Italic</i></p>", 4));
+ 						
+ 						nte.onRedo();
+ 						ok(testHtml("<p>Text</p><p><b>Bold</b>Normal<i>Italic</i></p>", 0));
+ 						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b>Normal<i>Italic</i></p>", 4));
+
+ 						nte.setCaret(5, 0);
+ 						nte.insertLine();
+ 						ok(testHtml("<p>Text<b>B</b></p><p><b>old</b>Normal<i>Italic</i></p>", 0));
+ 						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b>Normal<i>Italic</i></p>", 1));
+ 						
+ 						nte.onRedo();
+ 						ok(testHtml("<p>Text<b>B</b></p><p><b>old</b>Normal<i>Italic</i></p>", 0));
+ 						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b>Normal<i>Italic</i></p>", 1));
+
+ 						nte.setCaret(8, 0);
+ 						nte.insertLine();
+ 						ok(testHtml("<p>Text<b>Bold</b></p><p>Normal<i>Italic</i></p>", 0));
+ 						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b>Normal<i>Italic</i></p>", 4));
+ 						
+ 						nte.onRedo();
+						ok(testHtml("<p>Text<b>Bold</b></p><p>Normal<i>Italic</i></p>", 0));
+						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b>Normal<i>Italic</i></p>", 4));
+
+ 						nte.setCaret(12, 0);
+ 						nte.insertLine();
+ 						ok(testHtml("<p>Text<b>Bold</b>Norm</p><p>al<i>Italic</i></p>", 0));
+ 						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b>Normal<i>Italic</i></p>", 4));
+ 						
+ 						nte.onRedo();
+ 						ok(testHtml("<p>Text<b>Bold</b>Norm</p><p>al<i>Italic</i></p>", 0));
+ 						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b>Normal<i>Italic</i></p>", 4));
+
+ 						nte.setCaret(14, 0);
+ 						nte.insertLine();
+ 						ok(testHtml("<p>Text<b>Bold</b>Normal</p><p><i>Italic</i></p>", 0));
+ 						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b>Normal<i>Italic</i></p>", 6));
+ 						
+ 						nte.onRedo();
+ 						ok(testHtml("<p>Text<b>Bold</b>Normal</p><p><i>Italic</i></p>", 0));
+ 						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b>Normal<i>Italic</i></p>", 6));
+
+ 						nte.setCaret(16, 0);
+ 						nte.insertLine();
+ 						ok(testHtml("<p>Text<b>Bold</b>Normal<i>It</i></p><p><i>alic</i></p>", 0));
+ 						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b>Normal<i>Italic</i></p>", 2));
+ 						
+ 						nte.onRedo();
+ 						ok(testHtml("<p>Text<b>Bold</b>Normal<i>It</i></p><p><i>alic</i></p>", 0));
+ 						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b>Normal<i>Italic</i></p>", 2));
+
+ 						nte.setCaret(20, 0);
+ 						nte.insertLine();
+ 						ok(testHtml("<p>Text<b>Bold</b>Normal<i>Italic</i></p><p><br></p>", 0));
+ 						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b>Normal<i>Italic</i></p>", 6));
+ 						
+ 						nte.onRedo();
+ 						ok(testHtml("<p>Text<b>Bold</b>Normal<i>Italic</i></p><p><br></p>", 0));
+ 						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b>Normal<i>Italic</i></p>", 6));
+					}
+					);
+
+				test("Insertion 8", function()
+					{
+						expect(24);
+						
+	 					nte.parse("<p>Text<b>Bold</b><i>Italic</i></p>");
+
+ 						nte.setCaret(0, 0);
+ 						nte.insertLine();
+						if (nte.isIE)
+	 						ok(testHtml("<p>&nbsp;</p>\r\n<p>Text<b>Bold</b><i>Italic</i></p>", 0));
+						else
+	 						ok(testHtml("<p><br></p><p>Text<b>Bold</b><i>Italic</i></p>", 0));
+						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b><i>Italic</i></p>", 0));
+ 						
+ 						nte.onRedo();
+						if (nte.isIE)
+	 						ok(testHtml("<p>&nbsp;</p>\r\n<p>Text<b>Bold</b><i>Italic</i></p>", 0));
+						else
+	 						ok(testHtml("<p><br></p><p>Text<b>Bold</b><i>Italic</i></p>", 0));
+						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b><i>Italic</i></p>", 0));
+
+ 						nte.setCaret(4, 0);
+ 						nte.insertLine();
+						if (nte.isIE)
+	 						ok(testHtml("<p>Text</p>\r\n<p><b>Bold</b><i>Italic</i></p>", 0));
+						else
+	 						ok(testHtml("<p>Text</p><p><b>Bold</b><i>Italic</i></p>", 0));
+						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b><i>Italic</i></p>", 4));
+ 						
+ 						nte.onRedo();
+						if (nte.isIE)
+	 						ok(testHtml("<p>Text</p>\r\n<p><b>Bold</b><i>Italic</i></p>", 0));
+						else
+	 						ok(testHtml("<p>Text</p><p><b>Bold</b><i>Italic</i></p>", 0));
+						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b><i>Italic</i></p>", 4));
+
+ 						nte.setCaret(5, 0);
+ 						nte.insertLine();
+						if (nte.isIE)
+	 						ok(testHtml("<p>Text<b>B</b></p>\r\n<p><b>old</b><i>Italic</i></p>", 0));
+						else
+	 						ok(testHtml("<p>Text<b>B</b></p><p><b>old</b><i>Italic</i></p>", 0));
+						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b><i>Italic</i></p>", 1));
+ 						
+ 						nte.onRedo();
+						if (nte.isIE)
+	 						ok(testHtml("<p>Text<b>B</b></p>\r\n<p><b>old</b><i>Italic</i></p>", 0));
+						else
+	 						ok(testHtml("<p>Text<b>B</b></p><p><b>old</b><i>Italic</i></p>", 0));
+						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b><i>Italic</i></p>", 1));
+
+ 						nte.setCaret(8, 0);
+ 						nte.insertLine();
+						if (nte.isIE)
+	 						ok(testHtml("<p>Text<b>Bold</b></p>\r\n<p><i>Italic</i></p>", 0));
+						else
+	 						ok(testHtml("<p>Text<b>Bold</b></p><p><i>Italic</i></p>", 0));
+						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b><i>Italic</i></p>", 4));
+ 						
+ 						nte.onRedo();
+						if (nte.isIE)
+	 						ok(testHtml("<p>Text<b>Bold</b></p>\r\n<p><i>Italic</i></p>", 0));
+						else
+	 						ok(testHtml("<p>Text<b>Bold</b></p><p><i>Italic</i></p>", 0));
+						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b><i>Italic</i></p>", 4));
+
+ 						nte.setCaret(9, 0);
+ 						nte.insertLine();
+						if (nte.isIE)
+	 						ok(testHtml("<p>Text<b>Bold</b><i>I</i></p>\r\n<p><i>talic</i></p>", 0));
+						else
+	 						ok(testHtml("<p>Text<b>Bold</b><i>I</i></p><p><i>talic</i></p>", 0));
+						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b><i>Italic</i></p>", 1));
+ 						
+ 						nte.onRedo();
+						if (nte.isIE)
+	 						ok(testHtml("<p>Text<b>Bold</b><i>I</i></p>\r\n<p><i>talic</i></p>", 0));
+						else
+	 						ok(testHtml("<p>Text<b>Bold</b><i>I</i></p><p><i>talic</i></p>", 0));
+						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b><i>Italic</i></p>", 1));
+
+ 						nte.setCaret(14, 0);
+ 						nte.insertLine();
+						if (nte.isIE)
+	 						ok(testHtml("<p>Text<b>Bold</b><i>Italic</i></p>\r\n<p></p>", 0));
+						else
+	 						ok(testHtml("<p>Text<b>Bold</b><i>Italic</i></p><p><br></p>", 0));
+						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b><i>Italic</i></p>", 6));
+ 						
+ 						nte.onRedo();
+						if (nte.isIE)
+	 						ok(testHtml("<p>Text<b>Bold</b><i>Italic</i></p>\r\n<p></p>", 0));
+						else
+	 						ok(testHtml("<p>Text<b>Bold</b><i>Italic</i></p><p><br></p>", 0));
+						
+ 						nte.onUndo();
+ 						ok(testHtml("<p>Text<b>Bold</b><i>Italic</i></p>", 6));
+					}
+					);
+		  }
+		);
+	</script>
+</body>
+
+</html>

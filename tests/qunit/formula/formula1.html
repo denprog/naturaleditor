@@ -1,0 +1,685 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html xmlns:v="urn:schemas-microsoft-com:vml">
+
+<head>
+	<title>Caret moving test</title>
+	<link rel="stylesheet" href="../../../lib/unit.css" type="text/css" />
+	<!--<link rel="stylesheet" href="../../../styles.css" type="text/css" />-->
+	<script type="text/javascript" src="../../../lib/jquery.js"></script>
+	<script type="text/javascript" src="../../../lib/qunit.js"></script>
+	<script type="text/javascript" src="../../../naturaleditor.js"></script>
+	<script type="text/javascript" src="../tool.js"></script>
+</head>
+
+<body>
+	<h1 id="qunit-header">Formula test 1</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+
+	<span id = "frame"></span>
+
+	<script type="text/javascript">
+		var nte;
+		
+		$(document).ready(function()
+		  {
+		    nte = new NaturalEditor(document.getElementById("frame"), "themes/classic/theme.js", 600, 200);
+
+				test("Formula 1", function()
+					{
+						expect(36);
+						
+						nte.parse(
+							"<p>" + 
+								"Left" + 
+								"<span class='formula'>" + 
+									"<span class='formula_text'>78</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_exponentiation'>" + 
+										"<span class='formula_text'>123</span>" + 
+										"<span class='formula_group'>" + 
+											"<span class='formula_text'>456</span>" + 
+											"<span class='formula_plus'></span>" + 
+											"<span class='formula_text'>sum</span>" + 
+										"</span>" + 
+									"</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_text'>55</span>" + 
+								"</span>" + 
+								"Right" + 
+							"</p>"
+							);
+						
+						nte.setCaret(0, 0);
+						ok(testCaretPosition(0));
+						
+						for (var i = 0; i < 4; ++i)
+							nte.onRight();
+						ok(testCaretPosition(4));
+
+						nte.onRight();
+						ok(testCaretPosition(0));
+
+						nte.onRight();
+						nte.onRight();
+						nte.onRight();
+						ok(testCaretPosition(1));
+
+						nte.onRight();
+						ok(testCaretPosition(2));
+
+						nte.onRight();
+						ok(testCaretPosition(0));
+
+						nte.onRight();
+						nte.onRight();
+						nte.onRight();
+						ok(testCaretPosition(3));
+
+						nte.onRight();
+						ok(testCaretPosition(1));
+
+						nte.onRight();
+						ok(testCaretPosition(0));
+
+						nte.onRight();
+						nte.onRight();
+						nte.onRight();
+						ok(testCaretPosition(3));
+
+						nte.onRight();
+						ok(testCaretPosition(1));
+
+						nte.onRight();
+						ok(testCaretPosition(0));
+
+						nte.onRight();
+						nte.onRight();
+						nte.onRight();
+						ok(testCaretPosition(3));
+
+						nte.onRight();
+						ok(testCaretPosition(3));
+
+						nte.onRight();
+						ok(testCaretPosition(0));
+
+						nte.onRight();
+						nte.onRight();
+						ok(testCaretPosition(2));
+
+						nte.onRight();
+						ok(testCaretPosition(0));
+
+						for (var i = 0; i < 5; ++i)
+							nte.onRight();
+						ok(testCaretPosition(5));
+
+						for (var i = 0; i < 5; ++i)
+							nte.onLeft();
+						ok(testCaretPosition(0));
+
+						nte.onLeft();
+						ok(testCaretPosition(2));
+
+						nte.onLeft();
+						nte.onLeft();
+						ok(testCaretPosition(0));
+
+						nte.onLeft();
+						ok(testCaretPosition(3));
+
+						nte.onLeft();
+						ok(testCaretPosition(3));
+
+						nte.onLeft();
+						nte.onLeft();
+						nte.onLeft();
+						ok(testCaretPosition(0));
+
+						nte.onLeft();
+						ok(testCaretPosition(1));
+
+						nte.onLeft();
+						ok(testCaretPosition(3));
+
+						nte.onLeft();
+						nte.onLeft();
+						nte.onLeft();
+						ok(testCaretPosition(0));
+
+						nte.onLeft();
+						ok(testCaretPosition(1));
+
+						nte.onLeft();
+						ok(testCaretPosition(3));
+
+						nte.onLeft();
+						nte.onLeft();
+						nte.onLeft();
+						ok(testCaretPosition(0));
+
+						nte.onLeft();
+						ok(testCaretPosition(2));
+
+						nte.onLeft();
+						ok(testCaretPosition(1));
+
+						nte.onLeft();
+						ok(testCaretPosition(2));
+
+						nte.onLeft();
+						nte.onLeft();
+						ok(testCaretPosition(0));
+
+						nte.onLeft();
+						ok(testCaretPosition(4));
+
+						for (var i = 0; i < 4; ++i)
+							nte.onLeft();
+						ok(testCaretPosition(0));
+					}
+				);
+
+				test("Formula 2", function()
+					{
+						expect(39);
+						
+						nte.parse(
+							"<p>" + 
+								"Left" + 
+								"<span class='formula'>" + 
+									"<span class='formula_text'>78</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_exponentiation'>" + 
+										"<span class='formula_text'>123</span>" + 
+										"<span class='formula_group'>" + 
+											"<span class='formula_text'>456</span>" + 
+											"<span class='formula_plus'></span>" + 
+											"<span class='formula_text'>sum</span>" + 
+											"<span class='formula_plus'></span>" + 
+										"</span>" + 
+									"</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_text'>55</span>" + 
+								"</span>" + 
+								"Right" + 
+							"</p>"
+							);
+						
+						nte.setCaret(0, 0);
+						ok(testCaretPosition(0));
+						
+						for (var i = 0; i < 4; ++i)
+							nte.onRight();
+						ok(testCaretPosition(4));
+
+						nte.onRight();
+						ok(testCaretPosition(0));
+
+						nte.onRight();
+						nte.onRight();
+						nte.onRight();
+						ok(testCaretPosition(1));
+
+						nte.onRight();
+						ok(testCaretPosition(2));
+
+						nte.onRight();
+						ok(testCaretPosition(0));
+
+						nte.onRight();
+						nte.onRight();
+						nte.onRight();
+						ok(testCaretPosition(3));
+
+						nte.onRight();
+						ok(testCaretPosition(1));
+
+						nte.onRight();
+						ok(testCaretPosition(0));
+
+						nte.onRight();
+						nte.onRight();
+						nte.onRight();
+						ok(testCaretPosition(3));
+
+						nte.onRight();
+						ok(testCaretPosition(1));
+
+						nte.onRight();
+						ok(testCaretPosition(0));
+
+						nte.onRight();
+						nte.onRight();
+						nte.onRight();
+						ok(testCaretPosition(3));
+
+						nte.onRight();
+						ok(testCaretPosition(3));
+
+						nte.onRight();
+						ok(testCaretPosition(4));
+
+						nte.onRight();
+						ok(testCaretPosition(3));
+
+						nte.onRight();
+						ok(testCaretPosition(0));
+
+						nte.onRight();
+						nte.onRight();
+						ok(testCaretPosition(2));
+
+						nte.onRight();
+						ok(testCaretPosition(0));
+
+						for (var i = 0; i < 5; ++i)
+							nte.onRight();
+						ok(testCaretPosition(5));
+
+						for (var i = 0; i < 5; ++i)
+							nte.onLeft();
+						ok(testCaretPosition(0));
+
+						nte.onLeft();
+						ok(testCaretPosition(2));
+
+						nte.onLeft();
+						nte.onLeft();
+						ok(testCaretPosition(0));
+
+						nte.onLeft();
+						ok(testCaretPosition(3));
+
+						nte.onLeft();
+						ok(testCaretPosition(4));
+
+						nte.onLeft();
+						ok(testCaretPosition(3));
+
+						nte.onLeft();
+						nte.onLeft();
+						nte.onLeft();
+						nte.onLeft();
+						ok(testCaretPosition(0));
+
+						nte.onLeft();
+						ok(testCaretPosition(1));
+
+						nte.onLeft();
+						ok(testCaretPosition(3));
+
+						nte.onLeft();
+						nte.onLeft();
+						nte.onLeft();
+						ok(testCaretPosition(0));
+
+						nte.onLeft();
+						ok(testCaretPosition(1));
+
+						nte.onLeft();
+						ok(testCaretPosition(3));
+
+						nte.onLeft();
+						nte.onLeft();
+						nte.onLeft();
+						ok(testCaretPosition(0));
+
+						nte.onLeft();
+						ok(testCaretPosition(2));
+
+						nte.onLeft();
+						ok(testCaretPosition(1));
+
+						nte.onLeft();
+						ok(testCaretPosition(2));
+
+						nte.onLeft();
+						nte.onLeft();
+						ok(testCaretPosition(0));
+
+						nte.onLeft();
+						ok(testCaretPosition(4));
+
+						for (var i = 0; i < 4; ++i)
+							nte.onLeft();
+						ok(testCaretPosition(0));
+					}
+					);
+
+				test("Formula 3", function()
+					{
+						expect(41);
+						
+						nte.parse(
+							"<p>" + 
+								"Left" + 
+								"<span class='formula'>" + 
+									"<span class='formula_text'>78</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_exponentiation'>" + 
+										"<span class='formula_text'>123</span>" + 
+										"<span class='formula_group'>" + 
+											"<span class='formula_plus'></span>" + 
+											"<span class='formula_text'>456</span>" + 
+											"<span class='formula_plus'></span>" + 
+											"<span class='formula_text'>sum</span>" + 
+											"<span class='formula_plus'></span>" + 
+										"</span>" + 
+									"</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_text'>55</span>" + 
+								"</span>" + 
+								"Right" + 
+							"</p>"
+							);
+						
+						nte.setCaret(0, 0);
+						ok(testCaretPosition(0));
+						
+						for (var i = 0; i < 4; ++i)
+							nte.onRight();
+						ok(testCaretPosition(4));
+
+						nte.onRight();
+						ok(testCaretPosition(0));
+
+						nte.onRight();
+						nte.onRight();
+						nte.onRight();
+						ok(testCaretPosition(1));
+
+						nte.onRight();
+						ok(testCaretPosition(2));
+						
+						nte.onRight();
+						ok(testCaretPosition(0));
+
+						nte.onRight();
+						nte.onRight();
+						nte.onRight();
+						ok(testCaretPosition(3));
+
+						nte.onRight();
+						ok(testCaretPosition(1));
+
+						nte.onRight();
+						ok(testCaretPosition(0));
+
+						nte.onRight();
+						ok(testCaretPosition(0));
+						
+						nte.onRight();
+						nte.onRight();
+						nte.onRight();
+						ok(testCaretPosition(3));
+						
+						nte.onRight();
+						ok(testCaretPosition(2));
+
+						nte.onRight();
+						ok(testCaretPosition(0));
+
+						nte.onRight();
+						nte.onRight();
+						nte.onRight();
+						ok(testCaretPosition(3));
+
+						nte.onRight();
+						ok(testCaretPosition(4));
+
+						nte.onRight();
+						ok(testCaretPosition(5));
+
+						nte.onRight();
+						ok(testCaretPosition(3));
+
+						nte.onRight();
+						ok(testCaretPosition(0));
+
+						nte.onRight();
+						nte.onRight();
+						ok(testCaretPosition(2));
+
+						nte.onRight();
+						ok(testCaretPosition(0));
+
+						for (var i = 0; i < 5; ++i)
+							nte.onRight();
+						ok(testCaretPosition(5));
+
+						for (var i = 0; i < 5; ++i)
+							nte.onLeft();
+						ok(testCaretPosition(0));
+
+						nte.onLeft();
+						ok(testCaretPosition(2));
+
+						nte.onLeft();
+						nte.onLeft();
+						ok(testCaretPosition(0));
+
+						nte.onLeft();
+						ok(testCaretPosition(3));
+
+						nte.onLeft();
+						ok(testCaretPosition(5));
+
+						nte.onLeft();
+						ok(testCaretPosition(4));
+
+						nte.onLeft();
+						nte.onLeft();
+						nte.onLeft();
+						nte.onLeft();
+						ok(testCaretPosition(0));
+
+						nte.onLeft();
+						ok(testCaretPosition(2));
+
+						nte.onLeft();
+						ok(testCaretPosition(3));
+
+						nte.onLeft();
+						nte.onLeft();
+						nte.onLeft();
+						ok(testCaretPosition(0));
+
+						nte.onLeft();
+						ok(testCaretPosition(0));
+
+						nte.onLeft();
+						ok(testCaretPosition(1));
+
+						nte.onLeft();
+						ok(testCaretPosition(3));
+
+						nte.onLeft();
+						nte.onLeft();
+						nte.onLeft();
+						ok(testCaretPosition(0));
+
+						nte.onLeft();
+						ok(testCaretPosition(2));
+
+						nte.onLeft();
+						ok(testCaretPosition(1));
+
+						nte.onLeft();
+						ok(testCaretPosition(2));
+
+						nte.onLeft();
+						nte.onLeft();
+						ok(testCaretPosition(0));
+
+						nte.onLeft();
+						ok(testCaretPosition(4));
+
+						for (var i = 0; i < 4; ++i)
+							nte.onLeft();
+						ok(testCaretPosition(0));
+					}
+					);
+				
+				test("Formula 4", function()
+					{
+						expect(9);
+						
+						nte.parse(
+							"<p>" + 
+								"Left" + 
+								"<span class='formula'>" + 
+									"<span class='formula_exponentiation'>" + 
+										"<span class='formula_text'>123</span>" +
+										"<span class='formula_group'>" + 
+											"<span class='formula_text'>456</span>" + 
+											"<span class='formula_plus'></span>" + 
+											"<span class='formula_text'>sum</span>" + 
+											"<span class='formula_plus'></span>" + 
+											"<span class='formula_exponentiation'>" + 
+												"<span class='formula_text'>5</span>" + 
+												"<span class='formula_group'>" + 
+													"<span class='formula_text'>78</span>" + 
+													"<span class='formula_plus'></span>" + 
+													"<span class='formula_text'>123</span>" + 
+												"</span>" + 
+											"</span>" + 
+										"</span>" + 
+									"</span>" + 
+								"</span>" + 
+								"Right" + 
+							"</p>"
+							);
+						
+						nte.setCaret(0, 0);
+						ok(testCaretPosition(0));
+						
+						for (var i = 0; i < 5; ++i)
+							nte.onRight();
+						ok(testCaretPosition(0));
+
+						nte.onRight();
+						nte.onEnd();
+						ok(testCaretPosition(5));
+						
+						nte.onHome();
+						ok(testCaretPosition(0));
+						
+						nte.onLeft();
+						nte.onLeft();
+						nte.onHome();
+						ok(testCaretPosition(0));
+
+						nte.onHome();
+						ok(testCaretPosition(0));
+
+						nte.onHome();
+						ok(testCaretPosition(0));
+
+						nte.onHome();
+						ok(testCaretPosition(0));
+
+						nte.onHome();
+						ok(testCaretPosition(0));
+					}
+					);
+
+				test("Formula 5", function()
+					{
+						expect(15);
+						
+						nte.parse(
+							"<p>" + 
+								"Left" + 
+								"<span class='formula'>" + 
+									"<span class='formula_exponentiation'>" + 
+										"<span class='formula_text'>123</span>" +
+										"<span class='formula_group'>" + 
+											"<span class='formula_plus'></span>" + 
+											"<span class='formula_text'>456</span>" + 
+											"<span class='formula_plus'></span>" + 
+											"<span class='formula_text'>sum</span>" + 
+											"<span class='formula_exponentiation'>" + 
+												"<span class='formula_text'>5</span>" + 
+												"<span class='formula_group'>" + 
+													"<span class='formula_text'>78</span>" + 
+													"<span class='formula_plus'></span>" + 
+													"<span class='formula_text'>123</span>" + 
+													"<span class='formula_plus'></span>" +  
+												"</span>" + 
+											"</span>" + 
+										"</span>" + 
+									"</span>" + 
+								"</span>" + 
+								"Right" + 
+							"</p>"
+							);
+						
+						nte.setCaret(0, 0);
+						ok(testCaretPosition(0));
+
+						for (var i = 0; i < 5; ++i)
+							nte.onRight();
+						ok(testCaretPosition(0));
+
+						for (var i = 0; i < 5; ++i)
+							nte.onRight();
+						ok(testCaretPosition(0));
+
+						for (var i = 0; i < 10; ++i)
+							nte.onRight();
+						ok(testCaretPosition(4));
+
+						for (var i = 0; i < 4; ++i)
+							nte.onRight();
+						ok(testCaretPosition(0));
+
+						for (var i = 0; i < 9; ++i)
+							nte.onRight();
+						ok(testCaretPosition(4));
+
+						nte.onRight();
+						ok(testCaretPosition(1));
+						
+						nte.onLeft();
+						ok(testCaretPosition(5));
+
+						nte.moveCaretLeft(10);
+						ok(testCaretPosition(0));
+
+						nte.onLeft();
+						nte.onLeft();
+						nte.onLeft();
+						nte.onLeft();
+						ok(testCaretPosition(4));
+
+						for (var i = 0; i < 10; ++i)
+							nte.onLeft();
+						ok(testCaretPosition(0));
+
+						for (var i = 0; i < 5; ++i)
+							nte.onLeft();
+						ok(testCaretPosition(0));
+
+						nte.onLeft();
+						ok(testCaretPosition(0));
+
+						nte.onLeft();
+						ok(testCaretPosition(4));
+
+						nte.onLeft();
+						nte.onLeft();
+						nte.onLeft();
+						nte.onLeft();
+						ok(testCaretPosition(0));
+					}
+					);
+		  }
+		);
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html xmlns:v="urn:schemas-microsoft-com:vml">
+
+<head>
+	<title>Insertion test</title>
+	<link rel="stylesheet" href="../../../lib/unit.css" type="text/css" />
+	<script type="text/javascript" src="../../../lib/jquery.js"></script>
+	<script type="text/javascript" src="../../../lib/qunit.js"></script>
+	<script type="text/javascript" src="../../../naturaleditor.js"></script>
+	<script type="text/javascript" src="../tool.js"></script>
+</head>
+
+<body>
+	<h1 id="qunit-header">Test 1</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+
+	<span id = "frame"></span>
+
+	<script type="text/javascript">
+		var nte;
+
+		$(document).ready(function()
+		  {
+		    nte = new NaturalEditor(document.getElementById("frame"), "themes/classic/theme.js", 600, 200);
+		    
+				test("Caret moving 1", function()
+					{
+						expect(14);
+						
+						nte.parse(
+							"<p>Lorem <b>ipsum</b> dolor sit amet, <b><i>con</i>sectetur</b> adipiscing elit. Morbi aliquam bibendum turpis eu consectetur.</p>" + 
+							"<p><b><i>Aliquam</i></b> lobortis magna sed leo laoreet rutrum. Maecenas aliquam pellentesque mi, sit amet feugiat neque adipiscing in. Proin sit amet ante at turpis <i><b>auctor adipiscing</b></i>.</p>" + 
+							"<p>Vestibulum quis tortor urna, dictum adipiscing lectus. Fusce dolor nisi, mattis eu posuere vel, fermentum ac elit. Cras ut nunc lacus.</p>" + 
+							"<p>Curabitur porttitor mi elementum nisl rhoncus in accumsan augue varius.</p>" + 
+							"<p>Fusce consectetur erat ipsum.</p>" + 
+							"<p>Sed eu ipsum sit amet purus ullamcorper condimentum. Suspendisse tincidunt sollicitudin dui, sit amet molestie libero ultrices eu.</p>" + 
+							"<p>Cras tincidunt lacus sed ante aliquam eu tempor neque consequat. Donec tortor enim, dictum et consequat et, luctus at mauris. Donec vulputate vulputate leo.</p>" + 
+							"<p>Nulla arcu massa, ullamcorper et euismod at, imperdiet sed nisi. Donec nec libero nisl. Donec ac augue eu lorem egestas hendrerit.</p>"
+							);
+						
+						nte.setCaret(0, 0);
+						ok(testCaretPosition(0));
+						
+						nte.onEnd();
+						ok(testCaretPosition(31));
+
+						nte.onEnd();
+						ok(testCaretPosition(31));
+						
+						nte.onRight();
+						nte.onEnd();
+						ok(testCaretPosition(63));
+
+						nte.onRight();
+						nte.onEnd();
+						ok(testCaretPosition(69));
+
+						nte.onRight();
+						nte.onEnd();
+						ok(testCaretPosition(6));
+
+						nte.onRight();
+						nte.onEnd();
+						ok(testCaretPosition(1));
+
+						nte.onEnd();
+						ok(testCaretPosition(1));
+
+						nte.onHome();
+						ok(testCaretPosition(7));
+						
+						nte.onLeft();
+						nte.onHome();
+						ok(testCaretPosition(70));
+
+						nte.onLeft();
+						nte.onHome();
+						ok(testCaretPosition(0));
+
+						nte.onLeft();
+						nte.onHome();
+						ok(testCaretPosition(32));
+
+						nte.onLeft();
+						nte.onHome();
+						ok(testCaretPosition(0));
+
+						nte.onHome();
+						ok(testCaretPosition(0));
+					}
+					);
+		  }
+			);
+	</script>
+</body>
+
+</html>
