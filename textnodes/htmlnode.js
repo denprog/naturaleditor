@@ -292,11 +292,11 @@ var HtmlNode = Class.extend(
 		 * Creates a child node. Default implementation.
 		 * @method createChildNode
 		 */
-		createChildNode : function(nodeClassType, pos)
+		createChildNode : function(nodeClassType, pos, element)
 		{
 			if (nodeClassType == window["TextNode"])
 				return new TextNode(null, this, pos, this.nte);
-			return new nodeClassType(this, pos, this.nte);
+			return new nodeClassType(this, pos, this.nte, element);
 		}, 
 		
 		getChildNode : function(pos)
@@ -1169,38 +1169,38 @@ var HtmlNode = Class.extend(
 		
 		dublicate : function(parent)
 		{
+			var el = this.element.cloneNode(false);
 			if (this.className)
 			{
-				var resNode = this.nte.createNodeByClassName(this.className, null, parent, 
+				var resNode = this.nte.createNodeByClassName(this.className, el, parent, 
 					this.parentNode == null ? 0 : this.parentNode.getChildPos(this));
 			}
 			else
 			{
-				var resNode = this.nte.createNode(this.element.tagName, null, parent, 
+				var resNode = this.nte.createNode(this.element.tagName, el, parent, 
 					this.parentNode == null ? 0 : this.parentNode.getChildPos(this));
 			}
 			
 			resNode.caretState = this.caretState;
-			//resNode.childNodes = this.childNodes.dublicate(resNode);
 			resNode.childNodes.copyFrom(this.childNodes, resNode);
 
-			if (this.element.style.cssText != "")
-			{
-				//copy the style in the new node
-				for (var name in this.element.style)
-				{
-					if (!(name >= "0" && name <= "9") && name != "cssText")
-					{
-						var s = this.element.style[name];
-						if (s && typeof(s) != "function" && s != "")
-						{
-							var m = {};
-							m[name] = s;
-							resNode.addStyle(m);
-						}
-					}
-				}
-			}
+//			if (this.element.style.cssText != "")
+//			{
+//				//copy the style in the new node
+//				for (var name in this.element.style)
+//				{
+//					if (!(name >= "0" && name <= "9") && name != "cssText")
+//					{
+//						var s = this.element.style[name];
+//						if (s && typeof(s) != "function" && s != "")
+//						{
+//							var m = {};
+//							m[name] = s;
+//							resNode.addStyle(m);
+//						}
+//					}
+//				}
+//			}
 
 			return resNode;
 		}, 

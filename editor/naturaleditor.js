@@ -233,6 +233,7 @@ var NaturalEditor = Class.extend(
 				'h2' : "Header2Node", 
 				'h3' : "Header3Node",
 				'br' : "BreakNode", 
+				'a' : "ReferenceNode", 
 				'span' : 
 					{
 						'' : 'SpanNode',
@@ -282,15 +283,19 @@ var NaturalEditor = Class.extend(
 				if (element)
 				{
 					if (parentNode && parentNode.createChildNode)
-						return parentNode.createChildNode(t, pos);
-					return new t(parentNode, pos, this);
+						var res = parentNode.createChildNode(t, pos, element);
+					else
+						var res = new t(parentNode, pos, this, element);
+					//for (var attr in element.attributes)
+					//	res.element.attributes[attr] = element.attributes[attr];
+					return res;
 				}
 				
 				if (typeof(t) != "undefined")
 				{
 					if (parentNode && parentNode.createChildNode)
-						return parentNode.createChildNode(t, pos);
-					return new t(parentNode, pos, this);
+						return parentNode.createChildNode(t, pos, element);
+					return new t(parentNode, pos, this, element);
 				}
 			}
 			else

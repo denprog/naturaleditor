@@ -432,21 +432,21 @@
 						for (var i = 0; i < 19; ++i)
 							nte.onRight();
 						nte.onUp();
-						ok(testCaretPosition(1));
+						ok(testCaretPosition(0));
 
 						nte.onUp();
-						ok(testCaretPosition(7));
+						ok(testCaretPosition(6));
 
-						for (var i = 0; i < 9; ++i)
+						for (var i = 0; i < 8; ++i)
 							nte.onLeft();
 						nte.onDown();
-						ok(testCaretPosition(1));
+						ok(testCaretPosition(0));
 
 						nte.onDown();
 						ok(testCaretPosition(9));
 
 						nte.onUp();
-						ok(testCaretPosition(1));
+						ok(testCaretPosition(0));
 					}
 					);
 				
@@ -572,9 +572,8 @@
 						nte.onDown();
 						nte.onDown();
 						nte.onDown();
-						ok(testCaretPosition(3));
+						ok(testCaretPosition(4));
 
-						nte.onRight();
 						nte.onRight();
 						nte.onRight();
 						ok(testCaretPosition(6));
@@ -618,7 +617,7 @@
 						ok(testCaretPosition(2));
 						
 						nte.onDown();
-						ok(testCaretPosition(73));
+						ok(testCaretPosition(72));
 
 						nte.onDown();
 						for (var i = 0; i < 4; ++i)
