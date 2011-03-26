@@ -59,24 +59,6 @@ var TextNode = HtmlNode.extend(
 				this.getRelativePosBounds(s.getPos() + s.length, p);
 
 			this.caret.renderTextCaret(p, this, s.getPos(), s.length, range);
-			
-//			this.caret.clearShapes();
-//
-//			//if the caret is placed in this node, render it
-//			if (p)
-//			{
-//				this.caret.move(p.left, p.top);
-//				this.caret.setSize(1, p.height);
-//				var r = this.nte.drawLib.line(0, 0, 1, p.height, "black", this.caret.textCaretGroup);
-//				this.drawLib.animate("visibility", "visible", "hidden", "1", "indefinite", r);
-//				this.caret.addShape(r);
-//			}
-//			
-//			//update the selection range
-//			var r = this.nte.document.createRange();
-//			r.setStart(this.element, s.getPos());
-//			r.setEnd(this.element, s.getPos() + s.length);
-//			range.addRange(r);
 		}, 
 
 		setCaretToNodeBegin : function()

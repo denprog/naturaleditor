@@ -32,6 +32,7 @@
 	include('textnodes/htmlnode.js');
 	include('textnodes/textnode.js');
 	include('textnodes/bodynode.js');
+	include('textnodes/textbasenode.js');
 	include('textnodes/paragraphnode.js');
 	include('textnodes/unorderedlistnode.js');
 	include('textnodes/boldnode.js');
