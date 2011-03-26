@@ -134,45 +134,6 @@ var ExponentiationFormulaNode = CompoundFormulaNode.extend(
 		},
 
 		//caret functions
-		
-		renderCaret : function(selectedNode, range)
-		{
-			if (this.caret.currentState.getPos() != 1)
-			{
-				this._super();
-				return;
-			}
-			
-			var r = new Rect();
-			if (this.caret.currentState.beginCaretPos)
-				this.getPosBounds(this.caret.currentState.getSelectionStart(), r);
-			else
-				this.getPosBounds(this.caret.currentState.getSelectionEnd(), r);
-			
-			this.caret.paper.clearShapes();
-
-			r.setRect(r.left - 2, r.top, r.width + 2, r.height);
-			
-			this.caret.paper.move(r.left, r.top);
-			this.caret.paper.setSize(r.width + 1, r.height + 1);
-
-			if (this.caret.currentState.beginCaretPos)
-				this.caret.paper.line(0, 0, 0, r.height, "black");
-			else
-				this.caret.paper.line(r.right, 0, r.right, r.height, "black");
-			var t = this.caret.paper.line(0, r.height + 1, r.width, r.height + 1, "black");
-			this.drawLib.animate("visibility", "visible", "hidden", "1", "indefinite", t.parentNode);
-
-//			r.setRect(r.left - 1, r.top, r.width + 2, r.height);
-//			this.caret.paper.move(r.left, r.top);
-//			this.caret.paper.setSize(r.width, r.height);
-//
-//			if (this.caret.currentState.beginCaretPos)
-//				this.caret.paper.line(0, 0, 0, r.height, "black");
-//			else
-//				this.caret.paper.line(r.right, 0, r.right, r.height, "black");
-//			this.caret.paper.line(0, r.height, r.width, r.height, "black");
-		}, 
 
 		//command functions
 		

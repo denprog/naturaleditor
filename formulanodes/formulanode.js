@@ -173,27 +173,18 @@ var FormulaNode = HtmlNode.extend(
 		
 		renderCaret : function(selectedNode, range)
 		{
+			//this.caret.clearShapes();
+			
 			var r = new Rect();
-			if (this.caret.currentState.beginCaretPos)
-				this.getPosBounds(this.caret.currentState.getSelectionStart(), r);
+			this.getPosBounds(this.caret.currentState.getSelectionStart(), r);
+			if (r.bottom + 3 < this.groupNode.boundingRect.height + this.nte.editor.scrollTop && 
+				this.groupNode.boundingRect.height > r.bottom + 3)
+				r.setRect(r.left - 2, r.top, r.width == 1 ? 1 : Math.round(r.width) + 2, Math.floor(r.height) + 3);
 			else
-				this.getPosBounds(this.caret.currentState.getSelectionEnd(), r);
-			
-			this.caret.paper.clearShapes();
-			
-			//r.setRect(r.left - 1, r.top + 1, r.width + 1, r.height - 1);
-			//r.setRect(r.left, r.top, r.width, r.height);
-			r.setRect(r.left - 3, r.top, r.width + 3, r.height + 1);
-			this.caret.paper.move(r.left, r.top);
-			this.caret.paper.setSize(r.width + 1, r.height + 1);
+				r.setRect(r.left - 2, r.top, r.width == 1 ? 1 : Math.round(r.width) + 2, Math.floor(r.height));
 
-			if (this.caret.currentState.beginCaretPos)
-				this.caret.paper.line(0, 0, 0, r.height, "black");
-			else
-				this.caret.paper.line(r.right, 0, r.right, r.height, "black");
-			var t = this.caret.paper.line(0, r.height + 1, r.width, r.height + 1, "black");
-			this.drawLib.animate("visibility", "visible", "hidden", "1", "indefinite", t.parentNode);
-		}, 
+			this.caret.renderFormulaCaret(r, this.groupNode);
+		},
 
 		setCaretPosition : function(pos)
 		{
@@ -518,7 +509,7 @@ var FormulaNode = HtmlNode.extend(
 		
 		updateBoundingRect : function()
 		{
-			var c = this.element.getBBox();
+			//var c = this.element.getBBox();
 			var r = this.groupNode.element.getBoundingClientRect();
 			this.boundingRect.setRect(r.left - this.element.offsetLeft, r.top - this.element.offsetTop, 
 				this.clientRect.width, this.clientRect.height);
@@ -532,11 +523,8 @@ var FormulaNode = HtmlNode.extend(
 		getPosBounds : function(pos, posRect)
 		{
 			var n = this.childNodes.get(pos == this.childNodes.count() ? pos - 1 : pos);
-			//n.updateBoundingRect();
 			var cx = (pos == this.childNodes.count() ? n.boundingRect.right : n.boundingRect.left);
-			//var cx = 0;
 			var cy = n.boundingRect.top;
-			//var cy = 0;
 			
 			var p = this;
 			
@@ -566,11 +554,13 @@ var FormulaNode = HtmlNode.extend(
 
 			//var r = new Rect();
 			//this.groupNode.getNodeBounds(r);
-			var r = this.groupNode.boundingRect;
+			
+			//this.groupNode.updateBoundingRect();
+			//var r = this.groupNode.boundingRect;
 
 			//cx += r.left - this.groupNode.leftOffset;
-			cx += r.left;
-			cy += r.top;
+			//cx += r.left;
+			//cy += r.top;
 			//cy += h;
 
 			posRect.setRect(cx, cy, pos == this.childNodes.count() ? 1 : n.clientRect.width, n.boundingRect.height);
@@ -587,7 +577,23 @@ var FormulaNode = HtmlNode.extend(
 //				n.boundingRect.height);
 //				//n.clientRect.height);
 		},
-		
+
+		getRelativePosBounds : function(pos, rect)
+		{
+			this.getPosBounds(pos, rect);
+			
+			var r = this.groupNode.boundingRect;
+
+//			rect.setRect(rect.left + this.nte.editor.scrollLeft + r.left, 
+//				rect.top + this.nte.editor.scrollTop + r.top, 
+//				pos == this.childNodes.count() ? 1 : this.clientRect.width, 
+//				this.boundingRect.height);
+			rect.setRect(rect.left + r.left, 
+				rect.top + r.top, 
+				pos == this.childNodes.count() ? 1 : this.clientRect.width, 
+				this.boundingRect.height);
+		},
+
 		setEmpty : function()
 		{
 			this.childNodes.forEach("setEmpty", []);

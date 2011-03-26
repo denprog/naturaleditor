@@ -101,7 +101,10 @@ var GroupFormulaNode = FormulaNode.extend(
 		{
 			if (this.childNodes.count() > 0)
 			{
-				var res = this.childNodes.getFirst().getFirstPosition();
+				var n = this.childNodes.getFirst();
+				if (n instanceof CompoundFormulaNode)
+					return new CaretState(this, 0);
+				var res = n.getFirstPosition();
 				if (res)
 					return res;
 				return new CaretState(this, 0);

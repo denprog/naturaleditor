@@ -345,7 +345,7 @@ function CaretState(node, pos, length)
 	
 	this.getRect = function(posRect)
 	{
-		this.getNode().getPosBounds(this.getPos(), posRect);
+		this.getNode().getRelativePosBounds(this.getPos(), posRect);
 	};
 	
 	if (node)

@@ -54,37 +54,29 @@ var TextNode = HtmlNode.extend(
 
 			//whether the caret is placed in this node?
 			if (c.beginCaretPos && c.getSelectedNodePos(s) == 0)
-				this.getPosBounds(s.getPos(), p);
+				this.getRelativePosBounds(s.getPos(), p);
 			else if (!c.beginCaretPos && c.getSelectedNodePos(s) == c.getSelectedNodesCount() - 1)
-				this.getPosBounds(s.getPos() + s.length, p);
-			
-			this.caret.paper.clearShapes();
+				this.getRelativePosBounds(s.getPos() + s.length, p);
 
-			//if the caret is placed in this node, render it
-			if (p)
-			{
-				this.caret.paper.move(p.left, p.top);
-				this.caret.paper.setSize(1, p.height);
-				var r = this.caret.paper.fillRect(0, 0, 1, p.height, "black");
-				//var an = this.drawLib.animate(r, "opacity", "1;0;1", "0;0;1", "1s", "0s", "linear", "indefinite", "always", "remove", "none", "replace");
-				//this.caret.paper.animate("visibility", "visible", "hidden", "1", "indefinite", r);
-				//this.an = this.drawLib.animate("visibility", "visible", "hidden", "1", "indefinite", r);
-				//this.an = this.drawLib.animate("visibility", "hidden", "visible", "0", "0", this.rect);
-				//this.drawLib.remove(this.an, this.rect);
-				//delete this.an;
-				this.an = this.drawLib.animate("visibility", "visible", "hidden", "1", "indefinite", r);
-				//this.an = this.drawLib.animate("opacity", "1", "0", "1", "5", this.rect);
-				
-				//this.g = this.drawLib.group(this.caret.paper.group);
-				//var r = this.drawLib.fillRect(0, 0, 1, p.height, "black", this.g);
-				//this.an = this.drawLib.animate("visibility", "visible", "hidden", "1", "indefinite", this.g);
-			}
+			this.caret.renderTextCaret(p, this, s.getPos(), s.length, range);
 			
-			//update the selection range
-			var r = this.nte.document.createRange();
-			r.setStart(this.element, s.getPos());
-			r.setEnd(this.element, s.getPos() + s.length);
-			range.addRange(r);
+//			this.caret.clearShapes();
+//
+//			//if the caret is placed in this node, render it
+//			if (p)
+//			{
+//				this.caret.move(p.left, p.top);
+//				this.caret.setSize(1, p.height);
+//				var r = this.nte.drawLib.line(0, 0, 1, p.height, "black", this.caret.textCaretGroup);
+//				this.drawLib.animate("visibility", "visible", "hidden", "1", "indefinite", r);
+//				this.caret.addShape(r);
+//			}
+//			
+//			//update the selection range
+//			var r = this.nte.document.createRange();
+//			r.setStart(this.element, s.getPos());
+//			r.setEnd(this.element, s.getPos() + s.length);
+//			range.addRange(r);
 		}, 
 
 		setCaretToNodeBegin : function()
@@ -698,14 +690,35 @@ var TextNode = HtmlNode.extend(
 			}
 
 			var rect = textRange.getBoundingClientRect();
+
+			posRect.setRect(Math.round(pos == this.element.length ? rect.right : rect.left), 0, 0, rect.height);
+		},
+
+		getRelativePosBounds : function(pos, posRect)
+		{
+			var textRange = this.document.createRange();
+			if (pos == this.element.length)
+			{
+				textRange.setStart(this.element, pos > 0 ? pos - 1 : 0);
+				textRange.setEnd(this.element, pos);
+			}
+			else
+			{
+				textRange.setStart(this.element, pos);
+				textRange.setEnd(this.element, pos + 1);
+			}
+
+			var rect = textRange.getBoundingClientRect();
 			var r = this.nte.editor.getBoundingClientRect();
 			
 			posRect.setRect(Math.round((pos == this.element.length ? rect.right + this.nte.editor.scrollLeft : rect.left + this.nte.editor.scrollLeft) - r.left), 
 				Math.round(rect.top + this.nte.editor.scrollTop - r.top), 
-				//Math.round(rect.width), 
-				//Math.round(pos == this.element.length ? 0 : rect.width), 
 				Math.round(0), 
 				Math.round(rect.height));
+//			posRect.setRect(Math.round((pos == this.element.length ? rect.right : rect.left) - r.left), 
+//				Math.round(rect.top - r.top), 
+//				Math.round(0), 
+//				Math.round(rect.height));
 		}, 
 
 		//test functions

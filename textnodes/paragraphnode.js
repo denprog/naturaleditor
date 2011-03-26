@@ -108,13 +108,8 @@
 			
 			var r = this.tempRect;
 			this.getNodeBounds(r);
-			
-			this.caret.paper.clearShapes();
-			
-			this.caret.paper.move(r.left, r.top);
-			this.caret.paper.setSize(1, r.height);
-			var r = this.caret.paper.line(0, 0, 0, r.height, "black");
-			this.drawLib.animate("visibility", "visible", "hidden", "1", "indefinite", r);
+
+			this.caret.renderTextCaret(r, this, 0, 0, range);
 		},
 
 		/**
@@ -145,7 +140,7 @@
 			var c = res;
 			var r = new Rect();
 			var n = c.getNode();
-			n.getPosBounds(c.getPos(), r);
+			n.getRelativePosBounds(c.getPos(), r);
 			var x = r.left;
 			
 			while (c != null && r.left <= x)
@@ -170,7 +165,7 @@
 				//check not going out the paragraph
 				if (!this.isChild(n))
 					return res;
-				n.getPosBounds(c.getPos(), r);
+				n.getRelativePosBounds(c.getPos(), r);
 			}
 			
 			return res;
@@ -182,7 +177,7 @@
 			var c = res;
 			var r = new Rect();
 			var n = c.getNode();
-			n.getPosBounds(c.getPos(), r);
+			n.getRelativePosBounds(c.getPos(), r);
 			var x = r.left;
 			
 			while (c != null && r.left >= x)
@@ -208,7 +203,7 @@
 				if (!this.isChild(n))
 					return res;
 				
-				n.getPosBounds(c.getPos(), r);
+				n.getRelativePosBounds(c.getPos(), r);
 			}
 			
 			return res;

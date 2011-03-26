@@ -47,25 +47,27 @@ var SvgFormulaNode = FormulaNode.extend(
 			this.updateBoundingRect();
 
 			if (this.baseline != 0)
-			{
-				//var s = this.nte.window.getComputedStyle(this.element.parentNode, null);
-				//var t = parseInt(s.getPropertyValue("line-height"));
-
-				//this.element.style.verticalAlign = -this.clientRect.height + this.baseline + t / 2;
 				this.element.style.verticalAlign = -(this.clientRect.height - this.baseline) + "px";
-			}
 		}, 
 		
 		updateBoundingRect : function()
 		{
 			this.getNodeBounds(this.tempRect);
 			
-			var r = this.groupNode.element.getBoundingClientRect();
+			var r = this.element.getBoundingClientRect();
 			var b = this.nte.editor.getBoundingClientRect();
 			this.boundingRect.setRect(r.left - this.element.x.baseVal.value - b.left - this.leftOffset, 
-				r.top - this.element.y.baseVal.value - b.top - parseInt(this.element.style.verticalAlign),
+				this.tempRect.top - this.element.y.baseVal.value, 
 				this.element.width.baseVal.value, 
 				this.element.height.baseVal.value);
+			
+//			var r = this.element.getBoundingClientRect();
+//			var b = this.nte.editor.getBoundingClientRect();
+//			this.boundingRect.setRect(r.left - this.element.x.baseVal.value - b.left - this.leftOffset, 
+//				//r.top - this.element.y.baseVal.value - b.top - parseInt(this.element.style.verticalAlign),
+//				r.top - this.element.y.baseVal.value, 
+//				this.element.width.baseVal.value, 
+//				this.element.height.baseVal.value);
 
 //			var b = this.nte.editor.getBoundingClientRect();
 //			var s = this.nte.window.getComputedStyle(this.element.parentNode, null);
@@ -110,6 +112,8 @@ var SvgFormulaNode = FormulaNode.extend(
 		 */
 		getFirstPosition : function()
 		{
+			if (this.childNodes.getFirst() instanceof CompoundFormulaNode)
+				return new CaretState(this, 0);
 			var t = this.childNodes.getFirst().getFirstPosition();
 			if (t)
 				return t;

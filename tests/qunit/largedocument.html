@@ -1,0 +1,192 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html xmlns:v="urn:schemas-microsoft-com:vml">
+
+<head>
+	<title>Formulas test</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link rel="stylesheet" href="../../lib/unit.css" type="text/css" />
+	<script type="text/javascript" src="../../lib/jquery.js"></script>
+	<script type="text/javascript" src="../../lib/qunit.js"></script>
+	<script type="text/javascript" src="../../naturaleditor.js"></script>
+	<script type="text/javascript" src="tool.js"></script>
+</head>
+
+<body>
+	<!--<h1 id="qunit-header">Formula test 1</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>-->
+
+	<span id = "frame"></span>
+	
+	<script type="text/javascript">
+		var nte;
+		
+		$(document).ready(function()
+			{
+			  nte = new NaturalEditor(document.getElementById("frame"), "themes/classic/theme.js", 600, 200);
+			  
+				test("Formula 1", function()
+					{
+						//expect(1);
+
+						nte.parse(
+							"<p>http://la.wikipedia.org/wiki/Cultura</p>" + 
+							"<h2>Intellectualis historia culturae</h2>" + 
+							"<p><b>Cultura</b> (a colendo[1]) est notio difficillima definitu. Generatim, cultura est modus vivendi, at in quotidianis fortunae vicissitudinibus culturae multiplices sunt effectus. Declaravit UNESCO[2]:</p>" +
+							"<p>Cultura homini facultatem de se ipso cogitandi dat. Cultura est qua vere reddimur humani, ratione praediti, arbitrio instructi morumque bonitate ornati. Cultura fit ut rerum virtutes discernamus delectusque habeamus. Cultura est cuius opibus homines quid cogitent vel velint exprimunt, sui conscii fiunt, se imperfectos confitentur, quidquid impetraverint in dubium vocant, novas significationes adsidue quaerunt, opera exigunt quibus modum sibi impositum exsuperent.</p>" +
+							"<p>Hae definitiones praecipue ab homine profectae quotidiano et populari intellectui culturae respondere videntur. Quem intellectum humanisticum aequiperat (vel potius iam superavit) intellectus culturae plerumque ab anthropologis et sociologis partus. Quae cum ita sint, duo ferme sunt modi, quibus cultura vulgo intellegi solet:</p>" +
+							"<p>Intellectus humanisticus, qui culturae attribuit animum humanum eo consilio colendum, ut optimis artibus eruditus humanitate excelleat.</p>" + 
+							"<p>Intellectus anthropologicus, qui culturam arguit esse (1) integram scientiae, opinionis morumque compagem ex symbolicae cogitationis facultate ortam, ac (2) animorum, aestimationum, finium, consuetudinum communionem cuiusque institutionis, organizationis, gregis propriam. Itaque cultura anthropologice intellecta ex quodam consortium cognitionum thesauro constat, qui per socialem eruditionem memoriae communi traditur.[3]</p>" + 
+							"<p>" + 
+								"Left" + 
+								"<span class='formula'>" + 
+									"<span class='formula_text'>22</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_text'>55</span>" + 
+									"<span class='formula_exponentiation'>" + 
+										"<span class='formula_text'>123</span>" + 
+										"<span class='formula_group'>" + 
+											"<span class='formula_text'>456</span>" + 
+											"<span class='formula_plus'></span>" + 
+											"<span class='formula_text'>sum</span>" + 
+										"</span>" + 
+									"</span>" + 
+								"</span>" + 
+								"Right" + 
+							"</p>" + 
+							"<p>Anno 1952, Alfredus L. Kroeber et Clyde Kluckhohn, anthropologi Americani, indicem centum sexaginta quattuor Anglici nominis culture definitionum in variis scriptis editarum composuerunt, in quo huius vocis sensus in sex classes definitivas sunt divisi—definitiones dicimus descriptivas, historicas, normativas, geneticas, structurales, psychologicas (Kroeber & Kluckhohn (1952:77–273).</p>" + 
+							"<p>" + 
+								"Left" + 
+								"<span class='formula'>" + 
+									"<span class='formula_exponentiation'>" + 
+										"<span class='formula_text'>123</span>" + 
+										"<span class='formula_group'>" + 
+											"<span class='formula_text'>456</span>" + 
+											"<span class='formula_plus'></span>" + 
+											"<span class='formula_text'>sum</span>" + 
+										"</span>" + 
+									"</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_text'>55</span>" + 
+								"</span>" + 
+								"Right" + 
+							"</p>" + 
+							"<p>Hodie autem notionem culturae videmus multiplici exstitisse significationum varietate, quae ab animi quasi ad creativitatem liberatrice usque ad animi quasi coërcitricem extenditur. Praesertim apud recentiores eruditos, auctu technologiae motos, convenit de cultura coërcitrice disserere. Unus ex celeberrimis, Clifford Geertz, diserte de cultura coërcitrice dicit: culturam non ex moribus constare, sed potius ex coërcendi rationibus—consiliis, praescriptis, regulis, praeceptis ab ingeniariis computatralibus programmata appellatis—ad mores regendos designatis.[4]</p>" + 
+							"<p>" + 
+								"Left " + 
+								"<span class='formula'>" + 
+									"<span class='formula_text'>78</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_exponentiation'>" + 
+										"<span class='formula_text'>123</span>" + 
+										"<span class='formula_group'>" + 
+											"<span class='formula_text'>456</span>" + 
+											"<span class='formula_plus'></span>" + 
+											"<span class='formula_text'>sum</span>" + 
+										"</span>" + 
+									"</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_text'>55</span>" + 
+								"</span>" + 
+								"Right" + 
+							"</p>" + 
+							"<h2>Intellectualis historia culturae</h2>" + 
+							"<h3>Origo</h3>" + 
+							"<p>Cultura est ab colendo vocata, nempe a verbo Indoeuropaeo,[5] quod apud Romanos antiquos ad habitationem (ut incolere, incola), ad curam terrae (ut agrum colere, agricola) aliarumque rerum et corporearum (ut fructum, oleam colere; vinicola, viticola) et incorporearum (ut artes, leges, litteras, officia colere), nec non ad venerationem (ut deicola, plebicola, sacricola) pertinet.</p>" +
+							"<h3>Intellectus culturae quomodo in Latinitate variaverit</h3>" + 
+							"<p>Vocabulum culturae apud antiquos idem valebat ac agri cultura, qua de causa hac vi saepissime dicebatur sine genetivo attributo.[6] Cum autem alia quadam de re aut corporea aut incorporea agebatur, opus erat attributo genetivo (sicut cultura arborum, vitium, gallinarum, cochlearum, animi, ingenii, cett.).[7] Inde ab Tertulliano cultura etiam sensum venerationis adquisivit.[8] Hactenus fere de usu vernaculo loqui possumus.</p>" + 
+							"<p>Inde ab saeculo fere septimo decimo ex aliis linguis (praesertim Theodisca, Francogallica, Anglica) quasi advecticii usus sunt orti, qui novas peperunt significandi facultates. Itaque hodierna Latinitate, si de agri cultura loquimur, non licet omittere agri, nam cultura, absolute (id est: sine attributo genetivo) dicta, non iam agri culturam significat, sed potius animi culturam.[9]</p>" + 
+							"<p>Quae notio culturae ab homine profecta complures annos anthropologorum studiis admodum bene servivit, quamquam rerum culturalium enumeratione constat omnia enumeranda numquam exhaustum iri. Inde ab anno fere 1920 definitiones culturae paene abundare coeperunt, donec Kroeber et Kluckhohn supra laudati anno 1952 temporariam quandam sensuum culturae rationem reddiderunt. Hodie autem iam animalia quoque a nonnullis eruditis putantur suam habere culturam.[10]</p>" + 
+							"<p>Saeculo vicesimo, \"cultura\" facta est media anthropologiae pars (Miller 2008). Cultura anthropologice intellecta omnes res complectitur quae non ab genetica humana sunt ortae. Anthropologi, praesertim Americani, voce culturae duas fere res significaverunt: (1) indoles humana experientias symbolis in genera describendi atque inventiones excogitandi; (2) modi proprii quibus homines varias orbis terrarum regiones habitantes experientias suas descripserunt suaque inventione sunt usi. Post Bellum Orbis Terrarum II, vox culturae increbruit apud sociologos, rerum culturalium studiosos, psychologos, aliarumque doctrinarum peritos.</p>" + 
+							"<p>" + 
+								"Left" + 
+								"<span class='formula'>" + 
+									"<span class='formula_text'>555</span>" + 
+									"<span class='formula_minus'></span>" + 
+									"<span class='formula_division'>" + 
+										"<span class='formula_group'>" + 
+											"<span class='formula_text'>88</span>" + 
+										"</span>" + 
+										"<span class='formula_group'>" + 
+											"<span class='formula_text'>567</span>" + 
+											"<span class='formula_plus'></span>" + 
+											"<span class='formula_division'>" + 
+												"<span class='formula_group'>" + 
+													"<span class='formula_exponentiation'>" + 
+														"<span class='formula_text'>2</span>" + 
+														"<span class='formula_group'>" + 
+															"<span class='formula_text'>6.5</span>" + 
+															"<span class='formula_plus'></span>" + 
+															"<span class='formula_text'>87</span>" + 
+														"</span>" + 
+													"</span>" + 
+												"</span>" + 
+												"<span class='formula_group'>" + 
+													"<span class='formula_text'>267</span>" + 
+												"</span>" + 
+											"</span>" + 
+										"</span>" + 
+									"</span>" +
+								"</span>" + 
+								"Right" + 
+							"</p>" + 
+							"<h3>Cultura formatrix hominis et populi</h3>" + 
+							"<p>Immanuel Kant (1724–1804), philosophus Germanicus, individualisticam definitionem \"illuminationis\" excogitavit haud alienam ab formatione (Bildung): \"Illuminatio est exitus hominis ab immaturitate, quam sua culpa commeruit.\"[11] Hanc immaturitatem non ex defectu intelligentiae emanare, immo voluntatis et audaciae libere cogitandi. Contra hanc ignaviam hortatus Sapere aude! inquit.</p>" + 
+							"<p>Kant credidit naturam esse systema quoddam teleologicum, cuius finis in homine animique cultura constat.[12] Itaque hominis est animi culturam consummare et repraesentare moraliter vivendo secundum imperativum categoricum (Kant 1785). Nisi animi culturam menti insitam habemus, comitas nostra nihil nisi artificium est. Quod artificium Kant civilizationem nuncupavit et primus culturae opposuit. Est enim utilis se gerendi ratio, si quisque hominum benigno in alios animo esse consuevit, ac si controversiae familiarium aliarumque rerum convenienter cum legibus inter cives pacabiliter componuntur. Tametsi haec magni sunt momenti civilia, nondum satis sunt ad veram habendam animi culturam, quae ea tantum condicione valet, ut quisque exemplar moralitatis menti insitum (hoc est: imperativum categoricum) secutus eo, quidquid fecerit, consilia per se bona repraesentare studeat.</p>" + 
+							"<p>Quae nuper de Kantio narrata sunt ad eius pertinent cogitata, quae mente penitus mutata primoque \"criticarum\"[13] volumine edito tenebat, sed viginti fere annis antea—nempe annis millesimis septingentesimis sexagesimis—de philosophia et anthropologia culturali aliter cogitaverat. Iisdem annis Ioannes Gottfried Herder (1744–1803) erat discipulus Kantii eiusdemque amicus, qui illius aetatis praeceptis magistri sui nutriebatur. Itaque Herder, cum Kant sua commutaret praecepta, iisdem in praeceptis perseveravit.[14] Quo factum est, ut vehemens oriretur aemulatio inter Herderum, \"exemplarem anni 1765 Kantianum,\"[15] et Kantium ipsum \"postcriticum.\"</p>" + 
+							"<p>Herder hominem cogitabat natura esse defectum (Mängelwesen), cui recens nato desunt facultates ad vivendum necessariae. Cum de animi impetu nesciat texere ut aranea nec nidum construere ut avis, hominis est ratione (Besonnenheit) uti.[16] Quod quidem fieri non potest nisi in communione gregalium, nam \"homo ea est indole, ut in grege formetur, in communitate et societate.\"[17] Itaque animus in societate humana formandus est. Haec notio formationis (Bildung) in naturalismo Kantiano annorum 1760 remanet, quo relicto, ut supra dictum est, Kant ad idealismum moralem progressus est; Herder autem cogitavit populum (Volk) quasi substramen esse formationis humanae (Welter 2003:120–130). Hominem esse medium quendam (Zwitterwesen), inter immaturitatem (Existentialsein) et perfectionem (Idealsein) interiectum (Welter 2003:22), qui quandoque natus continuo formetur populo suo. Apud Herderum scilicet de populo Germano agebatur.</p>" + 
+							"<p>Itaque vere singulares non sunt homines sed populi, quorum quisque sui caeli suique soli natura nec non suorum gestorum effectu distincti suis moribus suos format homines.[18] Cogitandi modi in animo singularis hominis informati ex cultura populi oriuntur.</p>" + 
+							"<p>Herder unus ex primis animadvertisse videtur cogitationem lingua determinari, etenim nisi per linguam fieri non posse: linguam, fontem cognitionis, ex cogitationibus signis notatis constare (Häfner 1995:91). Lingua rectrix cogitationis—hanc notionem suam fecit etiam Gulielmus von Humboldt (1767–1835), glottologus et philosophus Germanicus. Hac notione affecti postea Eduardus Sapir et Beniaminus Whorf de relativitate linguistica disseruerunt.</p>" + 
+							"<p>Anno 1795, Humboldt anthropologiam proposuit, quae studia a Kantio et Herdero navata ad summam componeret. Per Aevum Romanticum, eruditi in Germania—praecipue philosophi qui motibus nationalisticis (sicut certamini pro \"Germania\" ex principatibus variis facienda, et certaminibus nationalibus a minoribus gentibus contra Imperium Austro-Hungaricum insertis) studebant—capaciorem culturae notionem evolverunt, quam \"cosmotheoriam\" (Weltanschauung) appellaverunt. Secundum hanc scholam, unicuique gregi ethnicae est sua visio mundi propria, quae suo tantum neque aliarum gentium modulo metienda est. Hic aspectus culturae, quamquam prioribus iudiciis capacior, distingui inter culturas eruditas (sive civilizatas) et culturas rudes (sive primitivas, sive gentiles, sive \"tribales\") etiamtunc sivit.<p>" +
+							"<h3>Cultura = cultura sublimis</h3>" + 
+							"<p>Complures humanistae saeculi undevicesimi, sicut Matthaeus Arnold (1822–1888) poeta et criticus Anglicus, vocem culturae adhibuerunt ad specimen urbanitatis et elegantiae humanae et \"optimarum rerum quae cogitatae et dictae in orbe terrarum sunt\" denotandum (Arnold 1869). Haec notio culturae est similis formationis (Bildung) Kantianae. Quae cum ita sint, cultura re vera optimatum sive electissimorum exemplaria denotabat, quae cum artibus bellis, coquinaria elegantia (haute cuisine), Europaea musica classica, vestitu aliisque rebus consociabantur.</p>" + 
+							"<p>De cetero, Romanticismi erat etiam studium doctrinae popularis (folklore), quod eruditis culturam aliquam in vulgo quoque exstitisse persuasit. Hoc discrimine cultura sublimis, res dominantis classis socialis, distingui solet ab cultura humili, re inferiorum classium socialium. Haec culturae notio, quae in Europa augescebat saeculo XVIII ineunteque saeculo XIX, inaequalitatem in civitatibus Europaeis praevalentem ostendit (Bakhtin 1981:4).</p>" + 
+							"<p>Cultura sublimis inter alia complectitur opera arte facta in domus imperatoriae sepulcris (sicut in Aegypto pharaonica) et in aedibus regiis (sicut in Persia et Sina) sita; ceterum multa exempla culturae humilioris, sicut petroglyphae, paene toto in mundo inveniuntur." + 
+							"<p>" + 
+								"Left" + 
+								"<span class='formula'>" + 
+									"<span class='formula_division'>" + 
+										"<span class='formula_group'>" + 
+											"<span class='formula_division'>" +
+												"<span class='formula_group'>" + 
+													"<span class='formula_text'>88</span>" +
+												"</span>" + 
+												"<span class='formula_group'>" + 
+													"<span class='formula_text'>567</span>" +
+												"</span>" + 
+											"</span>" + 
+										"</span>" + 
+										"<span class='formula_group'>" + 
+											"<span class='formula_text'>567</span>" + 
+											"<span class='formula_plus'></span>" + 
+											"<span class='formula_division'>" + 
+												"<span class='formula_group'>" + 
+													"<span class='formula_exponentiation'>" + 
+														"<span class='formula_text'>2</span>" + 
+														"<span class='formula_group'>" + 
+															"<span class='formula_text'>6.5</span>" + 
+															"<span class='formula_plus'></span>" + 
+															"<span class='formula_text'>87</span>" + 
+														"</span>" + 
+													"</span>" + 
+												"</span>" + 
+												"<span class='formula_group'>" + 
+													"<span class='formula_text'>267</span>" + 
+												"</span>" + 
+											"</span>" + 
+										"</span>" + 
+									"</span>" +
+								"</span>" + 
+								"Right" + 
+							"</p>"
+							);
+					}
+					);
+			}
+			);
+	</script>
+</body>
+
+</html>

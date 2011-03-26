@@ -138,19 +138,9 @@ var DivisionFormulaNode = CompoundFormulaNode.extend(
 				this.getPosBounds(this.caret.currentState.getSelectionStart(), r);
 			else
 				this.getPosBounds(this.caret.currentState.getSelectionEnd(), r);
-			
-			this.caret.paper.clearShapes();
-			
 			r.setRect(r.left - 3, r.top - 3, r.width + 6, r.height + 6);
-			this.caret.paper.move(r.left, r.top);
-			this.caret.paper.setSize(r.width, r.height);
-
-			if (this.caret.currentState.beginCaretPos)
-				this.caret.paper.line(0, 0, 0, r.height, "black");
-			else
-				this.caret.paper.line(r.right, 0, r.right, r.height, "black");
-			var r = this.caret.paper.line(0, r.height, r.width, r.height, "black");
-			this.drawLib.animate("visibility", "visible", "hidden", "1", "indefinite", r.parentNode);
+			
+			this.caret.renderFormulaCaret(r, this.groupNode);
 		}, 
 
 		getUpperPosition : function(relativeState)

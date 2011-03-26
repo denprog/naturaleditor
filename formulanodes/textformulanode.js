@@ -492,13 +492,9 @@ var FormulaTextNode = TextNode.extend(
 				this.getPosBounds(this.caret.currentState.getSelectionStart(), r);
 			else
 				this.getPosBounds(this.caret.currentState.getSelectionEnd(), r);
-			
-			this.caret.paper.clearShapes();
-			
-			this.caret.paper.move(r.left, r.top);
-			this.caret.paper.setSize(1, r.height);
-			var r = this.caret.paper.line(0, 0, 0, r.height, "black");
-			this.drawLib.animate("visibility", "visible", "hidden", "1", "indefinite", r);
+
+			r.width = 1;
+			this.caret.renderFormulaCaret(r, this.parentNode.groupNode);
 		},
 
 		moveCaretToLineBegin : function()
@@ -554,7 +550,6 @@ var FormulaTextNode = TextNode.extend(
 			
 			return false;
 		},
-		
 		doRemoveChild : function(node, pos, len, nodeEvent, command)
 		{
 			if ((pos == this.element.length && nodeEvent.right) || (pos == 0 && !nodeEvent.right))
@@ -593,7 +588,7 @@ var FormulaTextNode = TextNode.extend(
 		},
 
 		//tool functions
-		
+
 		getPosBounds : function(pos, posRect)
 		{
 			if (this.nte.isIE)
@@ -620,40 +615,122 @@ var FormulaTextNode = TextNode.extend(
 			}
 
 			var rect = textRange.getBoundingClientRect();
-			var c = this.nte.editor.getBoundingClientRect();
+			var cx = 0;
+			var cy = rect.top;
+			var p = this.parentNode;
 			
-			this.parentNode.groupNode.updateBoundingRect();
-			var r = this.parentNode.groupNode.boundingRect;
+			while (p && p != this.parentNode.groupNode)
+			{
+				if (p.boundingRect)
+				{
+					cx += p.boundingRect.left;
+					cy += p.boundingRect.top;
+				}
+				p = p.parentNode;
+			}
 			
-			var cx = 0, cy = 0;
-			var parent = this.parentNode;
-//			while (parent && parent != this.parentNode.groupNode)
-//			{
-//				if (parent.boundingRect)
-//				{
-//					cx += parent.boundingRect.left;
-//					cy += parent.boundingRect.top;
-//				}
-//				//else if (parent.element.offsetTop)
-//				//{
-//				//	cy += parent.element.offsetTop - parent.element.offsetHeight;
-//				//}
-//				parent = parent.parentNode;
-//			}
-
-//			posRect.setRect((pos == this.element.length ? rect.right + this.nte.editor.scrollLeft : 
-//				rect.left + this.nte.editor.scrollLeft) + r.left + cx - c.left, 
-//				rect.top + this.nte.editor.scrollTop + r.top + cy, 
-//				rect.width, 
-//				rect.height);
-
-			cx = this.parentNode.element.offsetLeft;
-			cy = this.parentNode.element.offsetTop;
+			cx = Math.round(cx);
+			cy = Math.round(cy);
 			
 			posRect.setRect((pos == this.element.length ? rect.right : rect.left) + cx, 
 				rect.top + cy, 
 				rect.width, 
 				rect.height);
+		},
+		
+		getRelativePosBounds : function(pos, posRect)
+		{
+			if (this.nte.isIE)
+			{
+				var textRange = this.document.body.createTextRange();
+				textRange.moveToElementText(this.element);
+				textRange.collapse(true);
+				textRange.moveStart("character", pos);
+				textRange.moveEnd("character", pos + 1);
+			}
+			else
+			{
+				var textRange = this.document.createRange();
+				if (pos == this.element.length)
+				{
+					textRange.setStart(this.element, pos - 1);
+					textRange.setStart(this.element, pos);
+				}
+				else
+				{
+					textRange.setStart(this.element, pos);
+					textRange.setEnd(this.element, pos + 1);
+				}
+			}
+
+			var rect = textRange.getBoundingClientRect();
+			var cx = 0;
+			var cy = rect.top;
+			var p = this.parentNode;
+			
+			while (p && p != this.parentNode.groupNode)
+			{
+				if (p.boundingRect)
+				{
+					cx += p.boundingRect.left;
+					cy += p.boundingRect.top;
+				}
+//				else
+//				{
+//					cx += p.element.offsetLeft;
+//					cy += p.element.offsetTop;
+//				}
+				p = p.parentNode;
+			}
+			
+			cx = Math.round(cx);
+			cy = Math.round(cy);
+			
+			var r = this.nte.editor.getBoundingClientRect();
+			var b = this.parentNode.groupNode.boundingRect;
+			
+			//posRect.setRect((pos == this.element.length ? rect.right : rect.left) + cx + this.nte.editor.scrollLeft + b.left - r.left, 
+			//	rect.top + cy + this.nte.editor.scrollTop + b.top - r.top, 
+			posRect.setRect((pos == this.element.length ? rect.right : rect.left) + cx + b.left, 
+				rect.top + cy + b.top, 
+				rect.width, 
+				rect.height);
+
+//			var rect = textRange.getBoundingClientRect();
+//			var c = this.nte.editor.getBoundingClientRect();
+//			
+//			this.parentNode.groupNode.updateBoundingRect();
+//			var r = this.parentNode.groupNode.boundingRect;
+//			
+//			var cx = 0, cy = 0;
+//			var parent = this.parentNode;
+////			while (parent && parent != this.parentNode.groupNode)
+////			{
+////				if (parent.boundingRect)
+////				{
+////					cx += parent.boundingRect.left;
+////					cy += parent.boundingRect.top;
+////				}
+////				//else if (parent.element.offsetTop)
+////				//{
+////				//	cy += parent.element.offsetTop - parent.element.offsetHeight;
+////				//}
+////				parent = parent.parentNode;
+////			}
+//
+////			posRect.setRect((pos == this.element.length ? rect.right + this.nte.editor.scrollLeft : 
+////				rect.left + this.nte.editor.scrollLeft) + r.left + cx - c.left, 
+////				rect.top + this.nte.editor.scrollTop + r.top + cy, 
+////				rect.width, 
+////				rect.height);
+//
+//			cx = this.parentNode.element.offsetLeft;
+//			cy = this.parentNode.element.offsetTop;
+//			
+//			posRect.setRect((pos == this.element.length ? rect.right : rect.left) + cx, 
+//				rect.top + cy, 
+//				rect.width, 
+//				rect.height);
 		},
 
 		getNodeBounds : function(posRect)

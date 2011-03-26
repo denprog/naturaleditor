@@ -203,6 +203,7 @@ var NaturalEditor = Class.extend(
 			this.caret.setToNodeBegin(this.rootNode.childNodes.get(0));
 			
 			this.rootNode.remake();
+			this.caret.render();
 		}, 
 
 		parseHtml : function(htmlText)
@@ -425,12 +426,15 @@ var NaturalEditor = Class.extend(
 			var iNode = node.hasTag("i");
 			var uNode = node.hasTag("u");
 
-			var b = this.theme.toolbar.getButton("bold");
-			var bButton = b.pressed;
-			b = this.theme.toolbar.getButton("italic");
-			var iButton = b.pressed;
-			b = this.theme.toolbar.getButton("underline");
-			var uButton = b.pressed;
+			if (this.theme.toolbar)
+			{
+				var b = this.theme.toolbar.getButton("bold");
+				var bButton = b.pressed;
+				b = this.theme.toolbar.getButton("italic");
+				var iButton = b.pressed;
+				b = this.theme.toolbar.getButton("underline");
+				var uButton = b.pressed;
+			}
 			
 			if (bNode == bButton && iNode == iButton && uNode == uButton)
 			{
@@ -448,26 +452,6 @@ var NaturalEditor = Class.extend(
 				var n = this.parseHtml(str);
 				this.commandManager.insert(n);
 			}
-			
-//			var b = this.theme.toolbar.getButton("underline");
-//			if (b && b.pressed && !node.hasTag("u"))
-//				str = "<u>" + str + "</u>";
-//
-//			b = this.theme.toolbar.getButton("italic");
-//			if (b && b.pressed && !node.hasTag("i"))
-//				str = "<i>" + str + "</i>";
-//			
-//			b = this.theme.toolbar.getButton("bold");
-//			if (b && b.pressed && !node.hasTag("b"))
-//				str = "<b>" + str + "</b>";
-			
-//			if (str == ch)
-//				this.commandManager.insertText(ch);
-//			else
-//			{
-//				var n = this.parseHtml(str);
-//				this.commandManager.insert(n);
-//			}
 			
 			this.caret.currentState.getNode().scrollIntoView(this.caret.currentState.getPos());
 			this.theme.update();
@@ -494,11 +478,14 @@ var NaturalEditor = Class.extend(
 				return true;
 			}
 
-			var r = this.theme.toolbar.parentElement.getBoundingClientRect();
-			if (x > r.left && x < r.right && y > r.top && y < r.bottom)
+			if (this.theme.toolbar)
 			{
-				this.setFocus();
-				return false;
+				var r = this.theme.toolbar.parentElement.getBoundingClientRect();
+				if (x > r.left && x < r.right && y > r.top && y < r.bottom)
+				{
+					this.setFocus();
+					return false;
+				}
 			}
 			
 			this.killFocus();
@@ -511,6 +498,7 @@ var NaturalEditor = Class.extend(
 			if (this.commandManager.insertLine())
 				this.caret.currentState.getNode().scrollIntoView(this.caret.currentState.getPos());
 			this.theme.update();
+			this.caret.render();
 			return true;
 		},
 		
@@ -519,6 +507,7 @@ var NaturalEditor = Class.extend(
 			if (this.caret.getFormula())
 			{
 				this.commandManager.insert(new PlusFormulaNode(null, 0, this));
+				this.caret.render();
 				return true;
 			}
 			return false;
@@ -529,6 +518,7 @@ var NaturalEditor = Class.extend(
 			if (this.caret.getFormula())
 			{
 				this.commandManager.insert(new MinusFormulaNode(null, 0, this));
+				this.caret.render();
 				return true;
 			}
 			return false;
@@ -539,6 +529,7 @@ var NaturalEditor = Class.extend(
 			if (this.caret.getFormula())
 			{
 				this.commandManager.insert(new MultiplyFormulaNode(null, 0, this));
+				this.caret.render();
 				return true;
 			}
 			return false;
@@ -550,6 +541,7 @@ var NaturalEditor = Class.extend(
 			if (n)
 			{
 				this.commandManager.insert(null, this.caret.currentState.getNode().createDivisionFormulaNode);
+				this.caret.render();
 				return true;
 			}
 			return false;
@@ -561,6 +553,7 @@ var NaturalEditor = Class.extend(
 			if (n)
 			{
 				this.commandManager.insert(null, this.caret.currentState.getNode().createExponentationFormulaNode);
+				this.caret.render();
 				return true;
 			}
 			return false;
@@ -569,18 +562,21 @@ var NaturalEditor = Class.extend(
 		onBackspace : function()
 		{
 			this.commandManager.remove(false);
+			this.caret.render();
 			return true;
 		}, 
 		
 		onDelete : function()
 		{
 			this.commandManager.remove(true);
+			this.caret.render();
 			return true;
 		}, 
 		
 		onUndo : function()
 		{
 			var res = this.commandManager.undo();
+			this.caret.render();
 			this.theme.update();
 			return res;
 		},
@@ -588,6 +584,7 @@ var NaturalEditor = Class.extend(
 		onRedo : function()
 		{
 			var res = this.commandManager.redo();
+			this.caret.render();
 			this.theme.update();
 			return res;
 		},
@@ -595,16 +592,19 @@ var NaturalEditor = Class.extend(
 		onBold : function()
 		{
 			this.theme.toolbar.pressButton("bold", true);
+			this.caret.render();
 		},
 
 		onItalic : function()
 		{
 			this.theme.toolbar.pressButton("italic", true);
+			this.caret.render();
 		},
 
 		onUnderline : function()
 		{
 			this.theme.toolbar.pressButton("underline", true);
+			this.caret.render();
 		},
 		
 		onSave : function()
@@ -684,42 +684,52 @@ var NaturalEditor = Class.extend(
 		insertHtml : function(htmlText)
 		{
 			var node = this.parseHtml(htmlText);
-			return this.commandManager.insert(node);
+			var res = this.commandManager.insert(node);
+			this.caret.render();
+			return res;
 		}, 
 
 		insertText : function(text)
 		{
-			return this.commandManager.insertText(text);
+			var res = this.commandManager.insertText(text);
+			this.caret.render();
+			return res;
 		}, 
 
 		deleteHtml : function(right)
 		{
 			this.commandManager.remove(right);
+			this.caret.render();
 		}, 
 
 		addType : function(type)
 		{
 			this.commandManager.addType(type);
+			this.caret.render();
 		}, 
 		
 		changeType : function(type)
 		{
 			this.commandManager.changeType(type);
+			this.caret.render();
 		}, 
 		
 		changeFontName : function(fontName)
 		{
 			this.commandManager.changeFontName(fontName);
+			this.caret.render();
 		}, 
 
 		changeFontSize : function(fontSize)
 		{
 			this.commandManager.changeFontSize(fontSize);
+			this.caret.render();
 		}, 
 		
 		insertLine : function()
 		{
 			this.commandManager.insertLine();
+			this.caret.render();
 		}, 
 
 		getHtml : function()

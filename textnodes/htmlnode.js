@@ -425,7 +425,7 @@ var HtmlNode = Class.extend(
 			var r = this.tempRect;
 			
 			if (typeof(pos) != "undefined" && pos != -1)
-				this.getPosBounds(pos, r);
+				this.getRelativePosBounds(pos, r);
 			else
 				this.getNodeBounds(r);
 			
@@ -434,7 +434,7 @@ var HtmlNode = Class.extend(
 				//scroll down
 				this.nte.editor.scrollTop = r.top - 10;
 			}
-			else if (r.bottom - this.nte.editor.scrollTop >= cr.height + 10)
+			else if (r.bottom - this.nte.editor.scrollTop >= cr.height - 10)
 			{
 				//scroll up
 				this.nte.editor.scrollTop = r.top + r.height - cr.height + 10;
@@ -516,8 +516,8 @@ var HtmlNode = Class.extend(
 			var t = this.getLineBegin(c);
 			if (t)
 			{
-				var n = t.getNode();
-				n.scrollIntoView(t.getSelectionStart());
+				//var n = t.getNode();
+				//n.scrollIntoView(t.getSelectionStart());
 				this.caret.setState(t);
 				return true;
 			}
@@ -543,8 +543,8 @@ var HtmlNode = Class.extend(
 			var t = this.getLineEnd(c);
 			if (t)
 			{
-				var n = t.getNode();
-				n.scrollIntoView(t.getSelectionStart());
+				//var n = t.getNode();
+				//n.scrollIntoView(t.getSelectionStart());
 				this.caret.setState(t);
 				return true;
 			}
@@ -582,8 +582,8 @@ var HtmlNode = Class.extend(
 			var t = this.getPreviousPosition(c);
 			if (t)
 			{
-				var n = t.getNode();
-				n.scrollIntoView(t.getSelectionStart());
+				//var n = t.getNode();
+				//n.scrollIntoView(t.getSelectionStart());
 				this.caret.setState(t);
 				return true;
 			}
@@ -608,8 +608,8 @@ var HtmlNode = Class.extend(
 			var t = this.getNextPosition(c);
 			if (t)
 			{
-				var n = t.getNode();
-				n.scrollIntoView(t.getSelectionStart());
+				//var n = t.getNode();
+				//n.scrollIntoView(t.getSelectionStart());
 				this.caret.setState(t);
 				return true;
 			}
@@ -624,7 +624,7 @@ var HtmlNode = Class.extend(
 			var t = this.getUpperPosition(this.caret.currentState);
 			if (t)
 			{
-				t.getNode().scrollIntoView(t.getPos());
+				//t.getNode().scrollIntoView(t.getPos());
 				this.caret.setState(t);
 				return true;
 			}
@@ -640,7 +640,7 @@ var HtmlNode = Class.extend(
 			var t = this.getLowerPosition(this.caret.currentState);
 			if (t)
 			{
-				t.getNode().scrollIntoView(t.getPos());
+				//t.getNode().scrollIntoView(t.getPos());
 				this.caret.setState(t);
 				return true;
 			}
@@ -707,8 +707,8 @@ var HtmlNode = Class.extend(
 			var t = this.getPreviousPosition(n, p);
 			if (t)
 			{
-				var n = this.nte.getNodeById(t.parentNodeId);
-				n.scrollIntoView(t.pos);
+				//var n = this.nte.getNodeById(t.parentNodeId);
+				//n.scrollIntoView(t.pos);
 				this.caret.continueSelection(t.getSelectedNode(), t.getSelectionStart());
 				return true;
 			}
@@ -724,8 +724,8 @@ var HtmlNode = Class.extend(
 			var t = this.getNextPosition(n);
 			if (t)
 			{
-				var n = this.nte.getNodeById(t.parentNodeId);
-				n.scrollIntoView(t.pos);
+				//var n = this.nte.getNodeById(t.parentNodeId);
+				//n.scrollIntoView(t.pos);
 				this.caret.continueSelection(t.getSelectedNode(), t.getSelectionStart());
 				return true;
 			}
@@ -982,7 +982,7 @@ var HtmlNode = Class.extend(
 			var x = r.left;
 
 			n = c.getNode();
-			n.getPosBounds(c.getPos(), r);
+			n.getRelativePosBounds(c.getPos(), r);
 			
 			while (c != null && r.left > x && !c1.isEqual(c2))
 			{
@@ -999,7 +999,7 @@ var HtmlNode = Class.extend(
 					return res;
 			
 				res = c;
-				n.getPosBounds(c.getPos(), r);
+				n.getRelativePosBounds(c.getPos(), r);
 			}
 			
 			var t = x - r.left;
@@ -1042,7 +1042,7 @@ var HtmlNode = Class.extend(
 			var x = r.left;
 
 			n = c.getNode();
-			n.getPosBounds(c.getPos(), r);
+			n.getRelativePosBounds(c.getPos(), r);
 			
 			while (c != null && r.left < x)
 			{
@@ -1065,7 +1065,7 @@ var HtmlNode = Class.extend(
 					return res;
 			
 				res = c;
-				n.getPosBounds(c.getPos(), r);
+				n.getRelativePosBounds(c.getPos(), r);
 			}
 			
 			var t = r.left - x;
@@ -1122,9 +1122,20 @@ var HtmlNode = Class.extend(
 				this.childNodes.get(pos).getNodeBounds(r);
 			}
 			
-			//posRect.setRect(r.left, r.top, r.width, r.height);
 			posRect.setRect(r.left, r.top, 0, r.height);
-		}, 
+		},
+		
+		getRelativePosBounds : function(pos, rect)
+		{
+			this.getPosBounds(pos, rect);
+
+			var r = this.nte.editor.getBoundingClientRect();
+
+			rect.setRect(Math.round((pos == this.element.length ? rect.right + this.nte.editor.scrollLeft : rect.left + this.nte.editor.scrollLeft) - r.left), 
+				Math.round(rect.top + this.nte.editor.scrollTop - r.top), 
+				Math.round(0), 
+				Math.round(rect.height));
+		},
 				
 		/**
 		 * Returns symbol bounds in the HTML text
