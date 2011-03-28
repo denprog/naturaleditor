@@ -64,7 +64,7 @@ var ExponentiationFormulaNode = CompoundFormulaNode.extend(
 			
 			if (this.base && this.exponent)
 			{
-				this.base.move(0, this.exponent.clientRect.height * 2 / 3);
+				this.base.move(0, this.exponent.clientRect.height);
 				
 				this.shape.clearShapes();
 				this.shape.addFillRect(0, 0, 3, this.base.boundingRect.bottom, "white");
@@ -106,8 +106,7 @@ var ExponentiationFormulaNode = CompoundFormulaNode.extend(
 			if (this.exponent)
 			{
 				//update the baseline
-				this.baseline = this.base.baseline + this.exponent.clientRect.height * 2 / 3;
-				//this.baseline = this.base.baseline;
+				this.baseline = this.base.baseline + this.exponent.clientRect.height;
 			}
 		}, 
 
