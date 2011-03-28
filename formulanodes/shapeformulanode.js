@@ -133,6 +133,12 @@ var ShapeFormulaNode = GroupFormulaNode.extend(
 			this.updateClientRect();
 		},
 		
+		addPolygon : function(points, color)
+		{
+			this.drawLib.polygon(points, color, this.element);
+			this.updateClientRect();
+		},
+		
 		clearShapes : function()
 		{
 			for (var i = 0; i < this.element.children.length; ++i)

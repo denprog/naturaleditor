@@ -244,6 +244,7 @@ var NaturalEditor = Class.extend(
 						'formula_multiply' : 'MultiplyFormulaNode', 
 						'formula_division' : 'DivisionFormulaNode', 
 						'formula_exponentiation' : 'ExponentiationFormulaNode', 
+						'formula_squareroot' : 'SquareRootFormulaNode', 
 						'formula_group' : 'GroupFormulaNode'
 					},
 				'foreignobject' : 'ForeignObjectFormulaNode', 

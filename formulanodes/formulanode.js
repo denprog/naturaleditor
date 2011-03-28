@@ -111,7 +111,6 @@ var FormulaNode = HtmlNode.extend(
 			{
 				var n = this.childNodes.get(i);
 				n.move(n.boundingRect.left, this.baseline - n.baseline);
-				//n.move(n.boundingRect.left, this.baseline);
 			}
 		},
 		

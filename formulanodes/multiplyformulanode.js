@@ -25,12 +25,15 @@ var MultiplyFormulaNode = ShapeFormulaNode.extend(
 		
 		remake : function()
 		{
+			this.update();
 			this.updateClientRect();
 		},
 
 		update : function()
 		{
-			this.baseline = this.clientRect.height;
+			var s = nte.window.getComputedStyle(this.element, null);
+			var h = parseInt(s.getPropertyValue("height"));
+			this.baseline = h;
 		},
 
 		updateClientRect : function()

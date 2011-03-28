@@ -76,6 +76,7 @@ var ExponentiationFormulaNode = CompoundFormulaNode.extend(
 			}
 			
 			this.updateClientRect();
+			this.update();
 		},
 		
 		setLevel : function(level)

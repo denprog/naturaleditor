@@ -335,9 +335,12 @@ function CaretState(node, pos, length)
 		return n == node || node.isChild(n);
 	};
 	
-	this.checkAtLast = function()
+	this.checkAtLast = function(node)
 	{
 		var parent = this.getNode();
+		if (node && parent != node)
+			return false;
+		
 		var pos = this.getPos();
 		
 		return pos != 0 && pos == parent.childNodes.count();

@@ -36,6 +36,7 @@ var SvgFormulaNode = FormulaNode.extend(
 				x += n.clientRect.width + this.kerning;
 			}
 			
+			this.update();
 			this.updateClientRect();
 			
 			if (this.clientRect.width == 0 || this.clientRect.height == 0)
@@ -43,7 +44,6 @@ var SvgFormulaNode = FormulaNode.extend(
 			else
 				this.drawLib.setSize(this.clientRect.width + this.rightOffset, this.clientRect.height, this.element);
 
-			this.update();
 			this.updateBoundingRect();
 
 			if (this.baseline != 0)

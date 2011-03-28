@@ -19,13 +19,22 @@ var GroupFormulaNode = FormulaNode.extend(
 			var x = 0, y = 0;
 			
 			this.childNodes.forEach("remake", []);
+
+			this.baseline = 0;
 			
+			//get loweset baseline
+			for (var i = 0; i < this.childNodes.count(); ++i)
+			{
+				var n = this.childNodes.get(i);
+				if (n.baseline > this.baseline)
+					this.baseline = n.baseline;
+			}
+
+			//update the baselines
 			for (var i = 0; i < this.childNodes.count(); ++i)
 			{
 				var n = this.childNodes.get(i);
 				n.move(x, this.baseline - n.baseline);
-				//n.move(x, this.baseline);
-				//n.move(x, y);
 				x += n.clientRect.width + this.groupNode.kerning;
 			}
 			
@@ -48,10 +57,6 @@ var GroupFormulaNode = FormulaNode.extend(
 					w = n.boundingRect.right;
 				if (h < n.boundingRect.bottom)
 					h = n.boundingRect.bottom;
-//				if (w < n.boundingRect.width)
-//					w = n.boundingRect.width;
-//				if (h < n.boundingRect.height)
-//					h = n.boundingRect.height;
 			}
 			this.clientRect.setRect(0, 0, w, h);
 		},
@@ -150,7 +155,7 @@ var GroupFormulaNode = FormulaNode.extend(
 				else if (relativeState.checkInNode(this))
 				{
 					var node = relativeState.getNode();
-					if (!relativeState.checkAtLast())
+					if (!relativeState.checkAtLast(this))
 					{
 						if (node == this)
 						{
