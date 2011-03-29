@@ -30,7 +30,7 @@ var SquareRootFormulaNode = CompoundFormulaNode.extend(
 				this.shape = this.childNodes.get(0);
 				break;
 			case 1:
-				this.radicant = this.childNodes.get(1);
+				this.radicand = this.childNodes.get(1);
 				break;
 			}
 			
@@ -42,13 +42,13 @@ var SquareRootFormulaNode = CompoundFormulaNode.extend(
 		{
 			this.childNodes.forEach("remake", []);
 			
-			if (this.radicant)
+			if (this.radicand)
 			{
 				this.shape.clearShapes();
 				
-				var cx = Math.round(this.radicant.clientRect.height * 5 / 11);
-				this.offset = this.radicant.clientRect.height / 5;
-				var cy = this.radicant.clientRect.height + this.offset * 2;
+				var cx = Math.round(this.radicand.clientRect.height * 5 / 11);
+				this.offset = this.radicand.clientRect.height / 5;
+				var cy = this.radicand.clientRect.height + this.offset * 2;
 				
 				this.shape.addPolygon(
 					cx + "," + cy * 0.01 + " " + 
@@ -59,15 +59,15 @@ var SquareRootFormulaNode = CompoundFormulaNode.extend(
 					cx * 0.343 + "," + cy * 0.429 + " " + 
 					cx * 0.703 + "," + cy * 0.869 + " " + 
 					cx * 0.934 + "," + "0 " + 
-					(cx * 1.32 + this.radicant.clientRect.width) + "," + 0 + " " + 
-					(cx * 1.32 + this.radicant.clientRect.width) + "," + cy * 0.01 + " " + 
+					(cx * 1.32 + this.radicand.clientRect.width) + "," + 0 + " " + 
+					(cx * 1.32 + this.radicand.clientRect.width) + "," + cy * 0.01 + " " + 
 					cx * 1.32 + "," + cy * 0.01, 
 					"black");
-				this.shape.boundingRect.setRect(this.shape.boundingRect.left, this.shape.boundingRect.top, cx * 1.32 + this.radicant.clientRect.width, cy);
+				this.shape.boundingRect.setRect(this.shape.boundingRect.left, this.shape.boundingRect.top, cx * 1.32 + this.radicand.clientRect.width, cy);
 				this.shape.clientRect.setRect(0, 0, cx, cy);
-				this.clientRect.setRect(0, 0, cx * 1.32 + this.radicant.clientRect.width, cy);
+				this.clientRect.setRect(0, 0, cx * 1.32 + this.radicand.clientRect.width, cy);
 				
-				this.radicant.move(cx * 1.3, this.offset);
+				this.radicand.move(cx * 1.3, this.offset);
 			}
 			
 			this.updateClientRect();
@@ -77,10 +77,8 @@ var SquareRootFormulaNode = CompoundFormulaNode.extend(
 		{
 			this.childNodes.forEach("update", []);
 
-			if (this.radicant)
-			{
-				this.baseline = this.radicant.baseline + this.offset;
-			}
+			if (this.radicand)
+				this.baseline = this.radicand.baseline + this.offset;
 		},
 
 		createChildNode : function(nodeClassType, pos)
@@ -89,8 +87,8 @@ var SquareRootFormulaNode = CompoundFormulaNode.extend(
 			switch (pos)
 			{
 			case 0:
-				this.radicant = new nodeClassType(this, 1, this.nte);
-				return this.radicant;
+				this.radicand = new nodeClassType(this, 1, this.nte);
+				return this.radicand;
 			}
 			
 			return null;
@@ -111,7 +109,7 @@ var SquareRootFormulaNode = CompoundFormulaNode.extend(
 				this.parentNode == null ? 0 : this.parentNode.getChildPos(this), this.nte);
 			
 			resNode.caretState = this.caretState;
-			this.radicant.dublicate(resNode);
+			this.radicand.dublicate(resNode);
 			
 			resNode.groupNode = this.groupNode;
 			
@@ -127,7 +125,7 @@ var SquareRootFormulaNode = CompoundFormulaNode.extend(
 		
 		toTex : function()
 		{
-			return "sqrt" + this.radicant.toTex();
+			return "sqrt" + this.radicand.toTex();
 		}
 	}
 	);

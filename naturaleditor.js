@@ -55,6 +55,7 @@
 	include('formulanodes/divisionformulanode.js');
 	include('formulanodes/exponentiationformulanode.js');
 	include('formulanodes/squarerootformulanode.js');
+	include('formulanodes/nthrootformulanode.js');
 	include('formulanodes/emptyformulanode.js');
 	include('util/toolbar.js');
 	include('themes/classic/theme.js');

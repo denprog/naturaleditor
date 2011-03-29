@@ -113,8 +113,6 @@ var DivisionFormulaNode = CompoundFormulaNode.extend(
 				this.dividend = new nodeClassType(this, 0, this.nte);
 				return this.dividend;
 			case 1:
-				this.divisor = new nodeClassType(this, 2, this.nte);
-				return this.divisor;
 			case 2:
 				this.divisor = new nodeClassType(this, 2, this.nte);
 				return this.divisor;
