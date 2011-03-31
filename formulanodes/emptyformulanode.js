@@ -1,5 +1,13 @@
+/**
+ * @class EmptyFormulaNode
+ * @constructor
+ * @extends ShapeFormulaNode
+ */
 var EmptyFormulaNode = ShapeFormulaNode.extend(
 	{
+		/**
+		 * @this {EmptyFormulaNode}
+		 */
 		init : function(parentNode, pos, nte)
 		{
 			this.drawLib = nte.drawLib;
@@ -20,14 +28,20 @@ var EmptyFormulaNode = ShapeFormulaNode.extend(
 			this.render();
 		},
 		
+		/**
+		 * @this {EmptyFormulaNode}
+		 */
 		remake : function()
 		{
 			this.updateClientRect();
 		},
 
+		/**
+		 * @this {EmptyFormulaNode}
+		 */
 		render : function()
 		{
-			var s = nte.window.getComputedStyle(this.element, null);
+			var s = this.nte.window.getComputedStyle(this.element, null);
 			var h = parseInt(s.getPropertyValue("font-size"));
 			
 			//if (this.shape)
@@ -38,21 +52,27 @@ var EmptyFormulaNode = ShapeFormulaNode.extend(
 			//this.addRect(0, 0, h, h, "black");
 		},
 		
+		/**
+		 * @this {EmptyFormulaNode}
+		 */
 		updateClientRect : function()
 		{
-			var s = nte.window.getComputedStyle(this.element, null);
+			var s = this.nte.window.getComputedStyle(this.element, null);
 			var h = parseInt(s.getPropertyValue("font-size"));
 			
 			this.clientRect.setRect(0, 0, h / 2, h);
 			this.boundingRect.setRect(0, 0, h / 2, h);
 		},
 
+		/**
+		 * @this {EmptyFormulaNode}
+		 */
 		update : function()
 		{
 			this.childNodes.forEach("update", []);
 			
 			//update the baseline
-			var s = nte.window.getComputedStyle(this.element, null);
+			var s = this.nte.window.getComputedStyle(this.element, null);
 			var h = parseInt(s.getPropertyValue("font-size"));
 			this.baseline = h;
 		}, 

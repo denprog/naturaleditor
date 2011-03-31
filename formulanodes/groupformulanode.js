@@ -1,6 +1,7 @@
 /**
  * The "g" tag node.
  * @class GroupFormulaNode
+ * @constructor
  */
 var GroupFormulaNode = FormulaNode.extend(
 	{

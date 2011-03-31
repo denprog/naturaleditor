@@ -1,6 +1,7 @@
 /**
  * Graphical element of formula node.
  * @class ShapeFormulaNode
+ * @constructor
  */
 var ShapeFormulaNode = GroupFormulaNode.extend(
 	{

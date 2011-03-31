@@ -1,4 +1,7 @@
-﻿var RootNode = HtmlNode.extend(
+﻿/**
+ * @constructor
+ */
+var RootNode = HtmlNode.extend(
 	{
 		init : function(element, parentNode, pos, nte)
 		{
@@ -238,7 +241,7 @@
 						nodeEvent.caretState.setToNode(this, pos, len);
 						nodeEvent.resNode = this;
 						
-						return true;
+						//return true;
 					}
 
 					return true;

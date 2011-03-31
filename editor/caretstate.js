@@ -1,6 +1,7 @@
 ﻿/**
  * Caret state.
  * @class CaretState
+ * @constructor
  */
 function CaretState(node, pos, length)
 {
@@ -388,6 +389,9 @@ function CaretPosition(node, pos)
 		this.positions.push(p[i]);
 };
 
+/**
+ * @constructor
+ */
 function SelectedNode(caretState, node, pos, length)
 {
 	this.caretPosition = new CaretPosition(node, pos);

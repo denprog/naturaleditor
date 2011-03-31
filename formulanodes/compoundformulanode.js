@@ -1,3 +1,6 @@
+/**
+ * @constructor
+ */
 var CompoundFormulaNode = GroupFormulaNode.extend(
 	{
 		init : function(parentNode, pos, nte)

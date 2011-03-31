@@ -1,6 +1,7 @@
 /**
  * Exponentiation formula node.
  * @class ExponentiationFormulaNode
+ * @constructor
  */
 var ExponentiationFormulaNode = CompoundFormulaNode.extend(
 	{

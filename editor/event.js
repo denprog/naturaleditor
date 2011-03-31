@@ -1,38 +1,46 @@
-﻿function Event(eventsHandler, owner, element, type, intermediateHandler, handler, name)
-{
-	this.eventsHandler = eventsHandler;
-	this.owner = owner;
-	this.element = element;
-	this.type = type;
-	this.intermediateHandler = intermediateHandler;
-	this.handler = handler;
-	this.name = name;
-	var obj = this;
+﻿///**
+// * Class for describing events
+// * @class Event
+// * @constructor
+// */
+//function Event(eventsHandler, owner, element, type, intermediateHandler, handler, name)
+//{
+//	this.eventsHandler = eventsHandler;
+//	this.owner = owner;
+//	this.element = element;
+//	this.type = type;
+//	this.intermediateHandler = intermediateHandler;
+//	this.handler = handler;
+//	this.name = name;
+//	var obj = this;
+//
+//	this.eventFunc = function(event)
+//	{
+//		this.intermediateHandler(event, obj);
+//	};
+//	
+//	this.attach = function()
+//	{
+//		if (this.element.addEventListener)
+//			this.element.addEventListener(type, this.eventFunc, false);
+//		else
+//			element.attachEvent("on" + type, this.eventFunc);
+//	};
+//	
+//	this.detach = function()
+//	{
+//		if (element.removeEventListener)
+//			element.removeEventListener(type, this.eventFunc, false);
+//		else
+//			element.detachEvent(type, this.eventFunc);
+//	};
+//	
+//	this.attach();
+//}
 
-	this.eventFunc = function(event)
-	{
-		intermediateHandler(event, obj);
-	};
-	
-	this.attach = function()
-	{
-		if (this.element.addEventListener)
-			this.element.addEventListener(type, this.eventFunc, false);
-		else
-			element.attachEvent("on" + type, this.eventFunc);
-	};
-	
-	this.detach = function()
-	{
-		if (element.removeEventListener)
-			element.removeEventListener(type, this.eventFunc, false);
-		else
-			element.detachEvent(type, this.eventFunc);
-	};
-	
-	this.attach();
-}
-
+/**
+ * @constructor
+ */
 function EventsHandler(nte)
 {
 	this.nte = nte;
@@ -59,10 +67,10 @@ function EventsHandler(nte)
 		node.eventHandlers[type] = null;
 	};
 
-	this.eventFunc = function(event)
-	{
-		intermediateHandler(event, obj);
-	};
+//	this.eventFunc = function(event)
+//	{
+//		intermediateHandler(event, obj);
+//	};
 	
 	this.attach = function(type)
 	{
@@ -319,7 +327,7 @@ function EventsHandler(nte)
 			return;
 		
 		var handler = this.findEventHandler("onkeypress");
-		if (handler && handler.eventHandlers["onkeypress"].apply(handler, [character]))
+		if (handler && handler.eventHandlers["onkeypress"].apply(handler, [String.fromCharCode(event.keyCode)]))
 			this.preventDefault(event);
 	};
 

@@ -7,18 +7,18 @@
 		document.write('<script type="text/javascript" src="' + base + url + '"></script>');
 	}
 	
-	function loadCss(fileName)
-	{
-		var r = document.createElement("link");
-		r.setAttribute("rel", "stylesheet");
-	  r.setAttribute("type", "text/css");
-	  r.setAttribute("href", fileName);
-	  
-	  if (typeof(r) != "undefined")
-	  	document.getElementsByTagName("head")[0].appendChild(r);
-	}
+//	function loadCss(fileName)
+//	{
+//		var r = document.createElement("link");
+//		r.setAttribute("rel", "stylesheet");
+//	  r.setAttribute("type", "text/css");
+//	  r.setAttribute("href", fileName);
+//	  
+//	  if (typeof(r) != "undefined")
+//	  	document.getElementsByTagName("head")[0].appendChild(r);
+//	}
 
-	loadCss(base + "style/styles.css");
+	//loadCss(base + "style/styles.css");
 	
 	include('lib/class.js');
 	include('editor/naturaleditor.js');

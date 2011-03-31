@@ -1,6 +1,7 @@
 /**
  * The Natural Editor
  * @class
+ * @constructor
  * @param {Object} parent
  * @param {Object} themePath
  * @param {Object} cx
@@ -34,6 +35,13 @@ var NaturalEditor = Class.extend(
 				else
 					this.inited = true;
 			}
+
+			if (DEBUG_LEVEL)
+				var base = window.location.href.substr(0, window.location.href.lastIndexOf("/NaturalEditor/")) + "/NaturalEditor/";
+			else
+				var base = this.getCurDirectory();
+
+			this.loadCss(DEBUG_LEVEL ? base + "style/styles.css" : base + "styles.css");
 			
 			this.drawLib = new SvgLib(this);
 			
@@ -334,8 +342,9 @@ var NaturalEditor = Class.extend(
 			return null;
 		},
 		
-		loadCss : function(document, fileName)
+		loadCss : function(fileName)
 		{
+			//alert(fileName);
 			var r = document.createElement("link");
 			r.setAttribute("rel", "stylesheet");
 		  r.setAttribute("type", "text/css");
@@ -343,6 +352,23 @@ var NaturalEditor = Class.extend(
 		  
 		  if (typeof(r) != "undefined")
 		  	document.getElementsByTagName("head")[0].appendChild(r);
+		},
+
+		getCurDirectory : function()
+		{
+			var scripts = document.getElementsByTagName('script');
+			var name = "naturaleditor.js";
+
+	    for (var i = scripts.length - 1; i >= 0; --i)
+	    {
+	      var src = scripts[i].src;
+	      var n = src.length;
+	      var length = name.length;
+	      if (src.substr(n - length) == name)
+	        return src.substr(0, n - length);
+	    }
+	    
+	    return "";
 		},
 		
 		setFocus : function()

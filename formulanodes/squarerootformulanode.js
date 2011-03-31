@@ -1,3 +1,6 @@
+/**
+ * @constructor
+ */
 var SquareRootFormulaNode = CompoundFormulaNode.extend(
 	{
 		init : function(parentNode, pos, nte)

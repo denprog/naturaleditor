@@ -1,9 +1,12 @@
+/**
+ * @constructor
+ */
 function Toolbar(nte, themeName, parentElement)
 {
 	this.nte = nte;
 	this.parentElement = parentElement;
 	this.themeName = themeName;
-	this.table;
+	//this.table;
 	
 	this.init = function()
 	{
@@ -54,6 +57,9 @@ function Toolbar(nte, themeName, parentElement)
 	this.init();
 }
 
+/**
+ * @constructor
+ */
 function ToolbarButton(nte, parentElement, name, themeName, shortcut, handler)
 {
 	this.nte = nte;
@@ -61,8 +67,8 @@ function ToolbarButton(nte, parentElement, name, themeName, shortcut, handler)
 	this.handler = handler;
 	this.name = name;
 	this.themeName = themeName;
-	this.link;
-	this.pressed;
+	//this.link;
+	//this.pressed;
 	
 	this.init = function()
 	{

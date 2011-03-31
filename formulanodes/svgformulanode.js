@@ -1,6 +1,7 @@
 /**
  * The "svg" tag node.
  * @class SvgFormulaNode
+ * @constructor
  */
 var SvgFormulaNode = FormulaNode.extend(
 	{

@@ -1,6 +1,7 @@
 ﻿/**
  * Bold html node
  * @class
+ * @constructor
  * @extends HtmlNode
  * @param {} parentNode parent node
  * @param {} nodePos node insert position

@@ -20,6 +20,7 @@ var NodeLevel =
 /**
  * Base class for html nodes
  * @class
+ * @constructor
  * @extends Class
  * @param {HtmlNodeType} nodeType type of the node
  * @param {} element DOM element
@@ -73,7 +74,7 @@ var HtmlNode = Class.extend(
 
 			this.level = NodeLevel.NORMAL;
 
-			this.tempRect = new Rect();
+			this.tempRect = new Rectangle();
 			
 			if (element)	
 				this.element = element;
@@ -334,13 +335,16 @@ var HtmlNode = Class.extend(
 
 		addStyle : function(style)
 		{
-			for (name in style)
+			for (var name in style)
 				this.element.style[name] = style[name];
 		}, 
 		
 		checkStyle : function(style)
 		{
-			return this.element.style[name] == style[name];
+			for (var name in style)
+				if (this.element.style[name] != style[name])
+					return false;
+			return true;
 		}, 
 
 		getChildPos : function(node)
@@ -1162,7 +1166,7 @@ var HtmlNode = Class.extend(
 				var r = this.nte.editor.getBoundingClientRect();
 			}
 			
-			return new Rect(rect.left - r.left, rect.top - r.top, rect.width, rect.height);
+			return new Rectangle(rect.left - r.left, rect.top - r.top, rect.width, rect.height);
 		}, 
 
 		//editing
@@ -1468,7 +1472,7 @@ var HtmlNode = Class.extend(
 				}
 			}
 			
-			return false;
+			//return false;
 		},
 		
 		removeChild : function(nodeEvent, command)

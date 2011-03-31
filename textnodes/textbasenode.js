@@ -1,3 +1,6 @@
+/**
+ * @constructor
+ */
 var TextBaseNode = HtmlNode.extend(
 	{
 		//caret functions
@@ -6,7 +9,7 @@ var TextBaseNode = HtmlNode.extend(
 		{
 			var res = caretState;
 			var c = res;
-			var r = new Rect();
+			var r = new Rectangle();
 			var n = c.getNode();
 			n.getRelativePosBounds(c.getPos(), r);
 			var x = r.left;
@@ -43,7 +46,7 @@ var TextBaseNode = HtmlNode.extend(
 		{
 			var res = caretState;
 			var c = res;
-			var r = new Rect();
+			var r = new Rectangle();
 			var n = c.getNode();
 			n.getRelativePosBounds(c.getPos(), r);
 			var x = r.left;

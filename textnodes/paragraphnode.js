@@ -1,4 +1,7 @@
-﻿var ParagraphNode = TextBaseNode.extend( 
+﻿/**
+ * @constructor
+ */
+var ParagraphNode = TextBaseNode.extend( 
 	{
 		init : function(parentNode, pos, nte)
 		{
@@ -138,7 +141,7 @@
 //		{
 //			var res = caretState;
 //			var c = res;
-//			var r = new Rect();
+//			var r = new Rectangle();
 //			var n = c.getNode();
 //			n.getRelativePosBounds(c.getPos(), r);
 //			var x = r.left;
@@ -175,7 +178,7 @@
 //		{
 //			var res = caretState;
 //			var c = res;
-//			var r = new Rect();
+//			var r = new Rectangle();
 //			var n = c.getNode();
 //			n.getRelativePosBounds(c.getPos(), r);
 //			var x = r.left;

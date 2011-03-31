@@ -1,3 +1,7 @@
+/**
+ * @constructor
+ * @param {function(this:String, FormulaNode, int, NaturalEditor)}
+ */
 var NthRootFormulaNode = CompoundFormulaNode.extend(
 	{
 		init : function(parentNode, pos, nte)

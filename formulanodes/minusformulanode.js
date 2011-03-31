@@ -1,6 +1,7 @@
 /**
  * Minus formula node
  * @class MinusFormulaNode
+ * @constructor
  */
 var MinusFormulaNode = ShapeFormulaNode.extend(
 	{
@@ -30,7 +31,7 @@ var MinusFormulaNode = ShapeFormulaNode.extend(
 
 		update : function()
 		{
-			var s = nte.window.getComputedStyle(this.element, null);
+			var s = this.nte.window.getComputedStyle(this.element, null);
 			var h = parseInt(s.getPropertyValue("height"));
 			this.baseline = h;
 			//this.baseline = this.clientRect.height;
@@ -38,7 +39,7 @@ var MinusFormulaNode = ShapeFormulaNode.extend(
 
 		updateClientRect : function()
 		{
-			var s = nte.window.getComputedStyle(this.element, null);
+			var s = this.nte.window.getComputedStyle(this.element, null);
 			var w = parseInt(s.getPropertyValue("width"));
 			var h = parseInt(s.getPropertyValue("height"));
 			
@@ -53,7 +54,7 @@ var MinusFormulaNode = ShapeFormulaNode.extend(
 
 		render : function()
 		{
-			var s = nte.window.getComputedStyle(this.element, null);
+			var s = this.nte.window.getComputedStyle(this.element, null);
 			var w = parseInt(s.getPropertyValue("width"));
 			var h = parseInt(s.getPropertyValue("height"));
 			

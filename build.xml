@@ -1,0 +1,94 @@
+<project name="NaturalEditor" default="build" basedir=".">
+	<property name="SOURCE_DIR" value="."/>
+	<property name="RELEASE_DIR" value="release"/>
+	<property name="JS_TEMP" value="${RELEASE_DIR}/naturaleditor_tmp.js"/>
+	
+	<target name="concat">
+		<echo message="Concatenating Javascript sources."/>
+		<concat encoding="UTF-8" destfile="${JS_TEMP}">
+			<filelist dir="${SOURCE_DIR}">
+				<file name="lib/class.js"/>
+				<file name="editor/naturaleditor.js"/>
+				<file name="util/rect.js"/>
+				<file name="editor/command.js"/>
+				<file name="editor/caretstate.js"/>
+				<file name="textnodes/nodescollection.js"/>
+				<file name="editor/caret.js"/>
+				<file name="editor/event.js"/>
+				<file name="lib/svglib.js"/>
+				<file name="textnodes/htmlnode.js"/>
+				<file name="textnodes/textnode.js"/>
+				<file name="textnodes/bodynode.js"/>
+				<file name="textnodes/textbasenode.js"/>
+				<file name="textnodes/paragraphnode.js"/>
+				<file name="textnodes/unorderedlistnode.js"/>
+				<file name="textnodes/boldnode.js"/>
+				<file name="textnodes/italicnode.js"/>
+				<file name="textnodes/underline.js"/>
+				<file name="textnodes/breaknode.js"/>
+				<file name="textnodes/spannode.js"/>
+				<file name="textnodes/headernode.js"/>
+				<file name="textnodes/referencenode.js"/>
+				<file name="formulanodes/formulanode.js"/>
+				<file name="formulanodes/svgformulanode.js"/>
+				<file name="formulanodes/groupformulanode.js"/>
+				<file name="formulanodes/compoundformulanode.js"/>
+				<file name="formulanodes/shapeformulanode.js"/>
+				<file name="formulanodes/foreignobjectformulanode.js"/>
+				<file name="formulanodes/textformulanode.js"/>
+				<file name="formulanodes/plusformulanode.js"/>
+				<file name="formulanodes/minusformulanode.js"/>
+				<file name="formulanodes/multiplyformulanode.js"/>
+				<file name="formulanodes/divisionformulanode.js"/>
+				<file name="formulanodes/exponentiationformulanode.js"/>
+				<file name="formulanodes/squarerootformulanode.js"/>
+				<file name="formulanodes/nthrootformulanode.js"/>
+				<file name="formulanodes/emptyformulanode.js"/>
+				<file name="util/toolbar.js"/>
+				<file name="themes/classic/theme.js"/>
+			</filelist>
+		</concat>
+		<echo message="Javascript sources concatenated."/>
+	</target>
+	
+	<taskdef name="jscomp" classname="com.google.javascript.jscomp.ant.CompileTask" classpath="compiler.jar"/>
+
+	<!--<target name="compile">
+		<echo message="Compilation started."/>
+		<jscomp compilationLevel="simple" warning="verbose" output="${RELEASE_DIR}/naturaleditor.js">
+			<sources dir="${RELEASE_DIR}">
+				<file name="naturaleditor_tmp.js"/>
+			</sources>
+		</jscomp>
+	</target>-->
+	
+	<target name="compile">
+		<!--<java jar="compiler.jar" fork="true">
+			<arg value="-js release/naturaleditor_tmp.js -js_output_file release/naturaleditor.js"/>
+		</java>-->
+		<exec executable="compiler.jar">
+			<arg line="--js release/naturaleditor_tmp.js --js_output_file release/naturaleditor.js"/>
+		</exec>
+	</target>
+	
+	<target name="compilejs">
+		<!-- modeled off example found at http://ant.apache.org/manual/Tasks/apply.html -->
+		<apply executable="java" parallel="false" failonerror="true" addsourcefile="false">
+			<arg value="-jar" />
+			<arg value="compiler.jar" />
+			<arg line="--compilation_level SIMPLE_OPTIMIZATIONS --define='DEBUG_LEVEL=false' --js release/naturaleditor_tmp.js --js_output_file release/naturaleditor.js"/>
+			<fileset dir="${RELEASE_DIR}" includes="naturaleditor_tmp.js"/>
+    </apply> 
+  </target> 
+	
+	<target name="gather">
+		<!--<delete file="${RELEASE_DIR}/naturaleditor_tmp.js" quiet="true"/>-->
+		<copy file="${SOURCE_DIR}/themes/classic/toolbar.css" todir="${RELEASE_DIR}" overwrite="true"/>
+		<copy file="${SOURCE_DIR}/themes/classic/icons.gif" todir="${RELEASE_DIR}" overwrite="true"/>
+		<copy file="${SOURCE_DIR}/style/styles.css" todir="${RELEASE_DIR}" overwrite="true"/>
+	</target>
+	
+	<target name="build" depends="concat, compilejs, gather">
+		<echo message="Build complete."/>
+	</target>
+</project>

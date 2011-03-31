@@ -1,4 +1,7 @@
-﻿function CommandManager(nte)
+﻿/**
+ * @constructor
+ */
+function CommandManager(nte)
 {
 	this.undoCommands = new Array();
 	this.redoCommands = new Array();
@@ -42,7 +45,7 @@
 			return false;
 		}
 
-		nodeCaretState = this.undoCommands[0].caretState;
+		var nodeCaretState = this.undoCommands[0].caretState;
 
 		if (nodeEvent.changedNode)
 			var node = nodeEvent.changedNode;
@@ -54,8 +57,9 @@
 				node = node.parentNode;
 		}
 		
-		if (mergeChildNodes.apply(this, [node, nodeCaretState]))
-			resCaretState = this.undoCommands[0].caretState;
+		//if (mergeChildNodes.apply(this, [node, nodeCaretState]))
+		//	resCaretState = this.undoCommands[0].caretState;
+		mergeChildNodes.apply(this, [node, nodeCaretState]);
 
 		if (commit)
 		{
@@ -113,7 +117,7 @@
 			return false;
 		}
 
-		nodeCaretState = this.undoCommands[0].caretState;
+		var nodeCaretState = this.undoCommands[0].caretState;
 
 		if (commit)
 		{
@@ -290,11 +294,11 @@
 		//merge the nodes if nessecary
 		var node = resCaretState.getNode();
 		if (mergeChildNodes.apply(this, [node, resCaretState]))
-			resCaretState = this.undoCommands[0].caretState;
+			var resCaretState = this.undoCommands[0].caretState;
 
 		if (commit)
 		{
-			if (nodeCaretState)
+			if (nodeCaretState && resCaretState)
 			{
 				this.redoCommands.length = 0;
 				this.undoCommands.splice(0, 0, new CommandsDelimiter(lastCaretState.dublicate(), resCaretState.dublicate()));
@@ -511,19 +515,25 @@
 	};
 }
 
+/**
+ * @constructor
+ */
 function CommandsDelimiter(beforeCaretState, afterCaretState)
 {
 	this.caretState = beforeCaretState;
 	this.afterCaretState = afterCaretState;
 }
 
+/**
+ * @constructor
+ */
 function Command(caretState, doActionFunc, undo, commandManager, name)
 {
 	this.caretState = caretState;
 	this.doActionFunc = doActionFunc;
 	this.undo = undo;
 	this.commandManager = commandManager;
-	this.nodeEvent;
+	//this.nodeEvent;
 	var nodeParams = {}; //array where a node stores its parameters
 	var doActionNodePos = null;
 	var undoActionNodePos = null;

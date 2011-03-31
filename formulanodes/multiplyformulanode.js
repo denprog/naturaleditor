@@ -1,6 +1,7 @@
 /**
  * Multiply formula node
  * @class MultiplyFormulaNode
+ * @constructor
  */
 var MultiplyFormulaNode = ShapeFormulaNode.extend(
 	{
@@ -31,14 +32,14 @@ var MultiplyFormulaNode = ShapeFormulaNode.extend(
 
 		update : function()
 		{
-			var s = nte.window.getComputedStyle(this.element, null);
+			var s = this.nte.window.getComputedStyle(this.element, null);
 			var h = parseInt(s.getPropertyValue("height"));
 			this.baseline = h;
 		},
 
 		updateClientRect : function()
 		{
-			var s = nte.window.getComputedStyle(this.element, null);
+			var s = this.nte.window.getComputedStyle(this.element, null);
 			var w = parseInt(s.getPropertyValue("width"));
 			var h = parseInt(s.getPropertyValue("height"));
 			
@@ -53,7 +54,7 @@ var MultiplyFormulaNode = ShapeFormulaNode.extend(
 
 		render : function()
 		{
-			var s = nte.window.getComputedStyle(this.element, null);
+			var s = this.nte.window.getComputedStyle(this.element, null);
 			var w = parseInt(s.getPropertyValue("width"));
 			var h = parseInt(s.getPropertyValue("height"));
 			

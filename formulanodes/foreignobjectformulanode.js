@@ -1,3 +1,6 @@
+/**
+ * @constructor
+ */
 var ForeignObjectFormulaNode = FormulaNode.extend(
 	{
 		init : function(parentNode, pos, nte)

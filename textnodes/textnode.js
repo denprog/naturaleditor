@@ -1,3 +1,6 @@
+/**
+ * @constructor
+ */
 var TextNode = HtmlNode.extend(
 	{
 		init : function(textNode, parentNode, pos, nte)

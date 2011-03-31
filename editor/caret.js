@@ -1,6 +1,7 @@
 ﻿/**
  * Caret in the Natural Editor
  * @class
+ * @constructor
  * @param {Object} nte
  */
 function Caret(nte)
@@ -32,7 +33,7 @@ function Caret(nte)
 	/*
 	 * Formula caret
 	 */
-	this.formulaCaretGroup;
+	//this.formulaCaretGroup;
 	
 	/*
 	 * Caret shapes
@@ -349,10 +350,10 @@ function Caret(nte)
 			this.nte.drawLib.remove(this.group, this.caretSpan);
 			this.textCaretGroup = this.nte.drawLib.svg(this.caretSpan);
 		}
-		else if (this.group)
-		{
+		//else if (this.group)
+		//{
 			//this.nte.drawLib.remove(this.group, this.group.parent);
-		}
+		//}
 		
 		//this.lib.remove(this.group, this.parent);
 		//this.group = this.lib.svg(this.parent);

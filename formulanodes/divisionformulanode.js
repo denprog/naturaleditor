@@ -1,6 +1,7 @@
 /**
  * Division formula node
  * @class DivisionFormulaNode
+ * @constructor
  */
 var DivisionFormulaNode = CompoundFormulaNode.extend(
 	{

@@ -1,6 +1,7 @@
 /**
  * Text formula node
  * @class TextFormulaNode
+ * @constructor
  */
 var TextFormulaNode = ForeignObjectFormulaNode.extend(
 	{
@@ -57,7 +58,7 @@ var TextFormulaNode = ForeignObjectFormulaNode.extend(
 
 			if (this.text && !this.img)
 			{
-				var r = new Rect();
+				var r = new Rectangle();
 				this.text.getNodeBounds(r);
 				
 				if (this.text.element.textContent.length > 0)
@@ -222,7 +223,7 @@ var TextFormulaNode = ForeignObjectFormulaNode.extend(
 		{
 			if (this.text)
 			{
-				var r = new Rect();
+				var r = new Rectangle();
 				this.text.getNodeBounds(r);
 				this.clientRect.setRect(0, 0, r.width, r.height);
 			}

@@ -1,4 +1,7 @@
-﻿var ItalicNode = HtmlNode.extend(
+﻿/**
+ * @constructor
+ */
+var ItalicNode = HtmlNode.extend(
 	/**
 	 @lends HtmlNode
 	 */

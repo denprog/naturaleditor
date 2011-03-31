@@ -1,6 +1,7 @@
 /**
  * Base class for formula nodes
  * @class FormulaNode
+ * @constructor
  */
 var FormulaNode = HtmlNode.extend(
 	{
@@ -15,8 +16,8 @@ var FormulaNode = HtmlNode.extend(
 			 * Client rect
 			 * @public
 			 */
-			this.clientRect = new Rect();
-			this.boundingRect = new Rect();
+			this.clientRect = new Rectangle();
+			this.boundingRect = new Rectangle();
 			
 			/**
 			 * Node baseline
@@ -174,7 +175,7 @@ var FormulaNode = HtmlNode.extend(
 		{
 			//this.caret.clearShapes();
 			
-			var r = new Rect();
+			var r = new Rectangle();
 			this.getPosBounds(this.caret.currentState.getSelectionStart(), r);
 			if (r.bottom + 3 < this.groupNode.boundingRect.height + this.nte.editor.scrollTop && 
 				this.groupNode.boundingRect.height > r.bottom + 3)
@@ -551,7 +552,7 @@ var FormulaNode = HtmlNode.extend(
 			//s = nte.window.getComputedStyle(this.groupNode.element, null);
 			//h = parseInt(s.getPropertyValue("padding-left"));
 
-			//var r = new Rect();
+			//var r = new Rectangle();
 			//this.groupNode.getNodeBounds(r);
 			
 			//this.groupNode.updateBoundingRect();

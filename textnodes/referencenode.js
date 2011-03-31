@@ -1,3 +1,6 @@
+/**
+ * @constructor
+ */
 var ReferenceNode = TextBaseNode.extend(
 	{
 		init : function(parentNode, pos, nte, element)
