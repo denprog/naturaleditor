@@ -199,7 +199,12 @@ var DivisionFormulaNode = CompoundFormulaNode.extend(
 		},
 
 		//command functions
-		
+
+		doInsert : function(pos, nodeEvent, command)
+		{
+			return false;
+		},
+
 		doRemoveChild : function(node, pos, len, nodeEvent, command)
 		{
 			return false;
@@ -207,8 +212,7 @@ var DivisionFormulaNode = CompoundFormulaNode.extend(
 
 		dublicate : function(parent)
 		{
-			var resNode = new DivisionFormulaNode(parent, 
-				this.parentNode == null ? 0 : this.parentNode.getChildPos(this), this.nte);
+			var resNode = new DivisionFormulaNode(parent, this.parentNode == null ? 0 : this.parentNode.getChildPos(this), this.nte);
 			
 			resNode.caretState = this.caretState;
 			this.dividend.dublicate(resNode);
@@ -226,9 +230,9 @@ var DivisionFormulaNode = CompoundFormulaNode.extend(
 
 		//test functions
 		
-		toTex : function()
+		toTex : function(braces)
 		{
-			return this.dividend.toTex() + "/" + this.divisor.toTex();
+			return "{" + this.dividend.toTex(false) + "}/{" + this.divisor.toTex(false) + "}";
 		}
 	}
 );

@@ -9,7 +9,7 @@ var NthRootFormulaNode = CompoundFormulaNode.extend(
 			this.drawLib = nte.drawLib;
 			
 			this._super(parentNode, pos, nte);
-			this.className = "RootFormulaNode";
+			this.className = "NthRootFormulaNode";
 			
 			this.degree = null;
 			this.shape = this.addShapeNode();
@@ -18,6 +18,9 @@ var NthRootFormulaNode = CompoundFormulaNode.extend(
 		
 		insertChildNode : function(childNode, pos)
 		{
+			if (pos == 1)
+				return;
+			
 			this._super(childNode, pos);
 			
 			switch (pos)
@@ -52,6 +55,7 @@ var NthRootFormulaNode = CompoundFormulaNode.extend(
 				this.offset = this.radicand.clientRect.height / 5;
 				var cy = Math.max(this.radicand.clientRect.height + this.offset * 2, this.degree.clientRect.height);
 
+				//the root's shape
 				this.shape.addPolygon(
 					cx + "," + cy * 0.01 + " " + 
 					cx * 0.722 + "," + cy + " " + 
@@ -69,32 +73,10 @@ var NthRootFormulaNode = CompoundFormulaNode.extend(
 				this.shape.clientRect.setRect(0, 0, cx, cy);
 				this.clientRect.setRect(0, 0, this.degree.clientRect.width + cx * 1.32 + this.radicand.clientRect.width, cy);
 				
+				//align the child nodes
 				this.degree.move(0, this.clientRect.height / 2 - this.degree.baseline);
 				this.shape.move(this.degree.clientRect.width + this.groupNode.kerning, 0);
 				this.radicand.move(this.groupNode.kerning + this.degree.clientRect.width + cx * 1.3, this.offset);
-
-//				var cx = Math.round(this.radicand.clientRect.height * 5 / 11);
-//				this.offset = this.radicand.clientRect.height / 5;
-//				var cy = this.radicand.clientRect.height + this.offset * 2;
-//				
-//				this.shape.addPolygon(
-//					cx + "," + cy * 0.01 + " " + 
-//					cx * 0.722 + "," + cy + " " + 
-//					cx * 0.281 + "," + cy * 0.495 + " " + 
-//					cx * 0.061 + "," + cy * 0.544 + " " + 
-//					cx * 0.075 + "," + cy * 0.510 + " " + 
-//					cx * 0.343 + "," + cy * 0.429 + " " + 
-//					cx * 0.703 + "," + cy * 0.869 + " " + 
-//					cx * 0.934 + "," + "0 " + 
-//					(cx * 1.32 + this.radicand.clientRect.width) + "," + 0 + " " + 
-//					(cx * 1.32 + this.radicand.clientRect.width) + "," + cy * 0.01 + " " + 
-//					cx * 1.32 + "," + cy * 0.01, 
-//					"black");
-//				this.shape.boundingRect.setRect(this.shape.boundingRect.left, this.shape.boundingRect.top, cx * 1.32 + this.radicand.clientRect.width, cy);
-//				this.shape.clientRect.setRect(0, 0, cx, cy);
-//				this.clientRect.setRect(0, 0, cx * 1.32 + this.radicand.clientRect.width, cy);
-//				
-//				this.radicand.move(cx * 1.3, this.offset);
 			}
 			
 			this.updateClientRect();
@@ -115,7 +97,7 @@ var NthRootFormulaNode = CompoundFormulaNode.extend(
 				this.render();
 			}
 
-			for (var i = 0; i < this.childNodes.count() - 1; ++i)
+			for (var i = 0; i < this.childNodes.count(); ++i)
 				this.childNodes.get(i).setLevel(level);
 			if (this.childNodes.count() > 0)
 				this.childNodes.get(0).setLevel(this.getLesserLevel());
@@ -148,6 +130,11 @@ var NthRootFormulaNode = CompoundFormulaNode.extend(
 		
 		//command functions
 		
+		doInsert : function(pos, nodeEvent, command)
+		{
+			return false;
+		},
+
 		doRemoveChild : function(node, pos, len, nodeEvent, command)
 		{
 			return false;
@@ -175,9 +162,9 @@ var NthRootFormulaNode = CompoundFormulaNode.extend(
 
 		//test functions
 		
-		toTex : function()
+		toTex : function(braces)
 		{
-			return "sqrt[" + this.degree.toTex() + "]" + this.radicand.toTex();
+			return "sqrt[" + this.degree.toTex(false) + "]{" + this.radicand.toTex(false) + "}";
 		}
 	}
 	);

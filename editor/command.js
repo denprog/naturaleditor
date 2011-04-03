@@ -170,6 +170,8 @@ function CommandManager(nte)
 			}
 		}
 
+		nodeEvent.right = right;
+		
 		nodeCaretState = nodeEvent.caretState;
 		
 		//merge the nodes if nessecary
@@ -244,13 +246,11 @@ function CommandManager(nte)
 		if (typeof(commit) == "undefined")
 			commit = true;
 
-		caretState.store();
+		caretState.setNodeCaretState();
 		
 		for (var i = 0; i < caretState.selectedNodes.length; ++i)
 		{
 			var s = caretState.selectedNodes[i];
-			s.restore();
-			
 			var nodeCaretState = new CaretState();
 			nodeCaretState.setSelectedNode(s.dublicate());
 
@@ -290,6 +290,8 @@ function CommandManager(nte)
 			else
 				resCaretState.selectedNodes.splice(0, 0, nodeCaretState.selectedNodes[0]);
 		}
+		
+		caretState.clearNodeCaretState();
 
 		//merge the nodes if nessecary
 		var node = resCaretState.getNode();

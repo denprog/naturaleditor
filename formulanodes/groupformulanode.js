@@ -253,9 +253,9 @@ var GroupFormulaNode = FormulaNode.extend(
 		
 		//test functions
 		
-		toTex : function()
+		toTex : function(braces)
 		{
-			return "{" + this.childNodes.toTex() + "}";
+			return braces ? "{" + this.childNodes.toTex(this.childNodes.count() == 1 ? false : true) + "}" : this.childNodes.toTex(this.childNodes.count() == 1 ? false : true);
 		}
 	}
 );

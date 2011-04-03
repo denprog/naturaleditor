@@ -260,10 +260,10 @@ var SvgFormulaNode = FormulaNode.extend(
 		
 		//test functions
 		
-		toTex : function()
+		toTex : function(braces)
 		{
 			var tex = "$";
-			tex += this.childNodes.toTex();
+			tex += this.childNodes.toTex(braces);
 			tex += "$";
 			return tex;
 		}

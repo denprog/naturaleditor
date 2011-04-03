@@ -166,9 +166,9 @@ var ExponentiationFormulaNode = CompoundFormulaNode.extend(
 
 		//test functions
 		
-		toTex : function()
+		toTex : function(braces)
 		{
-			return this.base.toTex() + "^" + this.exponent.toTex();
+			return this.base.toTex(braces) + "^" + this.exponent.toTex(braces);
 		}
 	}
 );

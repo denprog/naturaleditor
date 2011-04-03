@@ -39,6 +39,8 @@ function Caret(nte)
 	 * Caret shapes
 	 */
 	this.shapes = new Array();
+	
+	this.nextNode = null;
 
 	this.visible = true;
 
@@ -227,6 +229,39 @@ function Caret(nte)
 		
 		return null;
 	},
+
+	this.setNextState = function(caretState)
+	{
+		var node = caretState.getNode();
+		if (node.childNodes.count() > 0)
+		{
+			var n = node.getChildNode(caretState.getPos());
+			n.nextCaretPos = true;
+			this.nextNode = n;
+		}
+		else
+		{
+			node.nextCaretPos = true;
+			this.nextNode = node;
+			this.nextNodePos = caretState.getPos();
+		}
+	},
+	
+	this.getNextState = function()
+	{
+		if (!this.nextNode)
+			return null;
+		
+		if (this.nextNode instanceof TextNode)
+			var res = new CaretState(this.nextNode, this.nextNodePos, 0);
+		else
+			var res = new CaretState(this.nextNode.parentNode, this.nextNode.parentNode.getChildPos(this.nextNode), 0);
+		
+		this.nextNode.nextCaretPos = false;
+		this.nextNode = null;
+		
+		return res;
+	},
 	
 	this.show = function()
 	{
@@ -247,7 +282,9 @@ function Caret(nte)
 		this.caretSpan.style.left = x + "px";
 		this.caretSpan.style.top = y + "px";
 	},
-	
+
+	//rendering
+
 	this.setSize = function(width, height)
 	{
 		this.nte.drawLib.setSize(width, height, this.textCaretGroup);

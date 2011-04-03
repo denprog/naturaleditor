@@ -488,6 +488,7 @@ var NaturalEditor = Class.extend(
 			
 			this.caret.currentState.getNode().scrollIntoView(this.caret.currentState.getPos());
 			this.theme.update();
+			this.caret.render();
 			return true;
 		}, 
 		
@@ -793,7 +794,7 @@ var NaturalEditor = Class.extend(
 			for (var i = caretPos.length - 1; i > 0; --i)
 				node = node.childNodes.get(caretPos[i]);
 
-			return node.childNodes.get(caretPos[0]).toTex();
+			return node.childNodes.get(caretPos[0]).toTex(true);
 		}
 	}
 );

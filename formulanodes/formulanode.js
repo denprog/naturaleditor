@@ -28,9 +28,9 @@ var FormulaNode = HtmlNode.extend(
 			this._super(nodeType, element, parentNode, pos, nte);
 		}, 
 
-		insertChildNode : function(childNode, pos)
+		insertChildNode : function(childNode, pos, caretState)
 		{
-			this._super(childNode, pos);
+			this._super(childNode, pos, caretState);
 			if (this.groupNode)
 				this.groupNode.remake();
 		}, 
@@ -152,13 +152,7 @@ var FormulaNode = HtmlNode.extend(
 
 		mergeNode : function(caretState)
 		{
-			//caretState.store();
-			this._super();
-			//caretState.restore();
-			
-			if (caretState.getNode() == null || caretState.getPos() == -1)
-				caretState.setCaretState(this.getFirstPosition());
-			
+			this._super(caretState);
 			this.groupNode.remake();
 		}, 
 
@@ -246,9 +240,13 @@ var FormulaNode = HtmlNode.extend(
 				return false;
 			}
 
-			nodeEvent.caretState.store();
-			this.insertChildNode(node, pos);
-			nodeEvent.caretState.restore();
+			if (nodeEvent.caretState.checkAtLast())
+			{
+				this.insertChildNode(node, pos, nodeEvent.caretState);
+				nodeEvent.caretState.setToNode(this, this.childNodes.count(), 0);
+			}
+			else
+				this.insertChildNode(node, pos, nodeEvent.caretState);
 			
 			node.render();
 			this.groupNode.remake();
@@ -279,6 +277,8 @@ var FormulaNode = HtmlNode.extend(
 			{
 				if (len == 0)
 				{
+					var c = nodeEvent.caretState.dublicate();
+
 					if (nodeEvent.right)
 					{
 						if (this.childNodes.count() == 1 && (this.childNodes.get(0) instanceof EmptyFormulaNode))
@@ -294,22 +294,25 @@ var FormulaNode = HtmlNode.extend(
 							if (this.childNodes.count() > 1)
 							{
 								if (pos == this.childNodes.count() - 1)
-									nodeEvent.caretState = this.getLastPosition();
+								{
+									this.removeChildNode(pos);
+									c = this.getLastPosition();
+								}
 								else if (pos < this.childNodes.count())
 								{
 									//if a node has caret positions inside, move to the last position
 									var p = this.childNodes.get(pos).getLastPosition();
 									if (p)
-										nodeEvent.caretState = p;
-									nodeEvent.caretState = this.getNextPosition(nodeEvent.caretState);
+										c = p.dublicate();
+									c = this.getNextPosition(c);
+									
+									this.caret.setNextState(c);
+									this.removeChildNode(pos);
+									c = this.caret.getNextState();
 								}
-								
-								nodeEvent.caretState.store();
-								this.removeChildNode(pos);
-								nodeEvent.caretState.restore();
 
-								if (nodeEvent.caretState.getPos() == -1)
-									nodeEvent.caretState = this.getLastPosition();
+								if (c.getPos() == -1)
+									c = this.getLastPosition();
 							}
 							else
 							{
@@ -317,9 +320,10 @@ var FormulaNode = HtmlNode.extend(
 								this.removeChildNode(pos);
 								//insert an empty node
 								new EmptyFormulaNode(this, pos, this.nte);
-								nodeEvent.caretState = new CaretState(this, pos);
+								c = new CaretState(this, pos);
 							}
 
+							nodeEvent.caretState = c;
 							nodeEvent.undoActionNodePos = this.getCaretPosition();
 							
 							nodeEvent.undo = function()
@@ -349,12 +353,23 @@ var FormulaNode = HtmlNode.extend(
 
 							this.caretState = null;
 
-							nodeEvent.caretState.store();
-							this.removeChildNode(pos - 1);
-							nodeEvent.caretState.restore();
-
-							if (nodeEvent.caretState.getPos() == -1)
+							if (pos == this.childNodes.count())
+							{
+								this.removeChildNode(pos - 1);
+								c = this.getLastPosition();
+							}
+							else
+							{
+								c = this.getPreviousPosition(c);
+								this.caret.setNextState(c);
+								this.removeChildNode(pos);
+								c = this.caret.getNextState();
+							}
+							
+							if (c.getPos() == -1)
 								nodeEvent.caretState = this.getLastPosition();
+							else
+								nodeEvent.caretState = c;
 
 							nodeEvent.undoActionNodePos = this.getCaretPosition();
 							
@@ -613,9 +628,9 @@ var FormulaNode = HtmlNode.extend(
 		
 		//test functions
 		
-		toTex : function()
+		toTex : function(braces)
 		{
-			return this.childNodes.toTex();
+			return this.childNodes.toTex(braces);
 		}
 	}
 );

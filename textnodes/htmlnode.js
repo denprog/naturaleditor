@@ -88,6 +88,7 @@ var HtmlNode = Class.extend(
 		
 			this.caret = this.nte.caret;
 			this.caretState = null;
+			this.nextCaretPos = false;
 			
 			this.childNodes = new NodesCollection(1);
 
@@ -114,6 +115,9 @@ var HtmlNode = Class.extend(
 			this.childNodes.add(childNode);
 			childNode.parentNode = this;
 			this.element.appendChild(childNode.element);
+			
+			if (childNode.nextCaretPos)
+				this.caret.nextNode = childNode;
 		}, 
 		
 		/**
@@ -123,8 +127,23 @@ var HtmlNode = Class.extend(
 		 * @param {HtmlNode} childNode child node
 		 * @param {int} cPos continuous position
 		 */
-		insertChildNode : function(childNode, pos)
+		insertChildNode : function(childNode, pos, caretState)
 		{
+			if (caretState)
+			{
+				var n = caretState.getNode();
+				var p = caretState.getPos();
+				if (n.childNodes.count() > 0)
+				{
+					if (p == n.childNodes.count())
+						n.childNodes.get(p - 1).caretState = caretState;
+					else
+						n.childNodes.get(p).caretState = caretState;
+				}
+				else
+					n.caretState = caretState;
+			}
+			
 			childNode.parentNode = this;
 
 			if (this.childNodes.count() == pos)
@@ -133,10 +152,12 @@ var HtmlNode = Class.extend(
 				this.element.insertBefore(childNode.element, this.childNodes.get(pos).element);
 			
 			this.childNodes.insert(pos, childNode);
-			
-			//if (childNode.caretState)
-			//	childNode.caretState.setToNode(childNode, childNode.caretState.getPos(), childNode.caretState.length);
-			childNode.updateCaretState();
+
+			if (childNode.nextCaretPos)
+				this.caret.nextNode = childNode;
+
+			this.updateCaretState();
+			this.clearCaretState();
 		}, 
 
 		/**
@@ -156,8 +177,16 @@ var HtmlNode = Class.extend(
 		 */
 		removeChildNode : function(pos)
 		{
-			this.childNodes.get(pos).destroy();
+			var n = this.childNodes.get(pos);
+			
+			if (n.nextCaretPos && this.caret.nextNode == n)
+				this.caret.nextNode = null;
+
+			n.destroy();
 			this.childNodes.removeAt(pos);
+			
+			this.updateCaretState();
+			this.clearCaretState();
 			
 			return true;
 		}, 
@@ -171,10 +200,36 @@ var HtmlNode = Class.extend(
 		{
 			var c = this.caretState;
 			if (c)
-				c.setToNode(this, c.getPos(), c.length);
+			{
+				if (this.childNodes.count() > 0)
+					c.setToNode(this, c.getPos(), c.getSelectionLength());
+				else if (this instanceof TextNode)
+					c.setToNode(this, c.getPos(), c.getSelectionLength());
+				else
+					c.setToNode(this.parentNode, this.parentNode.getChildPos(this), c.getSelectionLength());
+			}
 
+			c = this.selectedNode;
+			if (c)
+			{
+				if (this.childNodes.count() > 0 || this instanceof TextNode)
+					c.setToNode(this, c.getPos(), c.length);
+				else
+					c.setToNode(this.parentNode, this.parentNode.getChildPos(this), c.length);
+			}
+			
 			for (var i = 0; i < this.childNodes.count(); ++i)
 				this.childNodes.get(i).updateCaretState();
+		},
+		
+		clearCaretState : function()
+		{
+			//this.caretState = null;
+			delete this.caretState;
+			//delete this.selectedNode;
+			
+			for (var i = 0; i < this.childNodes.count(); ++i)
+				this.childNodes.get(i).clearCaretState();
 		},
 		
 		hasClass : function(name)
@@ -246,31 +301,31 @@ var HtmlNode = Class.extend(
 			
 			this.insertChildNode(childNode, pos);
 		}, 
-		
+
 		mergeNode : function(caretState)
 		{
 			var pos = this.parentNode.getChildPos(this);
 			var node = this.parentNode.childNodes.get(pos + 1);
+			var n = caretState.getNode();
+			n.caretState = caretState;
 			
-			var c = node.caretState;
-			if (c)
+			if (n == node)
 				var s = c.findSelectedNode(node);
-
-			var p = this.parentNode.caretState;
-			if (p)
+			
+			if (n == this.parentNode)
 			{
-				if (p.isNodeSelected(node))
+				if (caretState.isNodeSelected(node))
 				{
-					p.removeInnerSelectedNode(node);
+					caretState.removeInnerSelectedNode(node);
 					var b2 = true;
 				}
-				if (p.isNodeSelected(this))
+				if (caretState.isNodeSelected(this))
 				{
-					p.removeInnerSelectedNode(this);
+					caretState.removeInnerSelectedNode(this);
 					var b1 = true;
 				}
 			}
-
+			
 			if (this.isEmpty())
 				this.childNodes.reset();
 			if (node.isEmpty())
@@ -280,14 +335,57 @@ var HtmlNode = Class.extend(
 			for (var i = 0; !node.isEmpty(); ++i)
 				this.moveChildNode(node.childNodes.get(0), len + i);
 			this.parentNode.removeChildNode(pos + 1);
-			
-			if (c && s)
-				c.replaceSelectedNode(node, this, len + s.getPos(), s.length);
+
+			if (s)
+				caretState.replaceSelectedNode(node, this, len + s.getPos(), s.length);
+
 			if (b1)
-				p.addSelectedNode(new SelectedNode(p, this, 0, len));
+				caretState.addSelectedNode(new SelectedNode(caretState, this, 0, len));
 			if (b2)
-				p.addSelectedNode(new SelectedNode(p, this, len, 1));
-		}, 
+				caretState.addSelectedNode(new SelectedNode(caretState, this, len, 1));
+		},
+		
+//		mergeNode : function(caretState)
+//		{
+//			var pos = this.parentNode.getChildPos(this);
+//			var node = this.parentNode.childNodes.get(pos + 1);
+//			
+//			var c = node.caretState;
+//			if (c)
+//				var s = c.findSelectedNode(node);
+//
+//			var p = this.parentNode.caretState;
+//			if (p)
+//			{
+//				if (p.isNodeSelected(node))
+//				{
+//					p.removeInnerSelectedNode(node);
+//					var b2 = true;
+//				}
+//				if (p.isNodeSelected(this))
+//				{
+//					p.removeInnerSelectedNode(this);
+//					var b1 = true;
+//				}
+//			}
+//
+//			if (this.isEmpty())
+//				this.childNodes.reset();
+//			if (node.isEmpty())
+//				node.childNodes.reset();
+//			
+//			var len = this.childNodes.count();
+//			for (var i = 0; !node.isEmpty(); ++i)
+//				this.moveChildNode(node.childNodes.get(0), len + i);
+//			this.parentNode.removeChildNode(pos + 1);
+//			
+//			if (c && s)
+//				c.replaceSelectedNode(node, this, len + s.getPos(), s.length);
+//			if (b1)
+//				p.addSelectedNode(new SelectedNode(p, this, 0, len));
+//			if (b2)
+//				p.addSelectedNode(new SelectedNode(p, this, len, 1));
+//		}, 
 
 		/**
 		 * Creates a child node. Default implementation.
@@ -1185,6 +1283,7 @@ var HtmlNode = Class.extend(
 					this.parentNode == null ? 0 : this.parentNode.getChildPos(this));
 			}
 			
+			resNode.nextCaretPos = this.nextCaretPos;
 			resNode.caretState = this.caretState;
 			resNode.childNodes.copyFrom(this.childNodes, resNode);
 
@@ -1435,11 +1534,11 @@ var HtmlNode = Class.extend(
 					
 					nodeEvent.undoActionNodePos = this.getCaretPosition();
 		
-					nodeEvent.undo = function()
+					nodeEvent.undo = function(nodeEvent, command)
 						{
 							//restore dublicates
 							for (var i = 0; i < dublicates.length; ++i)
-								this.insertChildNode(dublicates[i], pos + i);
+								this.insertChildNode(dublicates[i], pos + i, nodeEvent.caretState);
 							
 							return true;
 						};
@@ -1530,6 +1629,8 @@ var HtmlNode = Class.extend(
 				this.removeChildNode(0);
 				return false;
 			}
+			
+			this.updateCaretState();
 			
 			nodeEvent.caretState.setToNode(this, pos, 1);
 			nodeEvent.resNode = this;

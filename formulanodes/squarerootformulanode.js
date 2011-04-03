@@ -128,7 +128,7 @@ var SquareRootFormulaNode = CompoundFormulaNode.extend(
 		
 		toTex : function()
 		{
-			return "sqrt" + this.radicand.toTex();
+			return "sqrt{" + this.radicand.toTex() + "}";
 		}
 	}
 	);

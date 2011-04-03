@@ -232,12 +232,12 @@ function NodesCollection(id)
 		}
 	};
 	
-	this.toTex = function()
+	this.toTex = function(braces)
 	{
 		var res = "";
 		
 		for (var i = 0; i < this.nodes.length; ++i)
-			res += this.nodes[i].toTex();
+			res += this.nodes[i].toTex(braces);
 		
 		return res;
 	};

@@ -1,44 +1,4 @@
-﻿///**
-// * Class for describing events
-// * @class Event
-// * @constructor
-// */
-//function Event(eventsHandler, owner, element, type, intermediateHandler, handler, name)
-//{
-//	this.eventsHandler = eventsHandler;
-//	this.owner = owner;
-//	this.element = element;
-//	this.type = type;
-//	this.intermediateHandler = intermediateHandler;
-//	this.handler = handler;
-//	this.name = name;
-//	var obj = this;
-//
-//	this.eventFunc = function(event)
-//	{
-//		this.intermediateHandler(event, obj);
-//	};
-//	
-//	this.attach = function()
-//	{
-//		if (this.element.addEventListener)
-//			this.element.addEventListener(type, this.eventFunc, false);
-//		else
-//			element.attachEvent("on" + type, this.eventFunc);
-//	};
-//	
-//	this.detach = function()
-//	{
-//		if (element.removeEventListener)
-//			element.removeEventListener(type, this.eventFunc, false);
-//		else
-//			element.detachEvent(type, this.eventFunc);
-//	};
-//	
-//	this.attach();
-//}
-
-/**
+﻿/**
  * @constructor
  */
 function EventsHandler(nte)

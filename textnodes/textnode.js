@@ -425,27 +425,27 @@ var TextNode = HtmlNode.extend(
 			
 			return this.doRemoveChild(node, pos, len, nodeEvent, command);
 		},
-		
+
 		mergeNode : function(caretState)
 		{
 			var pos = this.parentNode.getChildPos(this);
 			var node = this.parentNode.childNodes.get(pos + 1);
+			var n = caretState.getNode();
+
+			if (n == node)
+				var s = caretState.findSelectedNode(node);
 			
-			var c = node.caretState;
-			if (c)
-				var s = c.findSelectedNode(node);
-			var p = this.parentNode.caretState;
-			if (p)
+			if (n == this.parentNode)
 			{
-				if (p.isNodeSelected(this))
+				if (caretState.isNodeSelected(node))
 				{
-					p.removeInnerSelectedNode(this);
-					var b1 = true;
-				}
-				else if (p.isNodeSelected(node))
-				{
-					p.removeInnerSelectedNode(node);
+					caretState.removeInnerSelectedNode(node);
 					var b2 = true;
+				}
+				if (caretState.isNodeSelected(this))
+				{
+					caretState.removeInnerSelectedNode(this);
+					var b1 = true;
 				}
 			}
 
@@ -453,20 +453,57 @@ var TextNode = HtmlNode.extend(
 			var r = node.element.data.length;
 			this.element.data += node.element.data;
 			this.parentNode.removeChildNode(pos + 1);
-			
-			if (c && s)
-				c.replaceSelectedNode(node, this, len + s.getPos(), s.length);
+
+			if (s)
+				caretState.replaceSelectedNode(node, this, len + s.getPos(), s.length);
+
 			if (b1)
-			{
-				p.addSelectedNode(new SelectedNode(p, this, 0, len));
-				this.caretState = p;
-			}
-			else if (b2)
-			{
-				p.insertSelectedNode(0, new SelectedNode(p, this, len, r));
-				this.caretState = p;
-			}
-		}, 
+				caretState.addSelectedNode(new SelectedNode(caretState, this, 0, len));
+			if (b2)
+				caretState.addSelectedNode(new SelectedNode(caretState, this, len, r));
+		},
+		
+//		mergeNode : function(caretState)
+//		{
+//			var pos = this.parentNode.getChildPos(this);
+//			var node = this.parentNode.childNodes.get(pos + 1);
+//			
+//			var c = node.caretState;
+//			if (c)
+//				var s = c.findSelectedNode(node);
+//			var p = this.parentNode.caretState;
+//			if (p)
+//			{
+//				if (p.isNodeSelected(this))
+//				{
+//					p.removeInnerSelectedNode(this);
+//					var b1 = true;
+//				}
+//				else if (p.isNodeSelected(node))
+//				{
+//					p.removeInnerSelectedNode(node);
+//					var b2 = true;
+//				}
+//			}
+//
+//			var len = this.element.data.length;
+//			var r = node.element.data.length;
+//			this.element.data += node.element.data;
+//			this.parentNode.removeChildNode(pos + 1);
+//			
+//			if (c && s)
+//				c.replaceSelectedNode(node, this, len + s.getPos(), s.length);
+//			if (b1)
+//			{
+//				p.addSelectedNode(new SelectedNode(p, this, 0, len));
+//				this.caretState = p;
+//			}
+//			else if (b2)
+//			{
+//				p.insertSelectedNode(0, new SelectedNode(p, this, len, r));
+//				this.caretState = p;
+//			}
+//		}, 
 
 		addType : function(nodeEvent, command)
 		{
@@ -586,6 +623,8 @@ var TextNode = HtmlNode.extend(
 					};
 			}
 			
+			this.parentNode.updateCaretState();
+			
 			return true;
 		}, 
 
@@ -598,7 +637,7 @@ var TextNode = HtmlNode.extend(
 				if (n instanceof TextNode)
 				{
 					var i = this.element.data.length;
-					this.mergeNode();
+					this.mergeNode(nodeEvent.caretState);
 
 					nodeEvent.resNode = this.parentNode;
 					nodeEvent.undoActionNodePos = this.getCaretPosition();

@@ -39,7 +39,7 @@ var ParagraphNode = TextBaseNode.extend(
 			this._super(childNode);
 		}, 
 
-		insertChildNode : function(childNode, pos)
+		insertChildNode : function(childNode, pos, caretState)
 		{
 			if (this.isEmpty() && !this.lineInserting)
 			{
@@ -47,10 +47,10 @@ var ParagraphNode = TextBaseNode.extend(
 					return;
 				
 				this.childNodes.reset();
-				this._super(childNode, 0);
+				this._super(childNode, 0, caretState);
 			}
 			else
-				this._super(childNode, pos);
+				this._super(childNode, pos, caretState);
 		}, 
 
 		addTextNode : function(textNode)
@@ -291,11 +291,15 @@ var ParagraphNode = TextBaseNode.extend(
 				for (var i = 0; i < c; ++i)
 					this.insertChildNode(node.childNodes.get(i), pos + i);
 				
-				nodeEvent.caretState.setToNodeEnd(node.childNodes.getLast());
+				//nodeEvent.caretState.setToNodeEnd(node.childNodes.getLast());
+				var c = nodeEvent.caretState.dublicate();
+				c.setToNodeEnd(node.childNodes.getLast());
+				this.caret.setNextState(c);
 
-				nodeEvent.caretState.store();
+				//nodeEvent.caretState.store();
 				this.normilize(command);
-				nodeEvent.caretState.restore();
+				//nodeEvent.caretState.restore();
+				nodeEvent.caretState = this.caret.getNextState();
 
 				nodeEvent.changedNode = this;
 				//nodeEvent.undoActionNodePos = this.getCaretPosition();
@@ -314,9 +318,9 @@ var ParagraphNode = TextBaseNode.extend(
 		{
 			if (nodeEvent.node)
 			{
-				nodeEvent.caretState.store();
+				//nodeEvent.caretState.store();
 				this.unnormilize(command);
-				nodeEvent.caretState.restore();
+				//nodeEvent.caretState.restore();
 				nodeEvent.node = nodeEvent.node.dublicate();
 
 				var c = command.getParam(this, "c");
@@ -401,9 +405,9 @@ var ParagraphNode = TextBaseNode.extend(
 		
 		undoInsertLine : function(nodeEvent, command)
 		{
-			nodeEvent.caretState.store();
+			//nodeEvent.caretState.store();
 			this.unnormilize(command);
-			nodeEvent.caretState.restore();
+			//nodeEvent.caretState.restore();
 
 			this.lineInserting = true;
 			

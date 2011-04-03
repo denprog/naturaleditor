@@ -132,10 +132,10 @@ var TextFormulaNode = ForeignObjectFormulaNode.extend(
 
 		doInsert : function(pos, nodeEvent, command)
 		{
-			if (pos > 0)
+			if (pos > 0 && this.parentNode.childNodes.getLast() != this)
 			{
 				var c = this.getNextPosition(nodeEvent.caretState);
-				c.store();
+				this.caret.setNextState(c);
 			}
 			
 			if (!this.parentNode.doInsert(pos == 0 ? this.parentNode.getChildPos(this) : this.parentNode.getChildPos(this) + 1, nodeEvent, command))
@@ -144,9 +144,9 @@ var TextFormulaNode = ForeignObjectFormulaNode.extend(
 			if (pos > 0)
 			{
 				var p = this.parentNode.getChildPos(this);
-				if (p < this.parentNode.childNodes.count() - 2)
+				if (p < this.parentNode.childNodes.count() - 2 && c)
 				{
-					c.restore();
+					c = this.caret.getNextState();
 					nodeEvent.caretState = c;
 				}
 				else
@@ -409,9 +409,7 @@ var FormulaSpanNode = HtmlNode.extend(
 
 		mergeNode : function(caretState)
 		{
-			//caretState.store();
-			this._super();
-			//caretState.restore();
+			this._super(caretState);
 			
 			if (caretState.getNode() == null || caretState.getPos() == -1)
 				caretState.setCaretState(this.getFirstPosition());
@@ -465,7 +463,7 @@ var FormulaTextNode = TextNode.extend(
 		
 		mergeNode : function(caretState)
 		{
-			this._super();
+			this._super(caretState);
 			this.parentNode.groupNode.remake();
 		},
 		
@@ -551,6 +549,7 @@ var FormulaTextNode = TextNode.extend(
 			
 			return false;
 		},
+		
 		doRemoveChild : function(node, pos, len, nodeEvent, command)
 		{
 			if ((pos == this.element.length && nodeEvent.right) || (pos == 0 && !nodeEvent.right))

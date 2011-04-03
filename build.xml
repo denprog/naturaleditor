@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project name="NaturalEditor" default="build" basedir=".">
 	<property name="SOURCE_DIR" value="."/>
 	<property name="RELEASE_DIR" value="release"/>
@@ -51,7 +52,7 @@
 		<echo message="Javascript sources concatenated."/>
 	</target>
 	
-	<taskdef name="jscomp" classname="com.google.javascript.jscomp.ant.CompileTask" classpath="compiler.jar"/>
+	<!--<taskdef name="jscomp" classname="com.google.javascript.jscomp.ant.CompileTask" classpath="compiler.jar"/>-->
 
 	<!--<target name="compile">
 		<echo message="Compilation started."/>

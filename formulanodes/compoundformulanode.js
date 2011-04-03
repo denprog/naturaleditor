@@ -119,7 +119,8 @@ var CompoundFormulaNode = GroupFormulaNode.extend(
 							var i = relativeState.getPos();
 							//i == this.childNodes.count() means the position is at the end of the collection
 							var n = this.childNodes.get(i == this.childNodes.count() ? i - 1 : i);
-							res = n.getLastPosition(relativeState);
+							//res = n.getLastPosition(relativeState);
+							res = n.getPreviousPosition(relativeState);
 							if (res)
 								return res;
 						}
