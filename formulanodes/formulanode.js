@@ -486,6 +486,19 @@ var FormulaNode = HtmlNode.extend(
 			return true;
 		},
 
+		createBracketsFormulaNode : function(nodeEvent, command)
+		{
+			var pos = nodeEvent.caretState.getPos();
+			var node = nodeEvent.caretState.getNode();
+			var params = nodeEvent.params;
+			
+			if (node.parentNode instanceof BracketsFormulaNode)
+			{
+			}
+			
+			var n = new BracketsFormulaNode(this, pos, this.nte, null, params);
+		},
+		
 		//tool functions
 		
 		/**

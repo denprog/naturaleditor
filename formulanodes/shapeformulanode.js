@@ -140,6 +140,12 @@ var ShapeFormulaNode = GroupFormulaNode.extend(
 			this.updateClientRect();
 		},
 		
+		addBezier : function(path, color)
+		{
+			this.drawLib.bezier(path, color, this.element);
+			this.updateClientRect();
+		},
+		
 		clearShapes : function()
 		{
 			for (var i = 0; i < this.element.children.length; ++i)

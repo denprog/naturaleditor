@@ -8,6 +8,7 @@
 		<echo message="Concatenating Javascript sources."/>
 		<concat encoding="UTF-8" destfile="${JS_TEMP}">
 			<filelist dir="${SOURCE_DIR}">
+				<file name="naturaleditor.js"/>
 				<file name="lib/class.js"/>
 				<file name="editor/naturaleditor.js"/>
 				<file name="util/rect.js"/>
@@ -44,6 +45,7 @@
 				<file name="formulanodes/exponentiationformulanode.js"/>
 				<file name="formulanodes/squarerootformulanode.js"/>
 				<file name="formulanodes/nthrootformulanode.js"/>
+				<file name="formulanodes/bracketsformulanode.js"/>
 				<file name="formulanodes/emptyformulanode.js"/>
 				<file name="util/toolbar.js"/>
 				<file name="themes/classic/theme.js"/>
