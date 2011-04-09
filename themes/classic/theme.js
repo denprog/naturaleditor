@@ -4,10 +4,6 @@
 function Theme(nte, parentElement, cx, cy)
 {
 	this.nte = nte;
-	//this.editor;
-	//this.caretPos;
-	//this.toolbar;
-	//this.testText;
 	this.name = "classic";
 	
 	this.init = function(parentElement, cx, cy)
@@ -47,12 +43,12 @@ function Theme(nte, parentElement, cx, cy)
 
 		this.editor.document = this.editor.ownerDocument;
 
-		if (DEBUG_LEVEL)
-			var base = this.editor.document.location.href.substr(0, this.editor.document.location.href.lastIndexOf("/NaturalEditor/")) + "/NaturalEditor/";
-		else
-			var base = this.nte.getCurDirectory();
-
-		this.nte.loadCss(DEBUG_LEVEL ? base + "themes/classic/toolbar.css" : base + "toolbar.css");
+//		if (DEBUG_LEVEL)
+//			var base = this.editor.document.location.href.substr(0, this.editor.document.location.href.lastIndexOf("/NaturalEditor/")) + "/NaturalEditor/";
+//		else
+//			var base = this.nte.getCurDirectory();
+//
+//		this.nte.loadCss(DEBUG_LEVEL ? base + "themes/classic/toolbar.css" : base + "toolbar.css");
 		
 		if (this.nte.isIE)
 			this.toolbar = new Toolbar(this.nte, this.name, frame.document.getElementById("toolbar1"));

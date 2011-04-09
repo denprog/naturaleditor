@@ -67,6 +67,7 @@ var TextFormulaNode = ForeignObjectFormulaNode.extend(
 					this.img = this.document.createElement("img");
 					this.img.style.width = 0;
 					this.img.style.height = 0;
+					this.img.src = "absent.jpg";
 					this.text.element.parentNode.insertBefore(this.img, null);
 					var w = r.width;
 					this.element.setAttribute("width", w);

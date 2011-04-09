@@ -9,15 +9,15 @@ var DivisionFormulaNode = CompoundFormulaNode.extend(
 		{
 			this.drawLib = nte.drawLib;
 			
-			this.levelClasses = {};
-			this.levelClasses[NodeLevel.NORMAL] = "normalDivisionFormulaNode";
-			this.levelClasses[NodeLevel.LESS] = "lessDivisionFormulaNode";
-			this.levelClasses[NodeLevel.STILL_LESS] = "stillLessDivisionFormulaNode";
+//			this.levelClasses = {};
+//			this.levelClasses[NodeLevel.NORMAL] = "normalDivisionFormulaNode";
+//			this.levelClasses[NodeLevel.LESS] = "lessDivisionFormulaNode";
+//			this.levelClasses[NodeLevel.STILL_LESS] = "stillLessDivisionFormulaNode";
 			
 			this._super(parentNode, pos, nte);
 			this.className = "DivisionFormulaNode";
 			
-			this.addClass("normalDivisionFormulaNode");
+//			this.addClass("normalDivisionFormulaNode");
 			
 			this.dividend = null;
 			this.shape = this.addShapeNode();

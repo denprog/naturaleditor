@@ -8,7 +8,7 @@ function CommandManager(nte)
 	
 	this.nte = nte;
 	
-	this.insert = function(node, action, commit)
+	this.insert = function(node, action, params, commit)
 	{
 		var caretState = this.nte.caret.getState();
 		var lastCaretState = caretState.dublicate();
@@ -31,6 +31,9 @@ function CommandManager(nte)
 			nodeEvent.caretState = caretState;
 		
 		nodeEvent.node = node;
+		
+		if (params)
+			nodeEvent.params = params;
 		
 		var n = nodeEvent.caretState.getNode();
 		

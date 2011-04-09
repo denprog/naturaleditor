@@ -18,8 +18,12 @@ var NaturalEditor = Class.extend(
 			this.isIE6 = this.isIE && /MSIE [56]/.test(navigator.userAgent);
 			this.isMac = navigator.userAgent.indexOf('Mac') != -1;
 			this.isAir = /adobeair/i.test(navigator.userAgent);
-			
-			if (!this.isGecko)
+
+			if (this.isWebKit)
+			{
+				this.inited = true;
+			}
+			else if (!this.isGecko)
 			{
 				this.inited = false;
 			}
@@ -36,13 +40,6 @@ var NaturalEditor = Class.extend(
 					this.inited = true;
 			}
 
-			if (DEBUG_LEVEL)
-				var base = window.location.href.substr(0, window.location.href.lastIndexOf("/NaturalEditor/")) + "/NaturalEditor/";
-			else
-				var base = this.getCurDirectory();
-
-			this.loadCss(DEBUG_LEVEL ? base + "style/styles.css" : base + "styles.css");
-			
 			this.drawLib = new SvgLib(this);
 			
 			/**
@@ -74,6 +71,8 @@ var NaturalEditor = Class.extend(
 			this.eventHandlers = {};
 			this.eventsHandler = new EventsHandler(this);
 
+			//this.eventsHandler.addEvent(this, "onDOMContentLoaded", this.onDOMContentLoaded);
+			
 			this.registerEvents();
 			
 			if (this.isIE)
@@ -129,6 +128,8 @@ var NaturalEditor = Class.extend(
 			this.eventsHandler.addGlobalShortcut("*", this.onMultiply);
 			this.eventsHandler.addGlobalShortcut("/", this.onDivision);
 			this.eventsHandler.addGlobalShortcut("^", this.onCircumflex);
+			this.eventsHandler.addGlobalShortcut("(", this.onLeftBracket);
+			this.eventsHandler.addGlobalShortcut(")", this.onRightBracket);
 			
 			this.eventsHandler.addGlobalShortcut("Backspace", this.onBackspace);
 			this.eventsHandler.addGlobalShortcut("Delete", this.onDelete);
@@ -160,6 +161,8 @@ var NaturalEditor = Class.extend(
 			this.eventsHandler.removeGlobalShortcut("*");
 			this.eventsHandler.removeGlobalShortcut("/");
 			this.eventsHandler.removeGlobalShortcut("^");
+			this.eventsHandler.removeGlobalShortcut("(");
+			this.eventsHandler.removeGlobalShortcut(")");
 			
 			this.eventsHandler.removeGlobalShortcut("Backspace");
 			this.eventsHandler.removeGlobalShortcut("Delete");
@@ -254,6 +257,7 @@ var NaturalEditor = Class.extend(
 						'formula_exponentiation' : 'ExponentiationFormulaNode', 
 						'formula_squareroot' : 'SquareRootFormulaNode', 
 						'formula_nthroot' : 'NthRootFormulaNode', 
+						'formula_brackets' : 'BracketsFormulaNode', 
 						'formula_group' : 'GroupFormulaNode'
 					},
 				'foreignobject' : 'ForeignObjectFormulaNode', 
@@ -342,34 +346,34 @@ var NaturalEditor = Class.extend(
 			return null;
 		},
 		
-		loadCss : function(fileName)
-		{
-			//alert(fileName);
-			var r = document.createElement("link");
-			r.setAttribute("rel", "stylesheet");
-		  r.setAttribute("type", "text/css");
-		  r.setAttribute("href", fileName);
-		  
-		  if (typeof(r) != "undefined")
-		  	document.getElementsByTagName("head")[0].appendChild(r);
-		},
-
-		getCurDirectory : function()
-		{
-			var scripts = document.getElementsByTagName('script');
-			var name = "naturaleditor.js";
-
-	    for (var i = scripts.length - 1; i >= 0; --i)
-	    {
-	      var src = scripts[i].src;
-	      var n = src.length;
-	      var length = name.length;
-	      if (src.substr(n - length) == name)
-	        return src.substr(0, n - length);
-	    }
-	    
-	    return "";
-		},
+//		loadCss : function(fileName)
+//		{
+//			//alert(fileName);
+//			var r = document.createElement("link");
+//			r.setAttribute("rel", "stylesheet");
+//		  r.setAttribute("type", "text/css");
+//		  r.setAttribute("href", fileName);
+//		  
+//		  if (typeof(r) != "undefined")
+//		  	document.getElementsByTagName("head")[0].appendChild(r);
+//		},
+//
+//		getCurDirectory : function()
+//		{
+//			var scripts = document.getElementsByTagName('script');
+//			var name = "naturaleditor.js";
+//
+//	    for (var i = scripts.length - 1; i >= 0; --i)
+//	    {
+//	      var src = scripts[i].src;
+//	      var n = src.length;
+//	      var length = name.length;
+//	      if (src.substr(n - length) == name)
+//	        return src.substr(0, n - length);
+//	    }
+//	    
+//	    return "";
+//		},
 		
 		setFocus : function()
 		{
@@ -387,6 +391,11 @@ var NaturalEditor = Class.extend(
 		{
 			this.rootNode.childNodes.reset();
 		}, 
+		
+//		onDOMContentLoaded : function()
+//		{
+//			return true;
+//		},
 		
 		onLeft : function()
 		{
@@ -593,6 +602,22 @@ var NaturalEditor = Class.extend(
 			return false;
 		},
 
+		onLeftBracket : function()
+		{
+			var n = this.caret.getFormula();
+			if (n)
+			{
+				this.commandManager.insert(null, {left : true}, this.caret.currentState.getNode().createBracketsFormulaNode);
+				this.caret.render();
+				return true;
+			}
+			return false;
+		},
+		
+		onRightBracket : function()
+		{
+		},
+		
 		onBackspace : function()
 		{
 			this.commandManager.remove(false);
