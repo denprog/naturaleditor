@@ -344,8 +344,8 @@ function Caret(nte)
 		
 		var group = this.nte.drawLib.svg(s);
 		this.nte.drawLib.move(rect.left, rect.top, f);
-		this.nte.drawLib.setSize(rect.width == 0 ? 1 : rect.width, rect.height, f);
-		this.nte.drawLib.setSize(rect.width == 0 ? 1 : rect.width, rect.height, group);
+		this.nte.drawLib.setSize(rect.width == 0 ? 1 : rect.width, rect.height + 1, f);
+		this.nte.drawLib.setSize(rect.width == 0 ? 1 : rect.width, rect.height + 1, group);
 		
 		if (rect.width > 1)
 		{

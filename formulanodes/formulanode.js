@@ -171,8 +171,7 @@ var FormulaNode = HtmlNode.extend(
 			
 			var r = new Rectangle();
 			this.getPosBounds(this.caret.currentState.getSelectionStart(), r);
-			if (r.bottom + 3 < this.groupNode.boundingRect.height + this.nte.editor.scrollTop && 
-				this.groupNode.boundingRect.height > r.bottom + 3)
+			if (this.groupNode.boundingRect.height > Math.round(r.bottom) + 3)
 				r.setRect(r.left - 2, r.top, r.width == 1 ? 1 : Math.round(r.width) + 2, Math.floor(r.height) + 3);
 			else
 				r.setRect(r.left - 2, r.top, r.width == 1 ? 1 : Math.round(r.width) + 2, Math.floor(r.height));
@@ -618,8 +617,10 @@ var FormulaNode = HtmlNode.extend(
 //				this.boundingRect.height);
 			rect.setRect(rect.left + r.left, 
 				rect.top + r.top, 
-				pos == this.childNodes.count() ? 1 : this.clientRect.width, 
-				this.boundingRect.height);
+				pos == this.childNodes.count() ? 1 : rect.width, 
+				rect.height);
+				//pos == this.childNodes.count() ? 1 : this.clientRect.width, 
+				//this.boundingRect.height);
 		},
 
 		setEmpty : function()

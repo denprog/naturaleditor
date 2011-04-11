@@ -23,7 +23,8 @@ var ForeignObjectFormulaNode = FormulaNode.extend(
 			if (this.childNodes.count() == 1)
 			{
 				this.childNodes.get(0).addTextNode(textNode);
-				this.groupNode.remake();
+				if (this.groupNode)
+					this.groupNode.remake();
 			}
 			else
 				this._super(textNode);
