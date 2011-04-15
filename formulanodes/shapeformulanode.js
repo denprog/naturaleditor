@@ -84,12 +84,12 @@ var ShapeFormulaNode = GroupFormulaNode.extend(
 			return new CaretState(this.parentNode, this.parentNode.getChildPos(this));
 		},
 		
-		getNextPosition : function(relativeState)
+		getNextPosition : function(relativeState, params)
 		{
 			return null;
 		},
 		
-		getPreviousPosition : function(relativeState)
+		getPreviousPosition : function(relativeState, params)
 		{
 			if (relativeState && relativeState.checkOnNode(this))
 				return null;

@@ -119,8 +119,6 @@ var SvgFormulaNode = FormulaNode.extend(
 			if (t)
 				return t;
 			return new CaretState(this, 0);
-			//return this.childNodes.getFirst().getFirstPosition();
-			//return this.childNodes.getFirst().getNextPosition(null);
 		}, 
 		
 		/**
@@ -139,7 +137,7 @@ var SvgFormulaNode = FormulaNode.extend(
 			return res;
 		},
 		
-		getNextPosition : function(relativeState)
+		getNextPosition : function(relativeState, params)
 		{
 			var res = null;
 
@@ -157,7 +155,7 @@ var SvgFormulaNode = FormulaNode.extend(
 						var i = relativeState.getPos();
 						//i == this.childNodes.count() means the position is at the end of the collection
 						var n = this.childNodes.get(i == this.childNodes.count() ? i - 1 : i);
-						res = n.getNextPosition(relativeState);
+						res = n.getNextPosition(relativeState, params);
 						if (res)
 							return res;
 						if (i == this.childNodes.count() - 1 && !(n instanceof EmptyFormulaNode))
@@ -167,33 +165,28 @@ var SvgFormulaNode = FormulaNode.extend(
 						var i = this.getFirstLevelChildPos(node);
 				}
 				else if (node == this)
-					return this.parentNode.getNextPosition(relativeState);
+					return this.parentNode.getNextPosition(relativeState, params);
 				else
 					var i = this.getFirstLevelChildPos(node);
 				
-				//for (var pos = i + 1; pos < this.childNodes.count(); ++pos)
-				//{
 				if (i + 1 < this.childNodes.count())
 				{
 					var n = this.childNodes.get(i + 1);
-					res = n.getNextPosition(relativeState);
+					res = n.getNextPosition(relativeState, params);
 					if (!res)
 						res = new CaretState(this, i + 1);
 				}
 				else if (i == this.childNodes.count() - 1 && !relativeState.isEqual(this.getLastPosition()))
 					return new CaretState(this, i + 1);
-				//if (res)
-				//	break;
-				//}
 				
 				if (!res && this.parentNode)
-					res = this.parentNode.getNextPosition(relativeState);
+					res = this.parentNode.getNextPosition(relativeState, params);
 			}
 			
 			return res;
 		}, 
 		
-		getPreviousPosition : function(relativeState)
+		getPreviousPosition : function(relativeState, params)
 		{
 			var res = null;
 			
@@ -209,30 +202,23 @@ var SvgFormulaNode = FormulaNode.extend(
 					var i = relativeState.getPos();
 					//i == this.childNodes.count() means the position is at the end of the collection
 					var n = this.childNodes.get(i == this.childNodes.count() ? i - 1 : i);
-					res = n.getPreviousPosition(relativeState);
+					res = n.getPreviousPosition(relativeState, params);
 					if (res)
 						return res;
 				}
 				else
 					var i = this.getFirstLevelChildPos(node);
 
-//				if (node != this)
-//				{
-//					res = new CaretState(this, i);
-//				}
-//				else
-//				{
 				for (var pos = i - 1; pos >= 0; --pos)
 				{
 					var n = this.childNodes.get(pos);
-					res = n.getPreviousPosition(null);
+					res = n.getPreviousPosition(null, params);
 					if (res)
 						break;
 				}
-//				}
 				
 				if (!res && this.parentNode)
-					res = this.parentNode.getPreviousPosition(relativeState);
+					res = this.parentNode.getPreviousPosition(relativeState, params);
 			}
 			
 			return res;

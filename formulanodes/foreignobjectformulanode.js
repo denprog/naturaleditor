@@ -59,7 +59,7 @@ var ForeignObjectFormulaNode = FormulaNode.extend(
 			return this.parentNode.moveCaretToLineEnd();
 		},
 
-		getNextPosition : function(relativeState)
+		getNextPosition : function(relativeState, params)
 		{
 			var res = null;
 			
@@ -68,7 +68,7 @@ var ForeignObjectFormulaNode = FormulaNode.extend(
 			else
 			{
 				if (relativeState.checkOnNode(this) || relativeState.checkInNode(this))
-					res = this.parentNode.getNextPosition(relativeState);
+					res = this.parentNode.getNextPosition(relativeState, params);
 				else
 					res = this.getFirstPosition();
 			}

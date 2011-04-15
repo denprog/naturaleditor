@@ -303,7 +303,7 @@ var FormulaNode = HtmlNode.extend(
 									var p = this.childNodes.get(pos).getLastPosition();
 									if (p)
 										c = p.dublicate();
-									c = this.getNextPosition(c);
+									c = this.getNextPosition(c, params);
 									
 									this.caret.setNextState(c);
 									this.removeChildNode(pos);
@@ -359,7 +359,7 @@ var FormulaNode = HtmlNode.extend(
 							}
 							else
 							{
-								c = this.getPreviousPosition(c);
+								c = this.getPreviousPosition(c, params);
 								this.caret.setNextState(c);
 								this.removeChildNode(pos);
 								c = this.caret.getNextState();

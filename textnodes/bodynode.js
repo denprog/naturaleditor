@@ -25,7 +25,7 @@ var RootNode = HtmlNode.extend(
 		 * @method getNextPosition
 		 * @param {CaretState} relativeState Relative caret state
 		 */
-		getNextPosition : function(relativeState)
+		getNextPosition : function(relativeState, params)
 		{
 			var res = null;
 			var node = relativeState.getNode();
@@ -48,7 +48,7 @@ var RootNode = HtmlNode.extend(
 		 * @method getPreviousPosition
 		 * @param {CaretState} relativeState Relative caret state
 		 */
-		getPreviousPosition : function(relativeState)
+		getPreviousPosition : function(relativeState, params)
 		{
 			var res = null;
 			var node = relativeState.getNode();
@@ -70,9 +70,6 @@ var RootNode = HtmlNode.extend(
 				//move to the first position
 				res = this.childNodes.get(i).getFirstPosition();
 			}
-			
-			//if (!res)
-			//	res = this.childNodes.get(i).getFirstPosition();
 			
 			return res;
 		},

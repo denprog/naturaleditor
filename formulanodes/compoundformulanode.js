@@ -44,7 +44,7 @@ var CompoundFormulaNode = GroupFormulaNode.extend(
 			return new CaretState(this.parentNode, this.parentNode.getChildPos(this));
 		}, 
 
-		getNextPosition : function(relativeState)
+		getNextPosition : function(relativeState, params)
 		{
 			var res = null;
 
@@ -65,7 +65,7 @@ var CompoundFormulaNode = GroupFormulaNode.extend(
 					{
 						var i = relativeState.getPos();
 						var n = this.childNodes.get(i);
-						res = n.getNextPosition(relativeState);
+						res = n.getNextPosition(relativeState, params);
 						if (res)
 							return res;
 					}
@@ -75,17 +75,17 @@ var CompoundFormulaNode = GroupFormulaNode.extend(
 					if (i + 1 < this.childNodes.count())
 					{
 						var n = this.childNodes.get(i + 1);
-						res = n.getNextPosition(null);
+						res = n.getNextPosition(null, params);
 						if (!res)
 							res = new CaretState(this, i + 1);
 					}
 					
 					if (!res && this.parentNode)
-						res = this.parentNode.getNextPosition(relativeState);
+						res = this.parentNode.getNextPosition(relativeState, params);
 				}
 				else if (relativeState.checkAtLast())
 				{
-					res = this.parentNode.getNextPosition(relativeState);
+					res = this.parentNode.getNextPosition(relativeState, params);
 				}
 				else
 					res = new CaretState(this.parentNode, this.parentNode.getChildPos(this));
@@ -94,7 +94,7 @@ var CompoundFormulaNode = GroupFormulaNode.extend(
 			return res;
 		},
 		
-		getPreviousPosition : function(relativeState)
+		getPreviousPosition : function(relativeState, params)
 		{
 			var res = null;
 
@@ -104,11 +104,6 @@ var CompoundFormulaNode = GroupFormulaNode.extend(
 			}
 			else
 			{
-//				if (relativeState.checkOnNode(this))
-//				{
-//					res = this.getLastPosition();
-//				}
-//				else
 				if (relativeState.checkInNode(this))
 				{
 					var node = relativeState.getNode();
@@ -119,8 +114,7 @@ var CompoundFormulaNode = GroupFormulaNode.extend(
 							var i = relativeState.getPos();
 							//i == this.childNodes.count() means the position is at the end of the collection
 							var n = this.childNodes.get(i == this.childNodes.count() ? i - 1 : i);
-							//res = n.getLastPosition(relativeState);
-							res = n.getPreviousPosition(relativeState);
+							res = n.getPreviousPosition(relativeState, params);
 							if (res)
 								return res;
 						}
@@ -133,18 +127,14 @@ var CompoundFormulaNode = GroupFormulaNode.extend(
 					for (var pos = i - 1; pos >= 0; --pos)
 					{
 						var n = this.childNodes.get(pos);
-						res = n.getPreviousPosition(null);
+						res = n.getPreviousPosition(null, params);
 						if (res)
 							break;
 					}
 					
 					if (!res)
 						res = new CaretState(this.parentNode, this.parentNode.getChildPos(this));
-					//if (!res && this.parentNode)
-					//	res = this.parentNode.getPreviousPosition(relativeState);
 				}
-				//else
-				//	res = new CaretState(this.parentNode, this.parentNode.getChildPos(this));
 			}
 			
 			return res;

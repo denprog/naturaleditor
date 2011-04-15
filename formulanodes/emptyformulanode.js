@@ -79,9 +79,8 @@ var EmptyFormulaNode = ShapeFormulaNode.extend(
 		
 		//caret functions
 
-		getNextPosition : function(relativeState)
+		getNextPosition : function(relativeState, params)
 		{
-			//return this.parentNode.getNextPosition(new CaretState(this.parentNode, this.parentNode.getChildPos(this) + 1));
 			return null;
 		},
 		

@@ -89,7 +89,7 @@ var TextNode = HtmlNode.extend(
 		 * @method getNextPosition
 		 * @param {CaretState} relativeState Relative caret state
 		 */
-		getNextPosition : function(relativeState)
+		getNextPosition : function(relativeState, params)
 		{
 			if (!relativeState)
 				res = new CaretState(this, 1);
@@ -128,13 +128,13 @@ var TextNode = HtmlNode.extend(
 						}
 						
 						if (!res && this.parentNode)
-							res = this.parentNode.getNextPosition(relativeState);
+							res = this.parentNode.getNextPosition(relativeState, params);
 					}
 				}
 				else if (pos < this.element.length)
 					res = new CaretState(this, pos + 1);
 				else
-					res = this.parentNode.getNextPosition(relativeState);
+					res = this.parentNode.getNextPosition(relativeState, params);
 			}
 			
 			return res;
@@ -145,7 +145,7 @@ var TextNode = HtmlNode.extend(
 		 * @method getPreviousPosition
 		 * @param {CaretState} relativeState Relative caret state
 		 */
-		getPreviousPosition : function(relativeState)
+		getPreviousPosition : function(relativeState, params)
 		{
 			if (!relativeState)
 				res = new CaretState(this, this.element.length);
@@ -156,12 +156,12 @@ var TextNode = HtmlNode.extend(
 	
 				if (pos == 0 || pos == 1)
 				{
-					res = this.parentNode.getPreviousPosition(relativeState);
+					res = this.parentNode.getPreviousPosition(relativeState, params);
 					if (res)
 					{
 						res.getRect(this.tempRect);
 						var t = this.tempRect.left;
-						var r = res.getNode().getPreviousPosition(res);
+						var r = res.getNode().getPreviousPosition(res, params);
 						if (r)
 						{
 							r.getRect(this.tempRect);
@@ -181,7 +181,7 @@ var TextNode = HtmlNode.extend(
 					res = new CaretState(this, pos - 1);
 				
 				if (!res)
-					res = this.parentNode.getPreviousPosition(relativeState);
+					res = this.parentNode.getPreviousPosition(relativeState, params);
 			}
 			
 			return res;

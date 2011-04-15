@@ -24,6 +24,7 @@ var TextBaseNode = HtmlNode.extend(
 				{
 					//omit the node because of having a single line
 					c = n.getFirstPosition();
+					res = c;
 				}
 
 				c = n.getPreviousPosition(c);
@@ -61,6 +62,7 @@ var TextBaseNode = HtmlNode.extend(
 				{
 					//omit the node because of having a single line
 					c = n.getLastPosition();
+					res = c;
 				}
 				
 				c = n.getNextPosition(c);

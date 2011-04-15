@@ -115,18 +115,18 @@ var TextFormulaNode = ForeignObjectFormulaNode.extend(
 
 		//caret functions
 		
-		getNextPosition : function(relativeState)
+		getNextPosition : function(relativeState, params)
 		{
 			if (this.childNodes.count() > 0 && this.childNodes.get(0).childNodes.get(0).empty)
 				return null;
-			return this._super(relativeState);
+			return this._super(relativeState, params);
 		},
 
-		getPreviousPosition : function(relativeState)
+		getPreviousPosition : function(relativeState, params)
 		{
 			if (this.childNodes.count() > 0 && this.childNodes.get(0).childNodes.get(0).empty)
 				return null;
-			return this._super(relativeState);
+			return this._super(relativeState, params);
 		},
 
 		//command functions
@@ -135,7 +135,7 @@ var TextFormulaNode = ForeignObjectFormulaNode.extend(
 		{
 			if (pos > 0 && this.parentNode.childNodes.getLast() != this)
 			{
-				var c = this.getNextPosition(nodeEvent.caretState);
+				var c = this.getNextPosition(nodeEvent.caretState, params);
 				this.caret.setNextState(c);
 			}
 			
@@ -359,18 +359,18 @@ var FormulaSpanNode = HtmlNode.extend(
 			return this.parentNode.moveCaretToLineEnd();
 		},
 
-		getNextPosition : function(relativeState)
+		getNextPosition : function(relativeState, params)
 		{
 			if (this.childNodes.count() > 0 && this.childNodes.get(0).empty)
 				return false;
-			return this._super(relativeState);
+			return this._super(relativeState, params);
 		},
 
-		getPreviousPosition : function(relativeState)
+		getPreviousPosition : function(relativeState, params)
 		{
 			if (this.childNodes.count() > 0 && this.childNodes.get(0).empty)
 				return false;
-			return this._super(relativeState);
+			return this._super(relativeState, params);
 		},
 
 		getUpperPosition : function(relativeState)
@@ -507,7 +507,7 @@ var FormulaTextNode = TextNode.extend(
 			return this.parentNode.moveCaretToLineEnd();
 		},
 
-		getPreviousPosition : function(relativeState)
+		getPreviousPosition : function(relativeState, params)
 		{
 			if (!relativeState)
 				res = new CaretState(this, this.element.length);
@@ -519,7 +519,7 @@ var FormulaTextNode = TextNode.extend(
 				if (pos > 0)
 					res = new CaretState(this, pos - 1);
 				else
-					res = this.parentNode.getPreviousPosition(relativeState);
+					res = this.parentNode.getPreviousPosition(relativeState, params);
 			}
 			
 			return res;

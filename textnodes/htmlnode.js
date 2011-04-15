@@ -684,8 +684,6 @@ var HtmlNode = Class.extend(
 			var t = this.getPreviousPosition(c);
 			if (t)
 			{
-				//var n = t.getNode();
-				//n.scrollIntoView(t.getSelectionStart());
 				this.caret.setState(t);
 				return true;
 			}
@@ -710,8 +708,6 @@ var HtmlNode = Class.extend(
 			var t = this.getNextPosition(c);
 			if (t)
 			{
-				//var n = t.getNode();
-				//n.scrollIntoView(t.getSelectionStart());
 				this.caret.setState(t);
 				return true;
 			}
@@ -726,7 +722,6 @@ var HtmlNode = Class.extend(
 			var t = this.getUpperPosition(this.caret.currentState);
 			if (t)
 			{
-				//t.getNode().scrollIntoView(t.getPos());
 				this.caret.setState(t);
 				return true;
 			}
@@ -809,8 +804,6 @@ var HtmlNode = Class.extend(
 			var t = this.getPreviousPosition(n, p);
 			if (t)
 			{
-				//var n = this.nte.getNodeById(t.parentNodeId);
-				//n.scrollIntoView(t.pos);
 				this.caret.continueSelection(t.getSelectedNode(), t.getSelectionStart());
 				return true;
 			}
@@ -823,11 +816,9 @@ var HtmlNode = Class.extend(
 			var n = this.getTextChildByContinuousPos(pos);
 			var p = this.getPosInChildTextPos(pos);
 
-			var t = this.getNextPosition(n);
+			var t = this.getNextPosition(n, params);
 			if (t)
 			{
-				//var n = this.nte.getNodeById(t.parentNodeId);
-				//n.scrollIntoView(t.pos);
 				this.caret.continueSelection(t.getSelectedNode(), t.getSelectionStart());
 				return true;
 			}
@@ -961,7 +952,7 @@ var HtmlNode = Class.extend(
 		 * @method getNextPosition
 		 * @param {CaretState} relativeState Relative caret state
 		 */
-		getNextPosition : function(relativeState)
+		getNextPosition : function(relativeState, params)
 		{
 			var res = null;
 			
@@ -969,7 +960,7 @@ var HtmlNode = Class.extend(
 			{
 				res = this.getFirstPosition();
 				if (res)
-					res = res.getNode().getNextPosition(res);
+					res = res.getNode().getNextPosition(res, params);
 			}
 			else
 			{
@@ -984,7 +975,7 @@ var HtmlNode = Class.extend(
 						//whether to skip the first position
 						if (pos == i + 1 && this.childNodes.get(i).skipFirstPosition())
 						{
-							res = n.getNextPosition(null);
+							res = n.getNextPosition(null, params);
 							if (n.getLength() == 1)
 							{
 								relativeState.getRect(this.tempRect);
@@ -993,7 +984,7 @@ var HtmlNode = Class.extend(
 								res.getRect(this.tempRect);
 								if (left == this.tempRect.left && top == this.tempRect.top)
 								{
-									res = n.getNextPosition(res);
+									res = n.getNextPosition(res, params);
 									res = res.getNode().getFirstPosition();
 								}
 							}
@@ -1006,7 +997,7 @@ var HtmlNode = Class.extend(
 				}
 				
 				if (!res && this.parentNode)
-					res = this.parentNode.getNextPosition(relativeState);
+					res = this.parentNode.getNextPosition(relativeState, params);
 			}
 			
 			return res;
@@ -1017,7 +1008,7 @@ var HtmlNode = Class.extend(
 		 * @method getPreviousPosition
 		 * @param {CaretState} relativeState Relative caret state
 		 */
-		getPreviousPosition : function(relativeState)
+		getPreviousPosition : function(relativeState, params)
 		{
 			var res = null;
 			
@@ -1039,14 +1030,14 @@ var HtmlNode = Class.extend(
 					for (var pos = i - 1; pos >= 0; --pos)
 					{
 						var n = this.childNodes.get(pos);
-						res = n.getPreviousPosition(null);
+						res = n.getPreviousPosition(null, params);
 						if (res)
 							break;
 					}
 				}
 				
 				if (!res && this.parentNode)
-					res = this.parentNode.getPreviousPosition(relativeState);
+					res = this.parentNode.getPreviousPosition(relativeState, params);
 			}
 			
 			return res;
@@ -1061,7 +1052,7 @@ var HtmlNode = Class.extend(
 			{
 				//get the previous line
 				var c1 = this.getLineBegin(relativeState);
-				c1 = c1.getNode().getPreviousPosition(c1);
+				c1 = c1.getNode().getPreviousPosition(c1, {lower : true});
 				if (!c1)
 					return null;
 				if (!this.isChild(c1.getNode()))
@@ -1091,13 +1082,13 @@ var HtmlNode = Class.extend(
 				c1 = c;
 				res = c;
 				n = c.getNode();
-				c = n.getPreviousPosition(c);
+				c = n.getPreviousPosition(c, {lower : true});
 				
 				if (!c || res.isEqual(c))
 					return res;
 				
 				n = c.getNode();
-				if (!p.isChild(n))
+				if (p != n && !p.isChild(n))
 					return res;
 			
 				res = c;
@@ -1121,7 +1112,7 @@ var HtmlNode = Class.extend(
 			{
 				//get the next line
 				var c1 = this.getLineEnd(relativeState);
-				c1 = c1.getNode().getNextPosition(c1);
+				c1 = c1.getNode().getNextPosition(c1, {upper : true});
 				if (!c1)
 					return null;
 				if (!this.isChild(c1.getNode()))
@@ -1157,13 +1148,13 @@ var HtmlNode = Class.extend(
 				c1 = c;
 				res = c;
 				n = c.getNode();
-				c = n.getNextPosition(c);
+				c = n.getNextPosition(c, {upper : true});
 				
 				if (!c || res.isEqual(c))
 					return res;
 				
 				n = c.getNode();
-				if (!p.isChild(n))
+				if (p != n && !p.isChild(n))
 					return res;
 			
 				res = c;

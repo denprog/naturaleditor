@@ -9,15 +9,8 @@ var DivisionFormulaNode = CompoundFormulaNode.extend(
 		{
 			this.drawLib = nte.drawLib;
 			
-//			this.levelClasses = {};
-//			this.levelClasses[NodeLevel.NORMAL] = "normalDivisionFormulaNode";
-//			this.levelClasses[NodeLevel.LESS] = "lessDivisionFormulaNode";
-//			this.levelClasses[NodeLevel.STILL_LESS] = "stillLessDivisionFormulaNode";
-			
 			this._super(parentNode, pos, nte);
 			this.className = "DivisionFormulaNode";
-			
-//			this.addClass("normalDivisionFormulaNode");
 			
 			this.dividend = null;
 			this.shape = this.addShapeNode();
@@ -142,6 +135,35 @@ var DivisionFormulaNode = CompoundFormulaNode.extend(
 			this.caret.renderFormulaCaret(r, this.groupNode);
 		}, 
 
+		getNextPosition : function(relativeState, params)
+		{
+			if (!relativeState || !params || !params.upper)
+				return this._super(relativeState);
+			
+			var res = this._super(relativeState, params);
+			var n = res.getNode();
+			if (!res.checkOnNode(this) && n != this.dividend && !this.dividend.isChild(n))
+				return this.parentNode.getNextPosition(relativeState, params);
+			
+			return res;
+		},
+
+		getPreviousPosition : function(relativeState, params)
+		{
+			if (!relativeState || !params || !params.lower)
+				return this._super(relativeState);
+
+			var res = this._super(relativeState, params);
+			if (res)
+			{
+				var n = res.getNode();
+				if (!res.checkOnNode(this) && n != this.divisor && !this.divisor.isChild(n))
+					return this.parentNode.getPreviousPosition(relativeState, params);
+			}
+			
+			return res;
+		},
+		
 		getUpperPosition : function(relativeState)
 		{
 			var n = relativeState.getNode();
