@@ -142,8 +142,17 @@ var ShapeFormulaNode = GroupFormulaNode.extend(
 		
 		clearShapes : function()
 		{
-			for (var i = 0; i < this.element.children.length; ++i)
-				this.drawLib.remove(this.element.children[i], this.element);
+			if (this.element.children)
+			{
+				for (var i = 0; i < this.element.children.length; ++i)
+					this.drawLib.remove(this.element.children[i], this.element);
+			}
+			else
+			{
+				for (var i = 0; i < this.element.childNodes.length; ++i)
+					this.drawLib.remove(this.element.childNodes[i], this.element);
+			}
+			
 			this.updateClientRect();
 		}
 	}
