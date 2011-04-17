@@ -732,7 +732,31 @@ var TextNode = HtmlNode.extend(
 				textRange.setEnd(this.element, pos + 1);
 			}
 
-			var rect = textRange.getBoundingClientRect();
+			var rect;
+			if (this.nte.isWebKit)
+			{
+				//rect = this.element.parentNode.getBoundingClientRect();
+
+				rect = textRange.getClientRects()[0];
+				if (!rect)
+					rect = textRange.getBoundingClientRect();
+
+//				if (pos == this.element.length)
+//				{
+//					textRange.setStart(this.element, 1);
+//					textRange.setEnd(this.element, 1);
+//					textRange.expand("character");
+//
+//					var r = textRange.getClientRects()[0];
+//					if (!r)
+//						r = textRange.getBoundingClientRect();
+//				}
+			}
+			else
+			{
+				rect = textRange.getBoundingClientRect();
+			}
+			
 			var r = this.nte.editor.getBoundingClientRect();
 			
 			posRect.setRect(Math.round((pos == this.element.length ? rect.right + this.nte.editor.scrollLeft : rect.left + this.nte.editor.scrollLeft) - r.left), 

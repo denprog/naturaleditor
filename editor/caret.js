@@ -324,6 +324,7 @@ function Caret(nte)
 		this.setSize(1, rect.height);
 		var r = this.nte.drawLib.line(0, 0, 1, rect.height, "black", this.textCaretGroup);
 		this.nte.drawLib.animate("visibility", "visible", "hidden", "1", "indefinite", r);
+		//this.nte.drawLib.animate("visibility", "CSS", "visible", "1", "10", r);
 		this.addShape(r);
 		
 		//update the selection range
