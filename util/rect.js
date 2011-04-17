@@ -3,13 +3,6 @@
  */
 function Rectangle(left, top, width, height)
 {
-	//this.left;
-	//this.top;
-	//this.right;
-	//this.bottom;
-	//this.width;
-	//this.height;
-	
 	this.setRect = function(left, top, width, height)
 	{
 		this.left = left;
