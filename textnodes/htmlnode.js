@@ -1745,6 +1745,18 @@ var HtmlNode = Class.extend(
 						
 						if (this.nte.isWebKit)
 						{
+							for (var name in n.element.style)
+							{
+								var p = parseInt(name);
+								if (p >= "0" && p <= "9")
+								{
+									var s = n.element.style[name];
+									p = n.element.style[s];
+									var m = {};
+									m[s] = p;
+									this.addStyle(m);
+								}
+							}
 						}
 						else
 						{
