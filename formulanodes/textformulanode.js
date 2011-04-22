@@ -715,6 +715,7 @@ var FormulaTextNode = TextNode.extend(
 				textRange.setEnd(this.element, 1);
 				var r = textRange.getBoundingClientRect();
 				
+				this.parentNode.groupNode.updateBoundingRect();
 				var b = this.parentNode.groupNode.boundingRect;
 
 				posRect.setRect((pos == this.element.length ? rect.right - r.left : rect.left - r.left) + cx + b.left, 
@@ -741,6 +742,7 @@ var FormulaTextNode = TextNode.extend(
 				cy = Math.round(cy);
 				
 				//var r = this.nte.editor.getBoundingClientRect();
+				this.parentNode.groupNode.updateBoundingRect();
 				var b = this.parentNode.groupNode.boundingRect;
 				
 				posRect.setRect((pos == this.element.length ? rect.right : rect.left) + cx + b.left, 

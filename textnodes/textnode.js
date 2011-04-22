@@ -740,6 +740,9 @@ var TextNode = HtmlNode.extend(
 				rect = textRange.getClientRects()[0];
 				if (!rect)
 					rect = textRange.getBoundingClientRect();
+				
+				if (!rect || (rect.width == 0 && rect.height == 0))
+					rect = this.element.previousSibling.getBoundingClientRect();
 
 //				if (pos == this.element.length)
 //				{

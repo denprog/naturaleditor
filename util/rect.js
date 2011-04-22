@@ -33,7 +33,7 @@ function Rectangle(left, top, width, height)
 
 	this.isEmpty = function()
 	{
-		return this.width == 0 || this.height == 0;
+		return this.width == 0 && this.height == 0;
 	};
 	
 	this.offsetRect = function(cx, cy)
