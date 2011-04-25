@@ -45,6 +45,7 @@
 				<file name="formulanodes/exponentiationformulanode.js"/>
 				<file name="formulanodes/squarerootformulanode.js"/>
 				<file name="formulanodes/nthrootformulanode.js"/>
+				<file name="formulanodes/bracketsformulanode.js"/>
 				<file name="formulanodes/emptyformulanode.js"/>
 				<file name="util/toolbar.js"/>
 				<file name="themes/classic/theme.js"/>
