@@ -53,32 +53,20 @@ var SvgFormulaNode = FormulaNode.extend(
 		
 		updateBoundingRect : function()
 		{
-			this.getNodeBounds(this.tempRect);
-			
-			var r = this.element.getBoundingClientRect();
-			var b = this.nte.editor.getBoundingClientRect();
-			this.boundingRect.setRect(r.left - this.element.x.baseVal.value - b.left - this.leftOffset, 
-				this.tempRect.top - this.element.y.baseVal.value, 
-				this.element.width.baseVal.value, 
-				this.element.height.baseVal.value);
-			
-//			var r = this.element.getBoundingClientRect();
-//			var b = this.nte.editor.getBoundingClientRect();
-//			this.boundingRect.setRect(r.left - this.element.x.baseVal.value - b.left - this.leftOffset, 
-//				//r.top - this.element.y.baseVal.value - b.top - parseInt(this.element.style.verticalAlign),
-//				r.top - this.element.y.baseVal.value, 
-//				this.element.width.baseVal.value, 
-//				this.element.height.baseVal.value);
-
-//			var b = this.nte.editor.getBoundingClientRect();
-//			var s = this.nte.window.getComputedStyle(this.element.parentNode, null);
-//			var t = parseInt(s.getPropertyValue("line-height"));
-//			this.boundingRect.setRect(r.left - this.element.x.baseVal.value, 
-//				//r.top - this.element.y.baseVal.value - b.top + (this.element.height.baseVal.value < t ? parseInt(this.element.style.verticalAlign) : 0),
-//				//r.top - this.element.y.baseVal.value - b.top + (this.element.height.baseVal.value > t ? -parseInt(this.element.style.verticalAlign) : 0),
-//				r.top - this.element.y.baseVal.value - b.top - parseInt(this.element.style.verticalAlign),
-//				this.element.width.baseVal.value, 
-//				this.element.height.baseVal.value);
+			if (this.nte.isWebKit)
+			{
+				this.boundingRect.setRect(this.element.offsetLeft, this.element.offsetTop, this.element.offsetWidth, this.element.offsetHeight);
+			}
+			else
+			{
+				this.getNodeBounds(this.tempRect);
+				var r = this.element.getBoundingClientRect();
+				var b = this.nte.editor.getBoundingClientRect();
+				this.boundingRect.setRect(r.left - this.element.x.baseVal.value - b.left - this.leftOffset, 
+					this.tempRect.top - this.element.y.baseVal.value, 
+					this.element.width.baseVal.value, 
+					this.element.height.baseVal.value);
+			}
 		}, 
 
 		moveCaretToLineBegin : function()

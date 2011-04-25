@@ -14,7 +14,7 @@ var TextBaseNode = HtmlNode.extend(
 			n.getRelativePosBounds(c.getPos(), r);
 			var x = r.left;
 			
-			while (c != null && r.left <= x)
+			while (c != null && r.left - 1 <= x)
 			{
 				res = c;
 				x = r.left;
@@ -52,7 +52,7 @@ var TextBaseNode = HtmlNode.extend(
 			n.getRelativePosBounds(c.getPos(), r);
 			var x = r.left;
 			
-			while (c != null && r.left >= x)
+			while (c != null && r.left + 1 >= x)
 			{
 				res = c;
 				x = r.left;

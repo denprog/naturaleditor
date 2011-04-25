@@ -23,54 +23,72 @@ svg g.normalPlusFormulaNode
 {
 	width : 10px;
 	height : 10px;
+	max-width : 10px;
+	max-height : 10px;
 }
 
 svg g.lessPlusFormulaNode
 {
 	width : 8px;
 	height : 8px;
+	max-width : 8px;
+	max-height : 8px;
 }
 
 svg g.stillLessPlusFormulaNode
 {
 	width : 6px;
 	height : 6px;
+	max-width : 6px;
+	max-height : 6px;
 }
 
 svg g.normalMinusFormulaNode
 {
 	width : 10px;
 	height : 10px;
+	max-width : 10px;
+	max-height : 10px;
 }
 
 svg g.lessMinusFormulaNode
 {
 	width : 8px;
 	height : 8px;
+	max-width : 8px;
+	max-height : 8px;
 }
 
 svg g.stillLessMinusFormulaNode
 {
 	width : 6px;
 	height : 6px;
+	max-width : 6px;
+	max-height : 6px;
 }
 
 svg g.normalMultiplyFormulaNode
 {
 	width : 8px;
 	height : 10px;
+	max-width : 8px;
+	max-height : 10px;
 }
 
 svg g.lessMultiplyFormulaNode
 {
 	width : 6px;
 	height : 8px;
+	max-width : 6px;
+	max-height : 8px;
 }
 
 svg g.stillLessMultiplyFormulaNode
 {
 	width : 5px;
 	height : 6px;
+	max-width : 5px;
+	max-height : 6px;
 }
 
 svg .normalEmptyFormulaNode

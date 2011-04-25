@@ -1734,17 +1734,37 @@ var HtmlNode = Class.extend(
 						command.setParam(this, "cssText", this.element.style.cssText);
 						command.setParam(n, "cssText", n.element.style.cssText);
 						
-						//copy the style in the new node
-						for (var name in n.element.style)
+						if (this.nte.isWebKit)
 						{
-							if (!(name >= "0" && name <= "9") && name != "cssText")
+							for (var name in n.element.style)
 							{
-								var s = n.element.style[name];
-								if (s && typeof(s) != "function" && s != "")
+								var p = parseInt(name);
+								if (p >= "0" && p <= "9")
 								{
+									var s = n.element.style[name];
+									p = n.element.style[s];
 									var m = {};
-									m[name] = s;
+									m[s] = p;
 									this.addStyle(m);
+								}
+							}
+						}
+						else
+						{
+							//copy the style in the new node
+							for (var name in n.element.style)
+							{
+								//var p = parseInt(name);
+								if (!(name >= "0" && name <= "9") && name != "cssText")
+								//if (p >= "0" && p <= "9" && name != "cssText")
+								{
+									var s = n.element.style[name];
+									if (s && typeof(s) != "function" && s != "")
+									{
+										var m = {};
+										m[name] = s;
+										this.addStyle(m);
+									}
 								}
 							}
 						}

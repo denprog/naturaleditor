@@ -531,7 +531,7 @@ var FormulaNode = HtmlNode.extend(
 				}
 			}
 			
-			this.clientRect.setRect(0, 0, w, h);
+			this.clientRect.setRect(0, 0, Math.round(w), Math.round(h));
 		}, 
 		
 		updateBoundingRect : function()

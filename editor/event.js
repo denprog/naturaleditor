@@ -449,15 +449,32 @@ function EventsHandler(nte)
 		event.dbl = true;
 	};
 	
-	this.eventHandlers = 
-		{
-			"onkeydown" : {event: "keydown", handler: this.onkeydown, refs: 0}, 
-			"onkeyup" : {event: "keyup", handler: this.onkeyup, refs: 0}, 
-			"onkeypress" : {event: "keypress", handler: this.onkeypress, refs: 0}, 
-			"onglobalshortcut" : {event: "keypress", handler: this.onglobalshortcut, refs: 0}, 
-			"onshortcut" : {event: "keypress", handler: this.onshortcut, refs: 0}, 
-			"onchar" : {event: "keypress", handler: this.onchar, refs: 0}, 
-			"onclick" : {event: "click", handler: this.onclick, refs: 0}, 
-			"ondoubleclick" : {event: "dblclick", handler: this.ondoubleclick, refs: 0}
-		};
+	if (this.nte.isGecko && !this.nte.isWebKit)
+	{
+		this.eventHandlers = 
+			{
+				"onkeydown" : {event: "keydown", handler: this.onkeydown, refs: 0}, 
+				"onkeyup" : {event: "keyup", handler: this.onkeyup, refs: 0}, 
+				"onkeypress" : {event: "keypress", handler: this.onkeypress, refs: 0}, 
+				"onglobalshortcut" : {event: "keypress", handler: this.onglobalshortcut, refs: 0}, 
+				"onshortcut" : {event: "keypress", handler: this.onshortcut, refs: 0}, 
+				"onchar" : {event: "keypress", handler: this.onchar, refs: 0}, 
+				"onclick" : {event: "click", handler: this.onclick, refs: 0}, 
+				"ondoubleclick" : {event: "dblclick", handler: this.ondoubleclick, refs: 0}
+			};
+	}
+	else
+	{
+		this.eventHandlers = 
+			{
+				"onkeydown" : {event: "keydown", handler: this.onkeydown, refs: 0}, 
+				"onkeyup" : {event: "keyup", handler: this.onkeyup, refs: 0}, 
+				"onkeypress" : {event: "keypress", handler: this.onkeypress, refs: 0}, 
+				"onglobalshortcut" : {event: "keydown", handler: this.onglobalshortcut, refs: 0}, 
+				"onshortcut" : {event: "keypress", handler: this.onshortcut, refs: 0}, 
+				"onchar" : {event: "keypress", handler: this.onchar, refs: 0}, 
+				"onclick" : {event: "click", handler: this.onclick, refs: 0}, 
+				"ondoubleclick" : {event: "dblclick", handler: this.ondoubleclick, refs: 0}
+			};
+	}
 }
