@@ -1,8 +1,14 @@
-var HeaderNode = HtmlNode.extend(
+/**
+ * @constructor
+ */
+var HeaderNode = TextBaseNode.extend(
 	{
 	}
 );
 
+/**
+ * @constructor
+ */
 var Header1Node = HeaderNode.extend(
 	{
 		init : function(parentNode, pos, nte)
@@ -12,6 +18,9 @@ var Header1Node = HeaderNode.extend(
 	}
 );
 
+/**
+ * @constructor
+ */
 var Header2Node = HeaderNode.extend(
 	{
 		init : function(parentNode, pos, nte)
@@ -21,6 +30,9 @@ var Header2Node = HeaderNode.extend(
 	}
 );
 
+/**
+ * @constructor
+ */
 var Header3Node = HeaderNode.extend(
 	{
 		init : function(parentNode, pos, nte)

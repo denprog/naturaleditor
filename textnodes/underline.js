@@ -1,3 +1,6 @@
+/**
+ * @constructor
+ */
 var UnderlineNode = HtmlNode.extend(
 	{
 		init : function(parentNode, pos, nte)

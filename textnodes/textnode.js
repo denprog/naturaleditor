@@ -1,3 +1,6 @@
+/**
+ * @constructor
+ */
 var TextNode = HtmlNode.extend(
 	{
 		init : function(textNode, parentNode, pos, nte)
@@ -54,37 +57,11 @@ var TextNode = HtmlNode.extend(
 
 			//whether the caret is placed in this node?
 			if (c.beginCaretPos && c.getSelectedNodePos(s) == 0)
-				this.getPosBounds(s.getPos(), p);
+				this.getRelativePosBounds(s.getPos(), p);
 			else if (!c.beginCaretPos && c.getSelectedNodePos(s) == c.getSelectedNodesCount() - 1)
-				this.getPosBounds(s.getPos() + s.length, p);
-			
-			this.caret.paper.clearShapes();
+				this.getRelativePosBounds(s.getPos() + s.length, p);
 
-			//if the caret is placed in this node, render it
-			if (p)
-			{
-				this.caret.paper.move(p.left, p.top);
-				this.caret.paper.setSize(1, p.height);
-				var r = this.caret.paper.fillRect(0, 0, 1, p.height, "black");
-				//var an = this.drawLib.animate(r, "opacity", "1;0;1", "0;0;1", "1s", "0s", "linear", "indefinite", "always", "remove", "none", "replace");
-				//this.caret.paper.animate("visibility", "visible", "hidden", "1", "indefinite", r);
-				//this.an = this.drawLib.animate("visibility", "visible", "hidden", "1", "indefinite", r);
-				//this.an = this.drawLib.animate("visibility", "hidden", "visible", "0", "0", this.rect);
-				//this.drawLib.remove(this.an, this.rect);
-				//delete this.an;
-				this.an = this.drawLib.animate("visibility", "visible", "hidden", "1", "indefinite", r);
-				//this.an = this.drawLib.animate("opacity", "1", "0", "1", "5", this.rect);
-				
-				//this.g = this.drawLib.group(this.caret.paper.group);
-				//var r = this.drawLib.fillRect(0, 0, 1, p.height, "black", this.g);
-				//this.an = this.drawLib.animate("visibility", "visible", "hidden", "1", "indefinite", this.g);
-			}
-			
-			//update the selection range
-			var r = this.nte.document.createRange();
-			r.setStart(this.element, s.getPos());
-			r.setEnd(this.element, s.getPos() + s.length);
-			range.addRange(r);
+			this.caret.renderTextCaret(p, this, s.getPos(), s.length, range);
 		}, 
 
 		setCaretToNodeBegin : function()
@@ -112,7 +89,7 @@ var TextNode = HtmlNode.extend(
 		 * @method getNextPosition
 		 * @param {CaretState} relativeState Relative caret state
 		 */
-		getNextPosition : function(relativeState)
+		getNextPosition : function(relativeState, params)
 		{
 			if (!relativeState)
 				res = new CaretState(this, 1);
@@ -151,13 +128,13 @@ var TextNode = HtmlNode.extend(
 						}
 						
 						if (!res && this.parentNode)
-							res = this.parentNode.getNextPosition(relativeState);
+							res = this.parentNode.getNextPosition(relativeState, params);
 					}
 				}
 				else if (pos < this.element.length)
 					res = new CaretState(this, pos + 1);
 				else
-					res = this.parentNode.getNextPosition(relativeState);
+					res = this.parentNode.getNextPosition(relativeState, params);
 			}
 			
 			return res;
@@ -168,7 +145,7 @@ var TextNode = HtmlNode.extend(
 		 * @method getPreviousPosition
 		 * @param {CaretState} relativeState Relative caret state
 		 */
-		getPreviousPosition : function(relativeState)
+		getPreviousPosition : function(relativeState, params)
 		{
 			if (!relativeState)
 				res = new CaretState(this, this.element.length);
@@ -179,12 +156,12 @@ var TextNode = HtmlNode.extend(
 	
 				if (pos == 0 || pos == 1)
 				{
-					res = this.parentNode.getPreviousPosition(relativeState);
+					res = this.parentNode.getPreviousPosition(relativeState, params);
 					if (res)
 					{
 						res.getRect(this.tempRect);
 						var t = this.tempRect.left;
-						var r = res.getNode().getPreviousPosition(res);
+						var r = res.getNode().getPreviousPosition(res, params);
 						if (r)
 						{
 							r.getRect(this.tempRect);
@@ -204,7 +181,7 @@ var TextNode = HtmlNode.extend(
 					res = new CaretState(this, pos - 1);
 				
 				if (!res)
-					res = this.parentNode.getPreviousPosition(relativeState);
+					res = this.parentNode.getPreviousPosition(relativeState, params);
 			}
 			
 			return res;
@@ -448,27 +425,27 @@ var TextNode = HtmlNode.extend(
 			
 			return this.doRemoveChild(node, pos, len, nodeEvent, command);
 		},
-		
+
 		mergeNode : function(caretState)
 		{
 			var pos = this.parentNode.getChildPos(this);
 			var node = this.parentNode.childNodes.get(pos + 1);
+			var n = caretState.getNode();
+
+			if (n == node)
+				var s = caretState.findSelectedNode(node);
 			
-			var c = node.caretState;
-			if (c)
-				var s = c.findSelectedNode(node);
-			var p = this.parentNode.caretState;
-			if (p)
+			if (n == this.parentNode)
 			{
-				if (p.isNodeSelected(this))
+				if (caretState.isNodeSelected(node))
 				{
-					p.removeInnerSelectedNode(this);
-					var b1 = true;
-				}
-				else if (p.isNodeSelected(node))
-				{
-					p.removeInnerSelectedNode(node);
+					caretState.removeInnerSelectedNode(node);
 					var b2 = true;
+				}
+				if (caretState.isNodeSelected(this))
+				{
+					caretState.removeInnerSelectedNode(this);
+					var b1 = true;
 				}
 			}
 
@@ -476,20 +453,57 @@ var TextNode = HtmlNode.extend(
 			var r = node.element.data.length;
 			this.element.data += node.element.data;
 			this.parentNode.removeChildNode(pos + 1);
-			
-			if (c && s)
-				c.replaceSelectedNode(node, this, len + s.getPos(), s.length);
+
+			if (s)
+				caretState.replaceSelectedNode(node, this, len + s.getPos(), s.length);
+
 			if (b1)
-			{
-				p.addSelectedNode(new SelectedNode(p, this, 0, len));
-				this.caretState = p;
-			}
-			else if (b2)
-			{
-				p.insertSelectedNode(0, new SelectedNode(p, this, len, r));
-				this.caretState = p;
-			}
-		}, 
+				caretState.addSelectedNode(new SelectedNode(caretState, this, 0, len));
+			if (b2)
+				caretState.addSelectedNode(new SelectedNode(caretState, this, len, r));
+		},
+		
+//		mergeNode : function(caretState)
+//		{
+//			var pos = this.parentNode.getChildPos(this);
+//			var node = this.parentNode.childNodes.get(pos + 1);
+//			
+//			var c = node.caretState;
+//			if (c)
+//				var s = c.findSelectedNode(node);
+//			var p = this.parentNode.caretState;
+//			if (p)
+//			{
+//				if (p.isNodeSelected(this))
+//				{
+//					p.removeInnerSelectedNode(this);
+//					var b1 = true;
+//				}
+//				else if (p.isNodeSelected(node))
+//				{
+//					p.removeInnerSelectedNode(node);
+//					var b2 = true;
+//				}
+//			}
+//
+//			var len = this.element.data.length;
+//			var r = node.element.data.length;
+//			this.element.data += node.element.data;
+//			this.parentNode.removeChildNode(pos + 1);
+//			
+//			if (c && s)
+//				c.replaceSelectedNode(node, this, len + s.getPos(), s.length);
+//			if (b1)
+//			{
+//				p.addSelectedNode(new SelectedNode(p, this, 0, len));
+//				this.caretState = p;
+//			}
+//			else if (b2)
+//			{
+//				p.insertSelectedNode(0, new SelectedNode(p, this, len, r));
+//				this.caretState = p;
+//			}
+//		}, 
 
 		addType : function(nodeEvent, command)
 		{
@@ -609,6 +623,8 @@ var TextNode = HtmlNode.extend(
 					};
 			}
 			
+			this.parentNode.updateCaretState();
+			
 			return true;
 		}, 
 
@@ -621,7 +637,7 @@ var TextNode = HtmlNode.extend(
 				if (n instanceof TextNode)
 				{
 					var i = this.element.data.length;
-					this.mergeNode();
+					this.mergeNode(nodeEvent.caretState);
 
 					nodeEvent.resNode = this.parentNode;
 					nodeEvent.undoActionNodePos = this.getCaretPosition();
@@ -698,12 +714,43 @@ var TextNode = HtmlNode.extend(
 			}
 
 			var rect = textRange.getBoundingClientRect();
+
+			posRect.setRect(Math.round(pos == this.element.length ? rect.right : rect.left), 0, 0, rect.height);
+		},
+
+		getRelativePosBounds : function(pos, posRect)
+		{
+			var textRange = this.document.createRange();
+			if (pos == this.element.length)
+			{
+				textRange.setStart(this.element, pos > 0 ? pos - 1 : 0);
+				textRange.setEnd(this.element, pos);
+			}
+			else
+			{
+				textRange.setStart(this.element, pos);
+				textRange.setEnd(this.element, pos + 1);
+			}
+
+			var rect;
+			if (this.nte.isWebKit)
+			{
+				rect = textRange.getClientRects()[0];
+				if (!rect)
+					rect = textRange.getBoundingClientRect();
+				
+				if ((!rect || (rect.width == 0 && rect.height == 0)) && this.element.previousSibling)
+					rect = this.element.previousSibling.getBoundingClientRect();
+			}
+			else
+			{
+				rect = textRange.getBoundingClientRect();
+			}
+			
 			var r = this.nte.editor.getBoundingClientRect();
 			
 			posRect.setRect(Math.round((pos == this.element.length ? rect.right + this.nte.editor.scrollLeft : rect.left + this.nte.editor.scrollLeft) - r.left), 
 				Math.round(rect.top + this.nte.editor.scrollTop - r.top), 
-				//Math.round(rect.width), 
-				//Math.round(pos == this.element.length ? 0 : rect.width), 
 				Math.round(0), 
 				Math.round(rect.height));
 		}, 

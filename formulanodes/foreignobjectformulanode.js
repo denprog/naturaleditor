@@ -1,3 +1,6 @@
+/**
+ * @constructor
+ */
 var ForeignObjectFormulaNode = FormulaNode.extend(
 	{
 		init : function(parentNode, pos, nte)
@@ -20,7 +23,8 @@ var ForeignObjectFormulaNode = FormulaNode.extend(
 			if (this.childNodes.count() == 1)
 			{
 				this.childNodes.get(0).addTextNode(textNode);
-				this.groupNode.remake();
+				if (this.groupNode)
+					this.groupNode.remake();
 			}
 			else
 				this._super(textNode);
@@ -55,7 +59,7 @@ var ForeignObjectFormulaNode = FormulaNode.extend(
 			return this.parentNode.moveCaretToLineEnd();
 		},
 
-		getNextPosition : function(relativeState)
+		getNextPosition : function(relativeState, params)
 		{
 			var res = null;
 			
@@ -64,7 +68,7 @@ var ForeignObjectFormulaNode = FormulaNode.extend(
 			else
 			{
 				if (relativeState.checkOnNode(this) || relativeState.checkInNode(this))
-					res = this.parentNode.getNextPosition(relativeState);
+					res = this.parentNode.getNextPosition(relativeState, params);
 				else
 					res = this.getFirstPosition();
 			}

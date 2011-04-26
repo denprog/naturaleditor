@@ -46,6 +46,8 @@ v\: * {
  						nte.changeFontName("arial");
 						if (nte.isIE)
  							ok(testSelectedHtml("<p><span style=\"font-family: arial\">T</span>ext</p>", 0, new Array("T")));
+						else if (nte.isWebKit)
+ 							ok(testSelectedHtml("<p><span style=\"font-family: arial; \">T</span>ext</p>", 0, new Array("T")));
 						else
  							ok(testSelectedHtml("<p><span style=\"font-family: arial;\">T</span>ext</p>", 0, new Array("T")));
  						nte.onUndo();
@@ -53,6 +55,8 @@ v\: * {
  						nte.onRedo();
 						if (nte.isIE)
  							ok(testSelectedHtml("<p><span style=\"font-family: arial\">T</span>ext</p>", 0, new Array("T")));
+						else if (nte.isWebKit)
+	 						ok(testSelectedHtml("<p><span style=\"font-family: arial; \">T</span>ext</p>", 0, new Array("T")));
 						else
 	 						ok(testSelectedHtml("<p><span style=\"font-family: arial;\">T</span>ext</p>", 0, new Array("T")));
  						nte.onUndo();
@@ -70,6 +74,8 @@ v\: * {
  						nte.changeFontSize("medium");
 						if (nte.isIE)
 	 						ok(testSelectedHtml("<p><span style=\"font-size: medium\">T</span>ext</p>", 0, new Array("T")));
+						else if (nte.isWebKit)
+	 						ok(testSelectedHtml("<p><span style=\"font-size: medium; \">T</span>ext</p>", 0, new Array("T")));
 						else
 	 						ok(testSelectedHtml("<p><span style=\"font-size: medium;\">T</span>ext</p>", 0, new Array("T")));
  						nte.onUndo();
@@ -77,6 +83,8 @@ v\: * {
  						nte.onRedo();
 						if (nte.isIE)
 	 						ok(testSelectedHtml("<p><span style=\"font-size: medium\">T</span>ext</p>", 0, new Array("T")));
+						else if (nte.isWebKit)
+	 						ok(testSelectedHtml("<p><span style=\"font-size: medium; \">T</span>ext</p>", 0, new Array("T")));
 						else
 	 						ok(testSelectedHtml("<p><span style=\"font-size: medium;\">T</span>ext</p>", 0, new Array("T")));
  						nte.onUndo();
@@ -92,25 +100,43 @@ v\: * {
 
  						nte.setCaret(0, 1);
  						nte.changeFontName("arial");
- 						ok(testSelectedHtml("<p><span style=\"font-family: arial;\">T</span>ext</p>", 0, new Array("T")));
+						if (nte.isWebKit)
+	 						ok(testSelectedHtml("<p><span style=\"font-family: arial; \">T</span>ext</p>", 0, new Array("T")));
+						else
+	 						ok(testSelectedHtml("<p><span style=\"font-family: arial;\">T</span>ext</p>", 0, new Array("T")));
 						
  						nte.changeFontSize("medium");
- 						ok(testSelectedHtml("<p><span style=\"font-size: medium; font-family: arial;\">T</span>ext</p>", 0, new Array("T")));
+						if (nte.isWebKit)
+ 							ok(testSelectedHtml("<p><span style=\"font-size: medium; font-family: arial; \">T</span>ext</p>", 0, new Array("T")));
+						else
+	 						ok(testSelectedHtml("<p><span style=\"font-size: medium; font-family: arial;\">T</span>ext</p>", 0, new Array("T")));
  						
  						nte.onUndo();
-						ok(testSelectedHtml("<p><span style=\"font-family: arial;\">T</span>ext</p>", 0, new Array("T")));
+						if (nte.isWebKit)
+							ok(testSelectedHtml("<p><span style=\"font-family: arial; \">T</span>ext</p>", 0, new Array("T")));
+						else
+							ok(testSelectedHtml("<p><span style=\"font-family: arial;\">T</span>ext</p>", 0, new Array("T")));
 						
  						nte.onUndo();
  						ok(testSelectedHtml("<p>Text</p>", 0, new Array("T"), "T"));
  						
  						nte.onRedo();
-						ok(testSelectedHtml("<p><span style=\"font-family: arial;\">T</span>ext</p>", 0, new Array("T")));
+						if (nte.isWebKit)
+							ok(testSelectedHtml("<p><span style=\"font-family: arial; \">T</span>ext</p>", 0, new Array("T")));
+						else
+							ok(testSelectedHtml("<p><span style=\"font-family: arial;\">T</span>ext</p>", 0, new Array("T")));
 						
  						nte.onRedo();
-						ok(testSelectedHtml("<p><span style=\"font-size: medium; font-family: arial;\">T</span>ext</p>", 0, new Array("T")));
+						if (nte.isWebKit)
+							ok(testSelectedHtml("<p><span style=\"font-size: medium; font-family: arial; \">T</span>ext</p>", 0, new Array("T")));
+						else
+							ok(testSelectedHtml("<p><span style=\"font-size: medium; font-family: arial;\">T</span>ext</p>", 0, new Array("T")));
 						
  						nte.onUndo();
- 						ok(testSelectedHtml("<p><span style=\"font-family: arial;\">T</span>ext</p>", 0, new Array("T")));
+						if (nte.isWebKit)
+ 							ok(testSelectedHtml("<p><span style=\"font-family: arial; \">T</span>ext</p>", 0, new Array("T")));
+						else
+	 						ok(testSelectedHtml("<p><span style=\"font-family: arial;\">T</span>ext</p>", 0, new Array("T")));
  						
  						nte.onUndo();
  						ok(testSelectedHtml("<p>Text</p>", 0, new Array("T")));
@@ -125,25 +151,43 @@ v\: * {
 
  						nte.setCaret(0, 4);
  						nte.changeFontName("arial");
- 						ok(testSelectedHtml("<p><span style=\"font-family: arial;\">Text</span></p>", 0, new Array("Text")));
+						if (nte.isWebKit)
+	 						ok(testSelectedHtml("<p><span style=\"font-family: arial; \">Text</span></p>", 0, new Array("Text")));
+						else
+	 						ok(testSelectedHtml("<p><span style=\"font-family: arial;\">Text</span></p>", 0, new Array("Text")));
  						
  						nte.changeFontSize("medium");
-						ok(testSelectedHtml("<p><span style=\"font-size: medium; font-family: arial;\">Text</span></p>", 0, new Array("Text")));
+						if (nte.isWebKit)
+							ok(testSelectedHtml("<p><span style=\"font-size: medium; font-family: arial; \">Text</span></p>", 0, new Array("Text")));
+						else
+							ok(testSelectedHtml("<p><span style=\"font-size: medium; font-family: arial;\">Text</span></p>", 0, new Array("Text")));
 						
  						nte.onUndo();
-						ok(testSelectedHtml("<p><span style=\"font-family: arial;\">Text</span></p>", 0, new Array("Text")));
+						if (nte.isWebKit)
+							ok(testSelectedHtml("<p><span style=\"font-family: arial; \">Text</span></p>", 0, new Array("Text")));
+						else
+							ok(testSelectedHtml("<p><span style=\"font-family: arial;\">Text</span></p>", 0, new Array("Text")));
 						
  						nte.onUndo();
  						ok(testSelectedHtml("<p>Text</p>", 0, new Array("Text"), "Text"));
  						
  						nte.onRedo();
-						ok(testSelectedHtml("<p><span style=\"font-family: arial;\">Text</span></p>", 0, new Array("Text")));
+						if (nte.isWebKit)
+							ok(testSelectedHtml("<p><span style=\"font-family: arial; \">Text</span></p>", 0, new Array("Text")));
+						else
+							ok(testSelectedHtml("<p><span style=\"font-family: arial;\">Text</span></p>", 0, new Array("Text")));
 						
  						nte.onRedo();
-						ok(testSelectedHtml("<p><span style=\"font-size: medium; font-family: arial;\">Text</span></p>", 0, new Array("Text")));
+						if (nte.isWebKit)
+							ok(testSelectedHtml("<p><span style=\"font-size: medium; font-family: arial; \">Text</span></p>", 0, new Array("Text")));
+						else
+							ok(testSelectedHtml("<p><span style=\"font-size: medium; font-family: arial;\">Text</span></p>", 0, new Array("Text")));
 						
  						nte.onUndo();
- 						ok(testSelectedHtml("<p><span style=\"font-family: arial;\">Text</span></p>", 0, new Array("Text")));
+						if (nte.isWebKit)
+	 						ok(testSelectedHtml("<p><span style=\"font-family: arial; \">Text</span></p>", 0, new Array("Text")));
+						else
+ 							ok(testSelectedHtml("<p><span style=\"font-family: arial;\">Text</span></p>", 0, new Array("Text")));
  						
  						nte.onUndo();
  						ok(testSelectedHtml("<p>Text</p>", 0, new Array("Text")));
@@ -158,24 +202,43 @@ v\: * {
 
  						nte.setCaret(2, 4);
  						nte.changeFontName("arial");
- 						ok(testSelectedHtml("<p>Te<span style=\"font-family: arial;\">xt</span><b><span style=\"font-family: arial;\">Bo</span>ld</b></p>", 1, new Array("xt", "Bo")));
+						if (nte.isWebKit)
+	 						ok(testSelectedHtml("<p>Te<span style=\"font-family: arial; \">xt</span><b><span style=\"font-family: arial; \">Bo</span>ld</b></p>", 1, new Array("xt", "Bo")));
+						else
+ 							ok(testSelectedHtml("<p>Te<span style=\"font-family: arial;\">xt</span><b><span style=\"font-family: arial;\">Bo</span>ld</b></p>", 1, new Array("xt", "Bo")));
  						
  						nte.changeFontSize("medium");
-						ok(testSelectedHtml("<p>Te<span style=\"font-size: medium; font-family: arial;\">xt</span><b><span style=\"font-size: medium; font-family: arial;\">Bo</span>ld</b></p>", 1, new Array("xt", "Bo")));
+						if (nte.isWebKit)
+							ok(testSelectedHtml("<p>Te<span style=\"font-size: medium; font-family: arial; \">xt</span><b><span style=\"font-size: medium; font-family: arial; \">Bo</span>ld</b></p>", 1, new Array("xt", "Bo")));
+						else
+							ok(testSelectedHtml("<p>Te<span style=\"font-size: medium; font-family: arial;\">xt</span><b><span style=\"font-size: medium; font-family: arial;\">Bo</span>ld</b></p>", 1, new Array("xt", "Bo")));
 						
  						nte.onUndo();
-						ok(testSelectedHtml("<p>Te<span style=\"font-family: arial;\">xt</span><b><span style=\"font-family: arial;\">Bo</span>ld</b></p>", 1, new Array("xt", "Bo")));
+						if (nte.isWebKit)
+							ok(testSelectedHtml("<p>Te<span style=\"font-family: arial; \">xt</span><b><span style=\"font-family: arial; \">Bo</span>ld</b></p>", 1, new Array("xt", "Bo")));
+						else
+							ok(testSelectedHtml("<p>Te<span style=\"font-family: arial;\">xt</span><b><span style=\"font-family: arial;\">Bo</span>ld</b></p>", 1, new Array("xt", "Bo")));
 						
  						nte.onUndo();
  						ok(testSelectedHtml("<p>Text<b>Bold</b></p>", 2, new Array("xt", "Bo"), "xtBo"));
- 						nte.onRedo();
-						ok(testSelectedHtml("<p>Te<span style=\"font-family: arial;\">xt</span><b><span style=\"font-family: arial;\">Bo</span>ld</b></p>", 1, new Array("xt", "Bo")));
 						
  						nte.onRedo();
- 						ok(testSelectedHtml("<p>Te<span style=\"font-size: medium; font-family: arial;\">xt</span><b><span style=\"font-size: medium; font-family: arial;\">Bo</span>ld</b></p>", 1, new Array("xt", "Bo")));
+						if (nte.isWebKit)
+							ok(testSelectedHtml("<p>Te<span style=\"font-family: arial; \">xt</span><b><span style=\"font-family: arial; \">Bo</span>ld</b></p>", 1, new Array("xt", "Bo")));
+						else
+							ok(testSelectedHtml("<p>Te<span style=\"font-family: arial;\">xt</span><b><span style=\"font-family: arial;\">Bo</span>ld</b></p>", 1, new Array("xt", "Bo")));
+						
+ 						nte.onRedo();
+						if (nte.isWebKit)
+							ok(testSelectedHtml("<p>Te<span style=\"font-size: medium; font-family: arial; \">xt</span><b><span style=\"font-size: medium; font-family: arial; \">Bo</span>ld</b></p>", 1, new Array("xt", "Bo")));
+						else
+ 							ok(testSelectedHtml("<p>Te<span style=\"font-size: medium; font-family: arial;\">xt</span><b><span style=\"font-size: medium; font-family: arial;\">Bo</span>ld</b></p>", 1, new Array("xt", "Bo")));
  						
  						nte.onUndo();
-						ok(testSelectedHtml("<p>Te<span style=\"font-family: arial;\">xt</span><b><span style=\"font-family: arial;\">Bo</span>ld</b></p>", 1, new Array("xt", "Bo")));
+						if (nte.isWebKit)
+							ok(testSelectedHtml("<p>Te<span style=\"font-family: arial; \">xt</span><b><span style=\"font-family: arial; \">Bo</span>ld</b></p>", 1, new Array("xt", "Bo")));
+						else
+							ok(testSelectedHtml("<p>Te<span style=\"font-family: arial;\">xt</span><b><span style=\"font-family: arial;\">Bo</span>ld</b></p>", 1, new Array("xt", "Bo")));
 						
  						nte.onUndo();
  						ok(testSelectedHtml("<p>Text<b>Bold</b></p>", 2, new Array("xt", "Bo")));
@@ -190,50 +253,86 @@ v\: * {
 
  						nte.setCaret(2, 4);
  						nte.changeFontName("arial");
- 						ok(testSelectedHtml("<p><b>Bo<span style=\"font-family: arial;\">ld</span></b><span style=\"font-family: arial;\">Te</span>xt</p>", 1, new Array("ld", "Te")));
+						if (nte.isWebKit)
+							ok(testSelectedHtml("<p><b>Bo<span style=\"font-family: arial; \">ld</span></b><span style=\"font-family: arial; \">Te</span>xt</p>", 1, new Array("ld", "Te")));
+						else
+ 							ok(testSelectedHtml("<p><b>Bo<span style=\"font-family: arial;\">ld</span></b><span style=\"font-family: arial;\">Te</span>xt</p>", 1, new Array("ld", "Te")));
  						
  						nte.changeFontSize("medium");
- 						ok(testSelectedHtml("<p><b>Bo<span style=\"font-size: medium; font-family: arial;\">ld</span></b><span style=\"font-size: medium; font-family: arial;\">Te</span>xt</p>", 1, new Array("ld", "Te")));
+						if (nte.isWebKit)
+							ok(testSelectedHtml("<p><b>Bo<span style=\"font-size: medium; font-family: arial; \">ld</span></b><span style=\"font-size: medium; font-family: arial; \">Te</span>xt</p>", 1, new Array("ld", "Te")));
+						else
+ 							ok(testSelectedHtml("<p><b>Bo<span style=\"font-size: medium; font-family: arial;\">ld</span></b><span style=\"font-size: medium; font-family: arial;\">Te</span>xt</p>", 1, new Array("ld", "Te")));
  						
  						nte.onUndo();
- 						ok(testSelectedHtml("<p><b>Bo<span style=\"font-family: arial;\">ld</span></b><span style=\"font-family: arial;\">Te</span>xt</p>", 1, new Array("ld", "Te")));
+						if (nte.isWebKit)
+							ok(testSelectedHtml("<p><b>Bo<span style=\"font-family: arial; \">ld</span></b><span style=\"font-family: arial; \">Te</span>xt</p>", 1, new Array("ld", "Te")));
+						else
+ 							ok(testSelectedHtml("<p><b>Bo<span style=\"font-family: arial;\">ld</span></b><span style=\"font-family: arial;\">Te</span>xt</p>", 1, new Array("ld", "Te")));
  						
  						nte.onUndo();
  						ok(testSelectedHtml("<p><b>Bold</b>Text</p>", 2, new Array("ld", "Te")));
  						
  						nte.onRedo();
- 						ok(testSelectedHtml("<p><b>Bo<span style=\"font-family: arial;\">ld</span></b><span style=\"font-family: arial;\">Te</span>xt</p>", 1, new Array("ld", "Te")));
+						if (nte.isWebKit)
+							ok(testSelectedHtml("<p><b>Bo<span style=\"font-family: arial; \">ld</span></b><span style=\"font-family: arial; \">Te</span>xt</p>", 1, new Array("ld", "Te")));
+						else
+ 							ok(testSelectedHtml("<p><b>Bo<span style=\"font-family: arial;\">ld</span></b><span style=\"font-family: arial;\">Te</span>xt</p>", 1, new Array("ld", "Te")));
  						
  						nte.onRedo();
- 						ok(testSelectedHtml("<p><b>Bo<span style=\"font-size: medium; font-family: arial;\">ld</span></b><span style=\"font-size: medium; font-family: arial;\">Te</span>xt</p>", 1, new Array("ld", "Te")));
+						if (nte.isWebKit)
+							ok(testSelectedHtml("<p><b>Bo<span style=\"font-size: medium; font-family: arial; \">ld</span></b><span style=\"font-size: medium; font-family: arial; \">Te</span>xt</p>", 1, new Array("ld", "Te")));
+						else
+ 							ok(testSelectedHtml("<p><b>Bo<span style=\"font-size: medium; font-family: arial;\">ld</span></b><span style=\"font-size: medium; font-family: arial;\">Te</span>xt</p>", 1, new Array("ld", "Te")));
  						
  						nte.onUndo();
- 						ok(testSelectedHtml("<p><b>Bo<span style=\"font-family: arial;\">ld</span></b><span style=\"font-family: arial;\">Te</span>xt</p>", 1, new Array("ld", "Te")));
+						if (nte.isWebKit)
+							ok(testSelectedHtml("<p><b>Bo<span style=\"font-family: arial; \">ld</span></b><span style=\"font-family: arial; \">Te</span>xt</p>", 1, new Array("ld", "Te")));
+						else
+ 							ok(testSelectedHtml("<p><b>Bo<span style=\"font-family: arial;\">ld</span></b><span style=\"font-family: arial;\">Te</span>xt</p>", 1, new Array("ld", "Te")));
  						
  						nte.onUndo();
  						ok(testSelectedHtml("<p><b>Bold</b>Text</p>", 2, new Array("ld", "Te")));
 
  						nte.setCaret(0, 6);
  						nte.changeFontName("arial");
- 						ok(testSelectedHtml("<p><span style=\"font-family: arial;\"><b>Bold</b>Te</span>xt</p>", 0, new Array("BoldTe")));
+						if (nte.isWebKit)
+							ok(testSelectedHtml("<p><span style=\"font-family: arial; \"><b>Bold</b>Te</span>xt</p>", 0, new Array("BoldTe")));
+						else
+ 							ok(testSelectedHtml("<p><span style=\"font-family: arial;\"><b>Bold</b>Te</span>xt</p>", 0, new Array("BoldTe")));
  						
  						nte.changeFontSize("medium");
- 						ok(testSelectedHtml("<p><span style=\"font-size: medium; font-family: arial;\"><b>Bold</b>Te</span>xt</p>", 0, new Array("BoldTe")));
+						if (nte.isWebKit)
+							ok(testSelectedHtml("<p><span style=\"font-size: medium; font-family: arial; \"><b>Bold</b>Te</span>xt</p>", 0, new Array("BoldTe")));
+						else
+ 							ok(testSelectedHtml("<p><span style=\"font-size: medium; font-family: arial;\"><b>Bold</b>Te</span>xt</p>", 0, new Array("BoldTe")));
  						
  						nte.onUndo();
- 						ok(testSelectedHtml("<p><span style=\"font-family: arial;\"><b>Bold</b>Te</span>xt</p>", 0, new Array("BoldTe")));
+						if (nte.isWebKit)
+							ok(testSelectedHtml("<p><span style=\"font-family: arial; \"><b>Bold</b>Te</span>xt</p>", 0, new Array("BoldTe")));
+						else
+ 							ok(testSelectedHtml("<p><span style=\"font-family: arial;\"><b>Bold</b>Te</span>xt</p>", 0, new Array("BoldTe")));
  						
  						nte.onUndo();
  						ok(testSelectedHtml("<p><b>Bold</b>Text</p>", 0, new Array("Bold", "Te"), "BoldTe"));
  						
  						nte.onRedo();
- 						ok(testSelectedHtml("<p><span style=\"font-family: arial;\"><b>Bold</b>Te</span>xt</p>", 0, new Array("BoldTe")));
+						if (nte.isWebKit)
+							ok(testSelectedHtml("<p><span style=\"font-family: arial; \"><b>Bold</b>Te</span>xt</p>", 0, new Array("BoldTe")));
+						else
+ 							ok(testSelectedHtml("<p><span style=\"font-family: arial;\"><b>Bold</b>Te</span>xt</p>", 0, new Array("BoldTe")));
  						
  						nte.onRedo();
- 						ok(testSelectedHtml("<p><span style=\"font-size: medium; font-family: arial;\"><b>Bold</b>Te</span>xt</p>", 0, new Array("BoldTe")));
+						if (nte.isWebKit)
+							ok(testSelectedHtml("<p><span style=\"font-size: medium; font-family: arial; \"><b>Bold</b>Te</span>xt</p>", 0, new Array("BoldTe")));
+						else
+ 							ok(testSelectedHtml("<p><span style=\"font-size: medium; font-family: arial;\"><b>Bold</b>Te</span>xt</p>", 0, new Array("BoldTe")));
  						
  						nte.onUndo();
- 						ok(testSelectedHtml("<p><span style=\"font-family: arial;\"><b>Bold</b>Te</span>xt</p>", 0, new Array("BoldTe")));
+						if (nte.isWebKit)
+							ok(testSelectedHtml("<p><span style=\"font-family: arial; \"><b>Bold</b>Te</span>xt</p>", 0, new Array("BoldTe")));
+						else
+ 							ok(testSelectedHtml("<p><span style=\"font-family: arial;\"><b>Bold</b>Te</span>xt</p>", 0, new Array("BoldTe")));
  						
  						nte.onUndo();
  						ok(testSelectedHtml("<p><b>Bold</b>Text</p>", 0, new Array("Bold", "Te")));
@@ -248,24 +347,39 @@ v\: * {
 		 				
 		 				nte.setCaret(1, 2);
  						nte.changeFontName("arial");
- 						ok(testSelectedHtml("<p>N<span style=\"font-family: arial;\">or</span>malText</p>", 1, new Array("or")));
+						if (nte.isWebKit)
+							ok(testSelectedHtml("<p>N<span style=\"font-family: arial; \">or</span>malText</p>", 1, new Array("or")));
+						else
+ 							ok(testSelectedHtml("<p>N<span style=\"font-family: arial;\">or</span>malText</p>", 1, new Array("or")));
  						
 		 				nte.setCaret(3, 3);
  						nte.changeFontName("arial");
- 						ok(testSelectedHtml("<p>N<span style=\"font-family: arial;\">ormal</span>Text</p>", 2, new Array("mal")));
+						if (nte.isWebKit)
+							ok(testSelectedHtml("<p>N<span style=\"font-family: arial; \">ormal</span>Text</p>", 2, new Array("mal")));
+						else
+ 							ok(testSelectedHtml("<p>N<span style=\"font-family: arial;\">ormal</span>Text</p>", 2, new Array("mal")));
  						
  						nte.onUndo();
- 						ok(testSelectedHtml("<p>N<span style=\"font-family: arial;\">or</span>malText</p>", 0, new Array("mal")));
+						if (nte.isWebKit)
+							ok(testSelectedHtml("<p>N<span style=\"font-family: arial; \">or</span>malText</p>", 0, new Array("mal")));
+						else
+ 							ok(testSelectedHtml("<p>N<span style=\"font-family: arial;\">or</span>malText</p>", 0, new Array("mal")));
 
  						nte.onUndo();
  						ok(testSelectedHtml("<p>NormalText</p>", 1, new Array("or")));
  						
  						nte.changeFontSize("large");
- 						ok(testSelectedHtml("<p>N<span style=\"font-size: large;\">or</span>malText</p>", 1, new Array("or")));
+						if (nte.isWebKit)
+							ok(testSelectedHtml("<p>N<span style=\"font-size: large; \">or</span>malText</p>", 1, new Array("or")));
+						else
+ 							ok(testSelectedHtml("<p>N<span style=\"font-size: large;\">or</span>malText</p>", 1, new Array("or")));
 
 		 				nte.setCaret(3, 3);
  						nte.changeFontSize("medium");
- 						ok(testSelectedHtml("<p>N<span style=\"font-size: large;\">or</span><span style=\"font-size: medium;\">mal</span>Text</p>", 2, new Array("mal")));
+						if (nte.isWebKit)
+							ok(testSelectedHtml("<p>N<span style=\"font-size: large; \">or</span><span style=\"font-size: medium; \">mal</span>Text</p>", 2, new Array("mal")));
+						else
+ 							ok(testSelectedHtml("<p>N<span style=\"font-size: large;\">or</span><span style=\"font-size: medium;\">mal</span>Text</p>", 2, new Array("mal")));
 					}
 					);
 		  }

@@ -1,3 +1,6 @@
+/**
+ * @constructor
+ */
 var BreakNode = HtmlNode.extend(
 	{
 		init : function(parentNode, nodePos, textPos, nte)

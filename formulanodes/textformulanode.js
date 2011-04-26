@@ -1,6 +1,7 @@
 /**
  * Text formula node
  * @class TextFormulaNode
+ * @constructor
  */
 var TextFormulaNode = ForeignObjectFormulaNode.extend(
 	{
@@ -57,7 +58,7 @@ var TextFormulaNode = ForeignObjectFormulaNode.extend(
 
 			if (this.text && !this.img)
 			{
-				var r = new Rect();
+				var r = new Rectangle();
 				this.text.getNodeBounds(r);
 				
 				if (this.text.element.textContent.length > 0)
@@ -66,6 +67,7 @@ var TextFormulaNode = ForeignObjectFormulaNode.extend(
 					this.img = this.document.createElement("img");
 					this.img.style.width = 0;
 					this.img.style.height = 0;
+					this.img.src = "absent.jpg";
 					this.text.element.parentNode.insertBefore(this.img, null);
 					var w = r.width;
 					this.element.setAttribute("width", w);
@@ -98,7 +100,7 @@ var TextFormulaNode = ForeignObjectFormulaNode.extend(
 				//this.baseline = this.img.y + this.img.offsetHeight - this.text.element.offsetTop + this.element.y.baseVal.value;
 				//this.baseline = this.img.y + this.text.element.offsetHeight / 2;
 				//this.baseline = this.text.element.offsetHeight / 2;
-				this.baseline = this.img.y - this.text.element.offsetTop;
+				this.baseline = this.img.offsetTop - this.text.element.offsetTop;
 				this.text.element.parentNode.removeChild(this.img);
 				this.img = null;
 			}
@@ -113,28 +115,28 @@ var TextFormulaNode = ForeignObjectFormulaNode.extend(
 
 		//caret functions
 		
-		getNextPosition : function(relativeState)
+		getNextPosition : function(relativeState, params)
 		{
 			if (this.childNodes.count() > 0 && this.childNodes.get(0).childNodes.get(0).empty)
 				return null;
-			return this._super(relativeState);
+			return this._super(relativeState, params);
 		},
 
-		getPreviousPosition : function(relativeState)
+		getPreviousPosition : function(relativeState, params)
 		{
 			if (this.childNodes.count() > 0 && this.childNodes.get(0).childNodes.get(0).empty)
 				return null;
-			return this._super(relativeState);
+			return this._super(relativeState, params);
 		},
 
 		//command functions
 
 		doInsert : function(pos, nodeEvent, command)
 		{
-			if (pos > 0)
+			if (pos > 0 && this.parentNode.childNodes.getLast() != this)
 			{
 				var c = this.getNextPosition(nodeEvent.caretState);
-				c.store();
+				this.caret.setNextState(c);
 			}
 			
 			if (!this.parentNode.doInsert(pos == 0 ? this.parentNode.getChildPos(this) : this.parentNode.getChildPos(this) + 1, nodeEvent, command))
@@ -143,9 +145,9 @@ var TextFormulaNode = ForeignObjectFormulaNode.extend(
 			if (pos > 0)
 			{
 				var p = this.parentNode.getChildPos(this);
-				if (p < this.parentNode.childNodes.count() - 2)
+				if (p < this.parentNode.childNodes.count() - 2 && c)
 				{
-					c.restore();
+					c = this.caret.getNextState();
 					nodeEvent.caretState = c;
 				}
 				else
@@ -222,7 +224,7 @@ var TextFormulaNode = ForeignObjectFormulaNode.extend(
 		{
 			if (this.text)
 			{
-				var r = new Rect();
+				var r = new Rectangle();
 				this.text.getNodeBounds(r);
 				this.clientRect.setRect(0, 0, r.width, r.height);
 			}
@@ -357,18 +359,18 @@ var FormulaSpanNode = HtmlNode.extend(
 			return this.parentNode.moveCaretToLineEnd();
 		},
 
-		getNextPosition : function(relativeState)
+		getNextPosition : function(relativeState, params)
 		{
 			if (this.childNodes.count() > 0 && this.childNodes.get(0).empty)
 				return false;
-			return this._super(relativeState);
+			return this._super(relativeState, params);
 		},
 
-		getPreviousPosition : function(relativeState)
+		getPreviousPosition : function(relativeState, params)
 		{
 			if (this.childNodes.count() > 0 && this.childNodes.get(0).empty)
 				return false;
-			return this._super(relativeState);
+			return this._super(relativeState, params);
 		},
 
 		getUpperPosition : function(relativeState)
@@ -408,9 +410,7 @@ var FormulaSpanNode = HtmlNode.extend(
 
 		mergeNode : function(caretState)
 		{
-			//caretState.store();
-			this._super();
-			//caretState.restore();
+			this._super(caretState);
 			
 			if (caretState.getNode() == null || caretState.getPos() == -1)
 				caretState.setCaretState(this.getFirstPosition());
@@ -464,7 +464,7 @@ var FormulaTextNode = TextNode.extend(
 		
 		mergeNode : function(caretState)
 		{
-			this._super();
+			this._super(caretState);
 			this.parentNode.groupNode.remake();
 		},
 		
@@ -492,13 +492,9 @@ var FormulaTextNode = TextNode.extend(
 				this.getPosBounds(this.caret.currentState.getSelectionStart(), r);
 			else
 				this.getPosBounds(this.caret.currentState.getSelectionEnd(), r);
-			
-			this.caret.paper.clearShapes();
-			
-			this.caret.paper.move(r.left, r.top);
-			this.caret.paper.setSize(1, r.height);
-			var r = this.caret.paper.line(0, 0, 0, r.height, "black");
-			this.drawLib.animate("visibility", "visible", "hidden", "1", "indefinite", r);
+
+			r.width = 1;
+			this.caret.renderFormulaCaret(r, this.parentNode.groupNode);
 		},
 
 		moveCaretToLineBegin : function()
@@ -511,7 +507,7 @@ var FormulaTextNode = TextNode.extend(
 			return this.parentNode.moveCaretToLineEnd();
 		},
 
-		getPreviousPosition : function(relativeState)
+		getPreviousPosition : function(relativeState, params)
 		{
 			if (!relativeState)
 				res = new CaretState(this, this.element.length);
@@ -523,7 +519,7 @@ var FormulaTextNode = TextNode.extend(
 				if (pos > 0)
 					res = new CaretState(this, pos - 1);
 				else
-					res = this.parentNode.getPreviousPosition(relativeState);
+					res = this.parentNode.getPreviousPosition(relativeState, params);
 			}
 			
 			return res;
@@ -593,7 +589,7 @@ var FormulaTextNode = TextNode.extend(
 		},
 
 		//tool functions
-		
+
 		getPosBounds : function(pos, posRect)
 		{
 			if (this.nte.isIE)
@@ -610,7 +606,7 @@ var FormulaTextNode = TextNode.extend(
 				if (pos == this.element.length)
 				{
 					textRange.setStart(this.element, pos - 1);
-					textRange.setStart(this.element, pos);
+					textRange.setEnd(this.element, pos);
 				}
 				else
 				{
@@ -620,40 +616,140 @@ var FormulaTextNode = TextNode.extend(
 			}
 
 			var rect = textRange.getBoundingClientRect();
-			var c = this.nte.editor.getBoundingClientRect();
-			
-			this.parentNode.groupNode.updateBoundingRect();
-			var r = this.parentNode.groupNode.boundingRect;
-			
-			var cx = 0, cy = 0;
-			var parent = this.parentNode;
-//			while (parent && parent != this.parentNode.groupNode)
-//			{
-//				if (parent.boundingRect)
-//				{
-//					cx += parent.boundingRect.left;
-//					cy += parent.boundingRect.top;
-//				}
-//				//else if (parent.element.offsetTop)
-//				//{
-//				//	cy += parent.element.offsetTop - parent.element.offsetHeight;
-//				//}
-//				parent = parent.parentNode;
-//			}
+			var p = this.parentNode;
 
-//			posRect.setRect((pos == this.element.length ? rect.right + this.nte.editor.scrollLeft : 
-//				rect.left + this.nte.editor.scrollLeft) + r.left + cx - c.left, 
-//				rect.top + this.nte.editor.scrollTop + r.top + cy, 
-//				rect.width, 
-//				rect.height);
+			if (this.nte.isWebKit)
+			{
+				var cx = 0;
+				var cy = 0;
+				while (p && p != this.parentNode.groupNode)
+				{
+					if (p.boundingRect)
+					{
+						cx += p.boundingRect.left;
+						cy += p.boundingRect.top;
+					}
+					p = p.parentNode;
+				}
+				
+				cy = Math.round(cy);
 
-			cx = this.parentNode.element.offsetLeft;
-			cy = this.parentNode.element.offsetTop;
+				textRange.setStart(this.element, 0);
+				textRange.setEnd(this.element, 1);
+				var r = textRange.getBoundingClientRect();
+
+				posRect.setRect((pos == this.element.length ? rect.right - r.left : rect.left - r.left) + cx, 
+					cy, 
+					rect.width, 
+					rect.height);
+			}
+			else
+			{
+				var cx = 0;
+				var cy = rect.top;
+				while (p && p != this.parentNode.groupNode)
+				{
+					if (p.boundingRect)
+					{
+						cx += p.boundingRect.left;
+						cy += p.boundingRect.top;
+					}
+					p = p.parentNode;
+				}
+				
+				cx = Math.round(cx);
+				cy = Math.round(cy);
+				
+				posRect.setRect((pos == this.element.length ? rect.right : rect.left) + cx, 
+					rect.top + cy, 
+					rect.width, 
+					rect.height);
+			}
+		},
+		
+		getRelativePosBounds : function(pos, posRect)
+		{
+			if (this.nte.isIE)
+			{
+				var textRange = this.document.body.createTextRange();
+				textRange.moveToElementText(this.element);
+				textRange.collapse(true);
+				textRange.moveStart("character", pos);
+				textRange.moveEnd("character", pos + 1);
+			}
+			else
+			{
+				var textRange = this.document.createRange();
+				if (pos == this.element.length)
+				{
+					textRange.setStart(this.element, pos - 1);
+					textRange.setEnd(this.element, pos);
+				}
+				else
+				{
+					textRange.setStart(this.element, pos);
+					textRange.setEnd(this.element, pos + 1);
+				}
+			}
+
+			var rect = textRange.getBoundingClientRect();
+			var p = this.parentNode;
 			
-			posRect.setRect((pos == this.element.length ? rect.right : rect.left) + cx, 
-				rect.top + cy, 
-				rect.width, 
-				rect.height);
+			if (this.nte.isWebKit)
+			{
+				var cx = 0;
+				var cy = 0;
+				while (p && p != this.parentNode.groupNode)
+				{
+					if (p.boundingRect)
+					{
+						cx += p.boundingRect.left;
+						cy += p.boundingRect.top;
+					}
+					p = p.parentNode;
+				}
+				
+				cy = Math.round(cy);
+
+				textRange.setStart(this.element, 0);
+				textRange.setEnd(this.element, 1);
+				var r = textRange.getBoundingClientRect();
+				
+				this.parentNode.groupNode.updateBoundingRect();
+				var b = this.parentNode.groupNode.boundingRect;
+
+				posRect.setRect((pos == this.element.length ? rect.right - r.left : rect.left - r.left) + cx + b.left, 
+					cy + b.top, 
+					rect.width, 
+					rect.height);
+			}
+			else
+			{
+				var cx = 0;
+				var cy = rect.top;
+				
+				while (p && p != this.parentNode.groupNode)
+				{
+					if (p.boundingRect)
+					{
+						cx += p.boundingRect.left;
+						cy += p.boundingRect.top;
+					}
+					p = p.parentNode;
+				}
+				
+				cx = Math.round(cx);
+				cy = Math.round(cy);
+				
+				//var r = this.nte.editor.getBoundingClientRect();
+				this.parentNode.groupNode.updateBoundingRect();
+				var b = this.parentNode.groupNode.boundingRect;
+				
+				posRect.setRect((pos == this.element.length ? rect.right : rect.left) + cx + b.left, 
+					rect.top + cy + b.top, 
+					rect.width, 
+					rect.height);
+			}
 		},
 
 		getNodeBounds : function(posRect)

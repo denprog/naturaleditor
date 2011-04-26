@@ -1,6 +1,7 @@
 /**
  * Division formula node
  * @class DivisionFormulaNode
+ * @constructor
  */
 var DivisionFormulaNode = CompoundFormulaNode.extend(
 	{
@@ -8,15 +9,8 @@ var DivisionFormulaNode = CompoundFormulaNode.extend(
 		{
 			this.drawLib = nte.drawLib;
 			
-			this.levelClasses = {};
-			this.levelClasses[NodeLevel.NORMAL] = "normalDivisionFormulaNode";
-			this.levelClasses[NodeLevel.LESS] = "lessDivisionFormulaNode";
-			this.levelClasses[NodeLevel.STILL_LESS] = "stillLessDivisionFormulaNode";
-			
 			this._super(parentNode, pos, nte);
 			this.className = "DivisionFormulaNode";
-			
-			this.addClass("normalDivisionFormulaNode");
 			
 			this.dividend = null;
 			this.shape = this.addShapeNode();
@@ -113,8 +107,6 @@ var DivisionFormulaNode = CompoundFormulaNode.extend(
 				this.dividend = new nodeClassType(this, 0, this.nte);
 				return this.dividend;
 			case 1:
-				this.divisor = new nodeClassType(this, 2, this.nte);
-				return this.divisor;
 			case 2:
 				this.divisor = new nodeClassType(this, 2, this.nte);
 				return this.divisor;
@@ -138,21 +130,40 @@ var DivisionFormulaNode = CompoundFormulaNode.extend(
 				this.getPosBounds(this.caret.currentState.getSelectionStart(), r);
 			else
 				this.getPosBounds(this.caret.currentState.getSelectionEnd(), r);
-			
-			this.caret.paper.clearShapes();
-			
 			r.setRect(r.left - 3, r.top - 3, r.width + 6, r.height + 6);
-			this.caret.paper.move(r.left, r.top);
-			this.caret.paper.setSize(r.width, r.height);
-
-			if (this.caret.currentState.beginCaretPos)
-				this.caret.paper.line(0, 0, 0, r.height, "black");
-			else
-				this.caret.paper.line(r.right, 0, r.right, r.height, "black");
-			var r = this.caret.paper.line(0, r.height, r.width, r.height, "black");
-			this.drawLib.animate("visibility", "visible", "hidden", "1", "indefinite", r.parentNode);
+			
+			this.caret.renderFormulaCaret(r, this.groupNode);
 		}, 
 
+		getNextPosition : function(relativeState, params)
+		{
+			if (!relativeState || !params || !params.upper)
+				return this._super(relativeState);
+			
+			var res = this._super(relativeState, params);
+			var n = res.getNode();
+			if (!res.checkOnNode(this) && n != this.dividend && !this.dividend.isChild(n))
+				return this.parentNode.getNextPosition(relativeState, params);
+			
+			return res;
+		},
+
+		getPreviousPosition : function(relativeState, params)
+		{
+			if (!relativeState || !params || !params.lower)
+				return this._super(relativeState);
+
+			var res = this._super(relativeState, params);
+			if (res)
+			{
+				var n = res.getNode();
+				if (!res.checkOnNode(this) && n != this.divisor && !this.divisor.isChild(n))
+					return this.parentNode.getPreviousPosition(relativeState, params);
+			}
+			
+			return res;
+		},
+		
 		getUpperPosition : function(relativeState)
 		{
 			var n = relativeState.getNode();
@@ -210,7 +221,12 @@ var DivisionFormulaNode = CompoundFormulaNode.extend(
 		},
 
 		//command functions
-		
+
+		doInsert : function(pos, nodeEvent, command)
+		{
+			return false;
+		},
+
 		doRemoveChild : function(node, pos, len, nodeEvent, command)
 		{
 			return false;
@@ -218,8 +234,7 @@ var DivisionFormulaNode = CompoundFormulaNode.extend(
 
 		dublicate : function(parent)
 		{
-			var resNode = new DivisionFormulaNode(parent, 
-				this.parentNode == null ? 0 : this.parentNode.getChildPos(this), this.nte);
+			var resNode = new DivisionFormulaNode(parent, this.parentNode == null ? 0 : this.parentNode.getChildPos(this), this.nte);
 			
 			resNode.caretState = this.caretState;
 			this.dividend.dublicate(resNode);
@@ -237,9 +252,9 @@ var DivisionFormulaNode = CompoundFormulaNode.extend(
 
 		//test functions
 		
-		toTex : function()
+		toTex : function(braces)
 		{
-			return this.dividend.toTex() + "/" + this.divisor.toTex();
+			return "{" + this.dividend.toTex(false) + "}/{" + this.divisor.toTex(false) + "}";
 		}
 	}
 );

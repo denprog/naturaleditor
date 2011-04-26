@@ -1,6 +1,7 @@
 /**
  * Graphical element of formula node.
  * @class ShapeFormulaNode
+ * @constructor
  */
 var ShapeFormulaNode = GroupFormulaNode.extend(
 	{
@@ -83,12 +84,12 @@ var ShapeFormulaNode = GroupFormulaNode.extend(
 			return new CaretState(this.parentNode, this.parentNode.getChildPos(this));
 		},
 		
-		getNextPosition : function(relativeState)
+		getNextPosition : function(relativeState, params)
 		{
 			return null;
 		},
 		
-		getPreviousPosition : function(relativeState)
+		getPreviousPosition : function(relativeState, params)
 		{
 			if (relativeState && relativeState.checkOnNode(this))
 				return null;
@@ -133,10 +134,31 @@ var ShapeFormulaNode = GroupFormulaNode.extend(
 			this.updateClientRect();
 		},
 		
+		addPolygon : function(points, color)
+		{
+			this.drawLib.polygon(points, color, this.element);
+			this.updateClientRect();
+		},
+		
+		addBezier : function(path, color)
+		{
+			this.drawLib.bezier(path, color, this.element);
+			this.updateClientRect();
+		},
+		
 		clearShapes : function()
 		{
-			for (var i = 0; i < this.element.children.length; ++i)
-				this.drawLib.remove(this.element.children[i], this.element);
+			if (this.element.children)
+			{
+				for (var i = 0; i < this.element.children.length; ++i)
+					this.drawLib.remove(this.element.children[i], this.element);
+			}
+			else
+			{
+				for (var i = 0; i < this.element.childNodes.length; ++i)
+					this.drawLib.remove(this.element.childNodes[i], this.element);
+			}
+			
 			this.updateClientRect();
 		}
 	}

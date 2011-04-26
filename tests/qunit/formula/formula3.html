@@ -29,7 +29,7 @@
 
 				test("Formula 1", function()
 					{
-						expect(101);
+						expect(102);
 						
 						nte.parse(
 							"<p>" + 
@@ -447,6 +447,9 @@
 						ok(testCaretPosition(0));
 
 						nte.moveCaretDown(1);
+						ok(testCaretPosition(3));
+
+						nte.moveCaretRight(1);
 						ok(testCaretPosition(0));
 
 						nte.moveCaretDown(1);

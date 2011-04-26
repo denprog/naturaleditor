@@ -152,7 +152,7 @@
 
 				test("Formula 2", function()
 					{
-						expect(22);
+						expect(20);
 						
 						nte.parse(
 							"<p>" + 
@@ -205,9 +205,6 @@
 						ok(testCaretPosition(0));
 						
 						nte.onDown();
-						ok(testCaretPosition(1));
-
-						nte.onDown();
 						ok(testCaretPosition(0));
 						
 						nte.onUp();
@@ -215,9 +212,6 @@
 
 						nte.onUp();
 						ok(testCaretPosition(0));
-
-						nte.onUp();
-						ok(testCaretPosition(1));
 
 						nte.onUp();
 						ok(testCaretPosition(0));

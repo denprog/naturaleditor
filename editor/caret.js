@@ -1,6 +1,7 @@
 ﻿/**
  * Caret in the Natural Editor
  * @class
+ * @constructor
  * @param {Object} nte
  */
 function Caret(nte)
@@ -16,14 +17,31 @@ function Caret(nte)
 	 */
 	this.currentState = null;
 
-	/**
-	 * Caret's paper
+//	/**
+//	 * Caret's paper
+//	 */
+	/*
+	 * Text caret
 	 */
-	this.span = this.editor.document.createElement("span");
-	this.span.className = "caret";
+	this.caretSpan = this.editor.document.createElement("span");
+	this.caretSpan.className = "caret";
 	//this.span.style.position = "absolute";
-	this.nte.editor.appendChild(this.span);
-	this.paper = new Paper(this.nte.drawLib, this.span);
+	this.nte.editor.appendChild(this.caretSpan);
+	//this.paper = new Paper(this.nte.drawLib, this.span);
+	this.textCaretGroup = this.nte.drawLib.svg(this.caretSpan);
+	
+	/*
+	 * Formula caret
+	 */
+	//this.formulaCaretGroup;
+	
+	/*
+	 * Caret shapes
+	 */
+	this.shapes = new Array();
+	this.formulaCaretShape = null;
+	
+	this.nextNode = null;
 
 	this.visible = true;
 
@@ -44,7 +62,7 @@ function Caret(nte)
 	this.setState = function(caretState)
 	{
 		this.currentState.setCaretState(caretState);
-		this.render();
+		//this.render();
 	};
 	
 	/**
@@ -212,6 +230,39 @@ function Caret(nte)
 		
 		return null;
 	},
+
+	this.setNextState = function(caretState)
+	{
+		var node = caretState.getNode();
+		if (node.childNodes.count() > 0)
+		{
+			var n = node.getChildNode(caretState.getPos());
+			n.nextCaretPos = true;
+			this.nextNode = n;
+		}
+		else
+		{
+			node.nextCaretPos = true;
+			this.nextNode = node;
+			this.nextNodePos = caretState.getPos();
+		}
+	},
+	
+	this.getNextState = function()
+	{
+		if (!this.nextNode)
+			return null;
+		
+		if (this.nextNode instanceof TextNode)
+			var res = new CaretState(this.nextNode, this.nextNodePos, 0);
+		else
+			var res = new CaretState(this.nextNode.parentNode, this.nextNode.parentNode.getChildPos(this.nextNode), 0);
+		
+		this.nextNode.nextCaretPos = false;
+		this.nextNode = null;
+		
+		return res;
+	},
 	
 	this.show = function()
 	{
@@ -222,8 +273,20 @@ function Caret(nte)
 	this.hide = function()
 	{
 		this.visible = false;
-		this.paper.clearShapes();
-		this.render();
+		this.clearShapes();
+	},
+	
+	this.move = function(x, y)
+	{
+		this.caretSpan.style.left = x + "px";
+		this.caretSpan.style.top = y + "px";
+	},
+
+	//rendering
+
+	this.setSize = function(width, height)
+	{
+		this.nte.drawLib.setSize(width, height, this.textCaretGroup);
 	},
 	
 	/**
@@ -247,7 +310,134 @@ function Caret(nte)
 			{
 				//the node will render the caret by oneself
 				node.renderCaret(s, range);
+				node.scrollIntoView(s.getPos());
 			}
+		}
+	},
+	
+	this.timerId = 0;
+	
+	this.renderTextCaret = function(rect, parent, pos, length, range)
+	{
+		this.clearShapes();
+
+		this.move(rect.left, rect.top);
+		this.setSize(1, rect.height);
+		var r = this.nte.drawLib.line(0, 0, 1, rect.height, "black", this.textCaretGroup);
+		this.addShape(r);
+		var c = this.caretSpan;
+		
+		function interval(obj, visibility)
+		{
+			if (c.style.visibility != visibility)
+				c.style.visibility = visibility;
+			
+			obj.timerId = setTimeout(
+				function()
+				{
+					interval(obj, c.style.visibility == "hidden" ? "visible" : "hidden");
+				}, 
+				500
+				);
+		};
+		
+		interval(this, "visible");
+
+		//update the selection range
+		var r = this.nte.document.createRange();
+		r.setStart(parent.element, pos);
+		r.setEnd(parent.element, pos + length);
+		range.addRange(r);
+	},
+	
+	this.renderFormulaCaret = function(rect, parent)
+	{
+		this.clearShapes();
+
+		var f = this.nte.drawLib.createElement("foreignObject", parent.element);
+		var s = this.nte.editor.document.createElementNS("http://www.w3.org/1999/xhtml", "span");
+		f.appendChild(s);
+		parent.element.appendChild(f);
+		
+		var group = this.nte.drawLib.svg(s);
+		this.nte.drawLib.move(rect.left, rect.top, f);
+		if (this.nte.isWebKit)
+		{
+			if (rect.bottom >= parent.groupNode.clientRect.height)
+				rect.setSize(rect.width, rect.height - 1);
+			this.nte.drawLib.setSize(rect.width <= 1 ? 2 : rect.width, rect.height + 1, f);
+			this.nte.drawLib.setSize(rect.width <= 1 ? 2 : rect.width, rect.height + 1, group);
+		}
+		else
+		{
+			this.nte.drawLib.setSize(rect.width == 0 ? 1 : rect.width, rect.height, f);
+			this.nte.drawLib.setSize(rect.width == 0 ? 1 : rect.width, rect.height, group);
+		}
+		
+		if (rect.width > 1)
+		{
+			this.nte.drawLib.line(1, 0, 1, rect.height, "black", group);
+			this.nte.drawLib.line(1, rect.height, rect.width, rect.height, "black", group);
+		}
+		else
+		{
+			this.nte.drawLib.line(1, 0, 1, rect.height, "black", group);
+		}
+		
+		//this.nte.drawLib.animate("visibility", "visible", "hidden", "1", "indefinite", group);
+		this.addShape(f, parent.element);
+
+		if (this.nte.isWebKit)
+		{
+			clearTimeout(this.tid);
+			
+			function interval(obj, visibility)
+			{
+				s.style.visibility = visibility;
+				
+				obj.timerId = setTimeout(
+					function()
+					{
+						interval(obj, s.style.visibility == "hidden" ? "visible" : "hidden");
+					}, 
+					500
+					);
+			}; 
+	
+			interval(this, "visible");
+		}
+		else
+		{
+			this.nte.drawLib.animate("visibility", "visible", "hidden", "1", "indefinite", group);
+		}
+	},
+	
+	//shapes
+	
+	this.addShape = function(shape, group)
+	{
+		this.shapes.push(shape);
+		if (!group)
+			this.group = this.textCaretGroup;
+		else
+			this.group = group;
+	},
+
+	this.clearShapes = function()
+	{
+		clearTimeout(this.timerId);
+
+		for (var i in this.shapes)
+		{
+			var shape = this.shapes[i];
+			this.nte.drawLib.remove(shape, shape.parentNode);
+		}
+		this.shapes.length = 0;
+		
+		if (this.group == this.textCaretGroup)
+		{
+			this.nte.drawLib.remove(this.group, this.caretSpan);
+			this.textCaretGroup = this.nte.drawLib.svg(this.caretSpan);
 		}
 	};
 }

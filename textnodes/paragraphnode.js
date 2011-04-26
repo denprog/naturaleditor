@@ -1,4 +1,7 @@
-﻿var ParagraphNode = HtmlNode.extend( 
+﻿/**
+ * @constructor
+ */
+var ParagraphNode = TextBaseNode.extend( 
 	{
 		init : function(parentNode, pos, nte)
 		{
@@ -36,7 +39,7 @@
 			this._super(childNode);
 		}, 
 
-		insertChildNode : function(childNode, pos)
+		insertChildNode : function(childNode, pos, caretState)
 		{
 			if (this.isEmpty() && !this.lineInserting)
 			{
@@ -44,10 +47,10 @@
 					return;
 				
 				this.childNodes.reset();
-				this._super(childNode, 0);
+				this._super(childNode, 0, caretState);
 			}
 			else
-				this._super(childNode, pos);
+				this._super(childNode, pos, caretState);
 		}, 
 
 		addTextNode : function(textNode)
@@ -108,13 +111,8 @@
 			
 			var r = this.tempRect;
 			this.getNodeBounds(r);
-			
-			this.caret.paper.clearShapes();
-			
-			this.caret.paper.move(r.left, r.top);
-			this.caret.paper.setSize(1, r.height);
-			var r = this.caret.paper.line(0, 0, 0, r.height, "black");
-			this.drawLib.animate("visibility", "visible", "hidden", "1", "indefinite", r);
+
+			this.caret.renderTextCaret(r, this, 0, 0, range);
 		},
 
 		/**
@@ -138,81 +136,6 @@
 				return new CaretState(this, 0);
 			return this._super();
 		}, 
-
-		getLineBegin : function(caretState)
-		{
-			var res = caretState;
-			var c = res;
-			var r = new Rect();
-			var n = c.getNode();
-			n.getPosBounds(c.getPos(), r);
-			var x = r.left;
-			
-			while (c != null && r.left <= x)
-			{
-				res = c;
-				x = r.left;
-				n = c.getNode();
-				
-				if (n.hasSingleLine())
-				{
-					//omit the node because of having a single line
-					c = n.getFirstPosition();
-				}
-
-				c = n.getPreviousPosition(c);
-				
-				if (!c || res.isEqual(c))
-					return res;
-				
-				n = c.getNode();
-				
-				//check not going out the paragraph
-				if (!this.isChild(n))
-					return res;
-				n.getPosBounds(c.getPos(), r);
-			}
-			
-			return res;
-		},
-		
-		getLineEnd : function(caretState)
-		{
-			var res = caretState;
-			var c = res;
-			var r = new Rect();
-			var n = c.getNode();
-			n.getPosBounds(c.getPos(), r);
-			var x = r.left;
-			
-			while (c != null && r.left >= x)
-			{
-				res = c;
-				x = r.left;
-				n = c.getNode();
-				
-				if (n.hasSingleLine())
-				{
-					//omit the node because of having a single line
-					c = n.getLastPosition();
-				}
-				
-				c = n.getNextPosition(c);
-				
-				if (!c || res.isEqual(c))
-					return res;
-				
-				n = c.getNode();
-				
-				//check not going out the paragraph
-				if (!this.isChild(n))
-					return res;
-				
-				n.getPosBounds(c.getPos(), r);
-			}
-			
-			return res;
-		},
 
 		//editing
 
@@ -293,11 +216,15 @@
 				for (var i = 0; i < c; ++i)
 					this.insertChildNode(node.childNodes.get(i), pos + i);
 				
-				nodeEvent.caretState.setToNodeEnd(node.childNodes.getLast());
+				//nodeEvent.caretState.setToNodeEnd(node.childNodes.getLast());
+				var c = nodeEvent.caretState.dublicate();
+				c.setToNodeEnd(node.childNodes.getLast());
+				this.caret.setNextState(c);
 
-				nodeEvent.caretState.store();
+				//nodeEvent.caretState.store();
 				this.normilize(command);
-				nodeEvent.caretState.restore();
+				//nodeEvent.caretState.restore();
+				nodeEvent.caretState = this.caret.getNextState();
 
 				nodeEvent.changedNode = this;
 				//nodeEvent.undoActionNodePos = this.getCaretPosition();
@@ -316,9 +243,9 @@
 		{
 			if (nodeEvent.node)
 			{
-				nodeEvent.caretState.store();
+				//nodeEvent.caretState.store();
 				this.unnormilize(command);
-				nodeEvent.caretState.restore();
+				//nodeEvent.caretState.restore();
 				nodeEvent.node = nodeEvent.node.dublicate();
 
 				var c = command.getParam(this, "c");
@@ -403,9 +330,9 @@
 		
 		undoInsertLine : function(nodeEvent, command)
 		{
-			nodeEvent.caretState.store();
+			//nodeEvent.caretState.store();
 			this.unnormilize(command);
-			nodeEvent.caretState.restore();
+			//nodeEvent.caretState.restore();
 
 			this.lineInserting = true;
 			

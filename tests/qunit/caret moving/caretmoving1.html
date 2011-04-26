@@ -3,7 +3,7 @@
 <html xmlns:v="urn:schemas-microsoft-com:vml">
 
 <head>
-	<title>Insertion test</title>
+	<title>Caret moving test</title>
 	<link rel="stylesheet" href="../../../lib/unit.css" type="text/css" />
 	<script type="text/javascript" src="../../../lib/jquery.js"></script>
 	<script type="text/javascript" src="../../../lib/qunit.js"></script>
@@ -432,21 +432,21 @@
 						for (var i = 0; i < 19; ++i)
 							nte.onRight();
 						nte.onUp();
-						ok(testCaretPosition(1));
+						ok(testCaretPosition(0));
 
 						nte.onUp();
-						ok(testCaretPosition(7));
+						ok(testCaretPosition(6));
 
-						for (var i = 0; i < 9; ++i)
+						for (var i = 0; i < 8; ++i)
 							nte.onLeft();
 						nte.onDown();
-						ok(testCaretPosition(1));
+						ok(testCaretPosition(0));
 
 						nte.onDown();
 						ok(testCaretPosition(9));
 
 						nte.onUp();
-						ok(testCaretPosition(1));
+						ok(testCaretPosition(0));
 					}
 					);
 				
@@ -572,9 +572,8 @@
 						nte.onDown();
 						nte.onDown();
 						nte.onDown();
-						ok(testCaretPosition(3));
+						ok(testCaretPosition(4));
 
-						nte.onRight();
 						nte.onRight();
 						nte.onRight();
 						ok(testCaretPosition(6));

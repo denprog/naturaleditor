@@ -1,4 +1,7 @@
-﻿function NodesCollection(id)
+﻿/**
+ * @constructor
+ */
+function NodesCollection(id)
 {
 	this.id = id;
   this.nodes = new Array();
@@ -122,7 +125,7 @@
   this.getRect = function(start, end)
   {
 		if (this.nodes.length == 0)
-			return new Rect(0, 0, 0, 0);
+			return new Rectangle(0, 0, 0, 0);
 		
 		var node = this.nodes[0];
 		
@@ -144,7 +147,7 @@
 				bottomPos = node.nodeRect.bottom();
 		}
 		
-		return new Rect(leftPos, topPos, rightPos - leftPos, bottomPos - topPos);
+		return new Rectangle(leftPos, topPos, rightPos - leftPos, bottomPos - topPos);
   };
   
   //returns the base line of the collection
@@ -229,12 +232,12 @@
 		}
 	};
 	
-	this.toTex = function()
+	this.toTex = function(braces)
 	{
 		var res = "";
 		
 		for (var i = 0; i < this.nodes.length; ++i)
-			res += this.nodes[i].toTex();
+			res += this.nodes[i].toTex(braces);
 		
 		return res;
 	};

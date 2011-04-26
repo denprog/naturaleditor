@@ -1,6 +1,7 @@
 ﻿/**
  * Caret state.
  * @class CaretState
+ * @constructor
  */
 function CaretState(node, pos, length)
 {
@@ -41,6 +42,26 @@ function CaretState(node, pos, length)
 		this.setSelectedNodes(caretState.selectedNodes);
 	};
 
+	this.setNodeCaretState = function()
+	{
+		for (var i = 0; i < this.selectedNodes.length; ++i)
+		{
+			var s = this.selectedNodes[i];
+			var n = s.getNode();
+			n.selectedNode = s;
+		}
+	},
+
+	this.clearNodeCaretState = function()
+	{
+		for (var i = 0; i < this.selectedNodes.length; ++i)
+		{
+			var s = this.selectedNodes[i];
+			var n = s.getNode();
+			delete n.selectedNode;
+		}
+	},
+	
 	this.setNodeSelected = function(node)
 	{
 		this.nte = node.nte;
@@ -246,18 +267,6 @@ function CaretState(node, pos, length)
 		
 		return -1;
 	};
-
-	this.store = function()
-	{
-		for (var i = 0; i < this.selectedNodes.length; ++i)
-			this.selectedNodes[i].store();
-	};
-	
-	this.restore = function()
-	{
-		for (var i = 0; i < this.selectedNodes.length; ++i)
-			this.selectedNodes[i].restore();
-	};
 	
 	/**
 	 * Makes a dublicate of this object
@@ -289,6 +298,8 @@ function CaretState(node, pos, length)
 			
 			//check whether the node is present
 			var n = s.getNode();
+			if (!n)
+				continue;
 	
 			//check the next state does not refer the same node
 			if (i < this.selectedNodes.length - 1)
@@ -335,9 +346,12 @@ function CaretState(node, pos, length)
 		return n == node || node.isChild(n);
 	};
 	
-	this.checkAtLast = function()
+	this.checkAtLast = function(node)
 	{
 		var parent = this.getNode();
+		if (node && parent != node)
+			return false;
+		
 		var pos = this.getPos();
 		
 		return pos != 0 && pos == parent.childNodes.count();
@@ -345,7 +359,7 @@ function CaretState(node, pos, length)
 	
 	this.getRect = function(posRect)
 	{
-		this.getNode().getPosBounds(this.getPos(), posRect);
+		this.getNode().getRelativePosBounds(this.getPos(), posRect);
 	};
 	
 	if (node)
@@ -385,6 +399,9 @@ function CaretPosition(node, pos)
 		this.positions.push(p[i]);
 };
 
+/**
+ * @constructor
+ */
 function SelectedNode(caretState, node, pos, length)
 {
 	this.caretPosition = new CaretPosition(node, pos);
@@ -394,9 +411,6 @@ function SelectedNode(caretState, node, pos, length)
 		this.length = 0;
 	else
 		this.length = length;
-
-	if (caretState)
-		node.caretState = caretState;
 
 	this.getNode = function()
 	{
@@ -410,54 +424,13 @@ function SelectedNode(caretState, node, pos, length)
 		return this.caretPosition.getPos();
 	};
 
-	var storedParentNode = null;
-	var storedPos = -1;
-	var storedNode = null;
-	
-	this.store = function()
+	this.setToNode = function(node, pos, length)
 	{
-		storedParentNode = this.getNode();
-		if (storedParentNode instanceof TextNode)
-			storedPos = this.getPos();
-		else
-		{
-			//if the caret position is at the end of the collection, storedNode = null
-			if (this.getPos() != storedParentNode.childNodes.count())
-				storedNode = storedParentNode.childNodes.get(this.getPos());
-		}
+		this.caretPosition = new CaretPosition(node, pos);
+		this.length = length;
+		this.caretState.updateSelectedNodes();
 	};
-	
-	this.restore = function()
-	{
-		if (!storedParentNode)
-			this.caretPosition = null;
-		else
-		{
-			if (storedPos != -1)
-				this.caretPosition = new CaretPosition(storedParentNode, storedPos);
-			else
-			{
-				if (storedNode == null)
-				{
-					//the caret position is at the end of the collection
-					var c = storedParentNode.getLastPosition();
-					this.caretPosition = new CaretPosition(c.getNode(), c.getPos());
-//					var n = storedParentNode.childNodes.getLast();
-//					if (n instanceof TextFormulaNode)
-//						this.caretPosition = new CaretPosition(n, n.getLength());
-//					else
-//						this.caretPosition = new CaretPosition(storedParentNode, storedParentNode.childNodes.count());
-				}
-				else
-					this.caretPosition = new CaretPosition(storedParentNode, storedNode == null ? storedParentNode.childNodes.count() : storedParentNode.getChildPos(storedNode));
-			}
-		}
 
-		storedParentNode = null;
-		storedPos = -1;
-		storedNode = null;
-	};
-	
 	this.dublicate = function()
 	{
 		return new SelectedNode(this.caretState, this.getNode(), this.getPos(), this.length);

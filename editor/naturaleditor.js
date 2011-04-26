@@ -1,6 +1,7 @@
 /**
  * The Natural Editor
  * @class
+ * @constructor
  * @param {Object} parent
  * @param {Object} themePath
  * @param {Object} cx
@@ -10,15 +11,19 @@ var NaturalEditor = Class.extend(
 	{
 		init : function(parent, themePath, cx, cy)
 		{
+			this.isGecko = !this.isWebKit && /Gecko/.test(navigator.userAgent);
 			this.isOpera = window.opera && opera.buildNumber;
 			this.isWebKit = /WebKit/.test(navigator.userAgent);
 			this.isIE = !this.isWebKit && !this.isOpera && (/msie/).test(navigator.userAgent.toLowerCase());
 			this.isIE6 = this.isIE && /MSIE [56]/.test(navigator.userAgent);
-			this.isGecko = !this.isWebKit && /Gecko/.test(navigator.userAgent);
 			this.isMac = navigator.userAgent.indexOf('Mac') != -1;
 			this.isAir = /adobeair/i.test(navigator.userAgent);
-			
-			if (!this.isGecko)
+
+			if (this.isWebKit)
+			{
+				this.inited = true;
+			}
+			else if (!this.isGecko)
 			{
 				this.inited = false;
 			}
@@ -27,11 +32,14 @@ var NaturalEditor = Class.extend(
 				var i = navigator.userAgent.indexOf("Firefox");
 				var version = parseFloat(navigator.userAgent.substring(i + 8));
 				if (version < 4)
+				{
+					i = navigator.userAgent.indexOf("IE");
 					this.inited = false;
+				}
 				else
 					this.inited = true;
 			}
-			
+
 			this.drawLib = new SvgLib(this);
 			
 			/**
@@ -63,6 +71,8 @@ var NaturalEditor = Class.extend(
 			this.eventHandlers = {};
 			this.eventsHandler = new EventsHandler(this);
 
+			//this.eventsHandler.addEvent(this, "onDOMContentLoaded", this.onDOMContentLoaded);
+			
 			this.registerEvents();
 			
 			if (this.isIE)
@@ -118,6 +128,8 @@ var NaturalEditor = Class.extend(
 			this.eventsHandler.addGlobalShortcut("*", this.onMultiply);
 			this.eventsHandler.addGlobalShortcut("/", this.onDivision);
 			this.eventsHandler.addGlobalShortcut("^", this.onCircumflex);
+			this.eventsHandler.addGlobalShortcut("(", this.onLeftBracket);
+			this.eventsHandler.addGlobalShortcut(")", this.onRightBracket);
 			
 			this.eventsHandler.addGlobalShortcut("Backspace", this.onBackspace);
 			this.eventsHandler.addGlobalShortcut("Delete", this.onDelete);
@@ -149,6 +161,8 @@ var NaturalEditor = Class.extend(
 			this.eventsHandler.removeGlobalShortcut("*");
 			this.eventsHandler.removeGlobalShortcut("/");
 			this.eventsHandler.removeGlobalShortcut("^");
+			this.eventsHandler.removeGlobalShortcut("(");
+			this.eventsHandler.removeGlobalShortcut(")");
 			
 			this.eventsHandler.removeGlobalShortcut("Backspace");
 			this.eventsHandler.removeGlobalShortcut("Delete");
@@ -200,6 +214,7 @@ var NaturalEditor = Class.extend(
 			this.caret.setToNodeBegin(this.rootNode.childNodes.get(0));
 			
 			this.rootNode.remake();
+			this.caret.render();
 		}, 
 
 		parseHtml : function(htmlText)
@@ -229,6 +244,7 @@ var NaturalEditor = Class.extend(
 				'h2' : "Header2Node", 
 				'h3' : "Header3Node",
 				'br' : "BreakNode", 
+				'a' : "ReferenceNode", 
 				'span' : 
 					{
 						'' : 'SpanNode',
@@ -239,6 +255,9 @@ var NaturalEditor = Class.extend(
 						'formula_multiply' : 'MultiplyFormulaNode', 
 						'formula_division' : 'DivisionFormulaNode', 
 						'formula_exponentiation' : 'ExponentiationFormulaNode', 
+						'formula_squareroot' : 'SquareRootFormulaNode', 
+						'formula_nthroot' : 'NthRootFormulaNode', 
+						'formula_brackets' : 'BracketsFormulaNode', 
 						'formula_group' : 'GroupFormulaNode'
 					},
 				'foreignobject' : 'ForeignObjectFormulaNode', 
@@ -278,15 +297,19 @@ var NaturalEditor = Class.extend(
 				if (element)
 				{
 					if (parentNode && parentNode.createChildNode)
-						return parentNode.createChildNode(t, pos);
-					return new t(parentNode, pos, this);
+						var res = parentNode.createChildNode(t, pos, element);
+					else
+						var res = new t(parentNode, pos, this, element);
+					//for (var attr in element.attributes)
+					//	res.element.attributes[attr] = element.attributes[attr];
+					return res;
 				}
 				
 				if (typeof(t) != "undefined")
 				{
 					if (parentNode && parentNode.createChildNode)
-						return parentNode.createChildNode(t, pos);
-					return new t(parentNode, pos, this);
+						return parentNode.createChildNode(t, pos, element);
+					return new t(parentNode, pos, this, element);
 				}
 			}
 			else
@@ -323,16 +346,34 @@ var NaturalEditor = Class.extend(
 			return null;
 		},
 		
-		loadCss : function(document, fileName)
-		{
-			var r = document.createElement("link");
-			r.setAttribute("rel", "stylesheet");
-		  r.setAttribute("type", "text/css");
-		  r.setAttribute("href", fileName);
-		  
-		  if (typeof(r) != "undefined")
-		  	document.getElementsByTagName("head")[0].appendChild(r);
-		},
+//		loadCss : function(fileName)
+//		{
+//			//alert(fileName);
+//			var r = document.createElement("link");
+//			r.setAttribute("rel", "stylesheet");
+//		  r.setAttribute("type", "text/css");
+//		  r.setAttribute("href", fileName);
+//		  
+//		  if (typeof(r) != "undefined")
+//		  	document.getElementsByTagName("head")[0].appendChild(r);
+//		},
+//
+//		getCurDirectory : function()
+//		{
+//			var scripts = document.getElementsByTagName('script');
+//			var name = "naturaleditor.js";
+//
+//	    for (var i = scripts.length - 1; i >= 0; --i)
+//	    {
+//	      var src = scripts[i].src;
+//	      var n = src.length;
+//	      var length = name.length;
+//	      if (src.substr(n - length) == name)
+//	        return src.substr(0, n - length);
+//	    }
+//	    
+//	    return "";
+//		},
 		
 		setFocus : function()
 		{
@@ -350,6 +391,11 @@ var NaturalEditor = Class.extend(
 		{
 			this.rootNode.childNodes.reset();
 		}, 
+		
+//		onDOMContentLoaded : function()
+//		{
+//			return true;
+//		},
 		
 		onLeft : function()
 		{
@@ -422,12 +468,15 @@ var NaturalEditor = Class.extend(
 			var iNode = node.hasTag("i");
 			var uNode = node.hasTag("u");
 
-			var b = this.theme.toolbar.getButton("bold");
-			var bButton = b.pressed;
-			b = this.theme.toolbar.getButton("italic");
-			var iButton = b.pressed;
-			b = this.theme.toolbar.getButton("underline");
-			var uButton = b.pressed;
+			if (this.theme.toolbar)
+			{
+				var b = this.theme.toolbar.getButton("bold");
+				var bButton = b.pressed;
+				b = this.theme.toolbar.getButton("italic");
+				var iButton = b.pressed;
+				b = this.theme.toolbar.getButton("underline");
+				var uButton = b.pressed;
+			}
 			
 			if (bNode == bButton && iNode == iButton && uNode == uButton)
 			{
@@ -446,28 +495,9 @@ var NaturalEditor = Class.extend(
 				this.commandManager.insert(n);
 			}
 			
-//			var b = this.theme.toolbar.getButton("underline");
-//			if (b && b.pressed && !node.hasTag("u"))
-//				str = "<u>" + str + "</u>";
-//
-//			b = this.theme.toolbar.getButton("italic");
-//			if (b && b.pressed && !node.hasTag("i"))
-//				str = "<i>" + str + "</i>";
-//			
-//			b = this.theme.toolbar.getButton("bold");
-//			if (b && b.pressed && !node.hasTag("b"))
-//				str = "<b>" + str + "</b>";
-			
-//			if (str == ch)
-//				this.commandManager.insertText(ch);
-//			else
-//			{
-//				var n = this.parseHtml(str);
-//				this.commandManager.insert(n);
-//			}
-			
 			this.caret.currentState.getNode().scrollIntoView(this.caret.currentState.getPos());
 			this.theme.update();
+			this.caret.render();
 			return true;
 		}, 
 		
@@ -491,11 +521,14 @@ var NaturalEditor = Class.extend(
 				return true;
 			}
 
-			var r = this.theme.toolbar.parentElement.getBoundingClientRect();
-			if (x > r.left && x < r.right && y > r.top && y < r.bottom)
+			if (this.theme.toolbar)
 			{
-				this.setFocus();
-				return false;
+				var r = this.theme.toolbar.parentElement.getBoundingClientRect();
+				if (x > r.left && x < r.right && y > r.top && y < r.bottom)
+				{
+					this.setFocus();
+					return false;
+				}
 			}
 			
 			this.killFocus();
@@ -508,6 +541,7 @@ var NaturalEditor = Class.extend(
 			if (this.commandManager.insertLine())
 				this.caret.currentState.getNode().scrollIntoView(this.caret.currentState.getPos());
 			this.theme.update();
+			this.caret.render();
 			return true;
 		},
 		
@@ -516,6 +550,7 @@ var NaturalEditor = Class.extend(
 			if (this.caret.getFormula())
 			{
 				this.commandManager.insert(new PlusFormulaNode(null, 0, this));
+				this.caret.render();
 				return true;
 			}
 			return false;
@@ -526,6 +561,7 @@ var NaturalEditor = Class.extend(
 			if (this.caret.getFormula())
 			{
 				this.commandManager.insert(new MinusFormulaNode(null, 0, this));
+				this.caret.render();
 				return true;
 			}
 			return false;
@@ -536,6 +572,7 @@ var NaturalEditor = Class.extend(
 			if (this.caret.getFormula())
 			{
 				this.commandManager.insert(new MultiplyFormulaNode(null, 0, this));
+				this.caret.render();
 				return true;
 			}
 			return false;
@@ -547,6 +584,7 @@ var NaturalEditor = Class.extend(
 			if (n)
 			{
 				this.commandManager.insert(null, this.caret.currentState.getNode().createDivisionFormulaNode);
+				this.caret.render();
 				return true;
 			}
 			return false;
@@ -558,26 +596,46 @@ var NaturalEditor = Class.extend(
 			if (n)
 			{
 				this.commandManager.insert(null, this.caret.currentState.getNode().createExponentationFormulaNode);
+				this.caret.render();
 				return true;
 			}
 			return false;
 		},
 
+		onLeftBracket : function()
+		{
+			var n = this.caret.getFormula();
+			if (n)
+			{
+				this.commandManager.insert(null, {left : true}, this.caret.currentState.getNode().createBracketsFormulaNode);
+				this.caret.render();
+				return true;
+			}
+			return false;
+		},
+		
+		onRightBracket : function()
+		{
+		},
+		
 		onBackspace : function()
 		{
 			this.commandManager.remove(false);
+			this.caret.render();
 			return true;
 		}, 
 		
 		onDelete : function()
 		{
 			this.commandManager.remove(true);
+			this.caret.render();
 			return true;
 		}, 
 		
 		onUndo : function()
 		{
 			var res = this.commandManager.undo();
+			this.caret.render();
 			this.theme.update();
 			return res;
 		},
@@ -585,6 +643,7 @@ var NaturalEditor = Class.extend(
 		onRedo : function()
 		{
 			var res = this.commandManager.redo();
+			this.caret.render();
 			this.theme.update();
 			return res;
 		},
@@ -592,16 +651,19 @@ var NaturalEditor = Class.extend(
 		onBold : function()
 		{
 			this.theme.toolbar.pressButton("bold", true);
+			this.caret.render();
 		},
 
 		onItalic : function()
 		{
 			this.theme.toolbar.pressButton("italic", true);
+			this.caret.render();
 		},
 
 		onUnderline : function()
 		{
 			this.theme.toolbar.pressButton("underline", true);
+			this.caret.render();
 		},
 		
 		onSave : function()
@@ -681,42 +743,52 @@ var NaturalEditor = Class.extend(
 		insertHtml : function(htmlText)
 		{
 			var node = this.parseHtml(htmlText);
-			return this.commandManager.insert(node);
+			var res = this.commandManager.insert(node);
+			this.caret.render();
+			return res;
 		}, 
 
 		insertText : function(text)
 		{
-			return this.commandManager.insertText(text);
+			var res = this.commandManager.insertText(text);
+			this.caret.render();
+			return res;
 		}, 
 
 		deleteHtml : function(right)
 		{
 			this.commandManager.remove(right);
+			this.caret.render();
 		}, 
 
 		addType : function(type)
 		{
 			this.commandManager.addType(type);
+			this.caret.render();
 		}, 
 		
 		changeType : function(type)
 		{
 			this.commandManager.changeType(type);
+			this.caret.render();
 		}, 
 		
 		changeFontName : function(fontName)
 		{
 			this.commandManager.changeFontName(fontName);
+			this.caret.render();
 		}, 
 
 		changeFontSize : function(fontSize)
 		{
 			this.commandManager.changeFontSize(fontSize);
+			this.caret.render();
 		}, 
 		
 		insertLine : function()
 		{
 			this.commandManager.insertLine();
+			this.caret.render();
 		}, 
 
 		getHtml : function()
@@ -747,7 +819,7 @@ var NaturalEditor = Class.extend(
 			for (var i = caretPos.length - 1; i > 0; --i)
 				node = node.childNodes.get(caretPos[i]);
 
-			return node.childNodes.get(caretPos[0]).toTex();
+			return node.childNodes.get(caretPos[0]).toTex(true);
 		}
 	}
 );

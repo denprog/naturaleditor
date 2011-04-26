@@ -1,6 +1,7 @@
 /**
  * Plus formula node
  * @class PlusFormulaNode
+ * @constructor
  */
 var PlusFormulaNode = ShapeFormulaNode.extend(
 	{
@@ -32,16 +33,16 @@ var PlusFormulaNode = ShapeFormulaNode.extend(
 
 		update : function()
 		{
-			var s = nte.window.getComputedStyle(this.element, null);
-			var h = parseInt(s.getPropertyValue("height"));
+			var s = this.nte.window.getComputedStyle(this.element, null);
+			var h = parseInt(s.getPropertyValue("max-height"));
 			this.baseline = h;
 		},
 
 		updateClientRect : function()
 		{
-			var s = nte.window.getComputedStyle(this.element, null);
-			var w = parseInt(s.getPropertyValue("width"));
-			var h = parseInt(s.getPropertyValue("height"));
+			var s = this.nte.window.getComputedStyle(this.element, null);
+			var w = parseInt(s.getPropertyValue("max-width"));
+			var h = parseInt(s.getPropertyValue("max-height"));
 			
 			this.clientRect.setRect(0, 0, w, h);
 		}, 
@@ -57,9 +58,9 @@ var PlusFormulaNode = ShapeFormulaNode.extend(
 
 		render : function()
 		{
-			var s = nte.window.getComputedStyle(this.element, null);
-			var w = parseInt(s.getPropertyValue("width"));
-			var h = parseInt(s.getPropertyValue("height"));
+			var s = this.nte.window.getComputedStyle(this.element, null);
+			var w = parseInt(s.getPropertyValue("max-width"));
+			var h = parseInt(s.getPropertyValue("max-height"));
 			
 			if (this.shape1)
 			{

@@ -1,38 +1,6 @@
-﻿function Event(eventsHandler, owner, element, type, intermediateHandler, handler, name)
-{
-	this.eventsHandler = eventsHandler;
-	this.owner = owner;
-	this.element = element;
-	this.type = type;
-	this.intermediateHandler = intermediateHandler;
-	this.handler = handler;
-	this.name = name;
-	var obj = this;
-
-	this.eventFunc = function(event)
-	{
-		intermediateHandler(event, obj);
-	};
-	
-	this.attach = function()
-	{
-		if (this.element.addEventListener)
-			this.element.addEventListener(type, this.eventFunc, false);
-		else
-			element.attachEvent("on" + type, this.eventFunc);
-	};
-	
-	this.detach = function()
-	{
-		if (element.removeEventListener)
-			element.removeEventListener(type, this.eventFunc, false);
-		else
-			element.detachEvent(type, this.eventFunc);
-	};
-	
-	this.attach();
-}
-
+﻿/**
+ * @constructor
+ */
 function EventsHandler(nte)
 {
 	this.nte = nte;
@@ -59,10 +27,10 @@ function EventsHandler(nte)
 		node.eventHandlers[type] = null;
 	};
 
-	this.eventFunc = function(event)
-	{
-		intermediateHandler(event, obj);
-	};
+//	this.eventFunc = function(event)
+//	{
+//		intermediateHandler(event, obj);
+//	};
 	
 	this.attach = function(type)
 	{
@@ -319,7 +287,7 @@ function EventsHandler(nte)
 			return;
 		
 		var handler = this.findEventHandler("onkeypress");
-		if (handler && handler.eventHandlers["onkeypress"].apply(handler, [character]))
+		if (handler && handler.eventHandlers["onkeypress"].apply(handler, [String.fromCharCode(event.keyCode)]))
 			this.preventDefault(event);
 	};
 
@@ -481,15 +449,32 @@ function EventsHandler(nte)
 		event.dbl = true;
 	};
 	
-	this.eventHandlers = 
-		{
-			"onkeydown" : {event: "keydown", handler: this.onkeydown, refs: 0}, 
-			"onkeyup" : {event: "keyup", handler: this.onkeyup, refs: 0}, 
-			"onkeypress" : {event: "keypress", handler: this.onkeypress, refs: 0}, 
-			"onglobalshortcut" : {event: "keypress", handler: this.onglobalshortcut, refs: 0}, 
-			"onshortcut" : {event: "keypress", handler: this.onshortcut, refs: 0}, 
-			"onchar" : {event: "keypress", handler: this.onchar, refs: 0}, 
-			"onclick" : {event: "click", handler: this.onclick, refs: 0}, 
-			"ondoubleclick" : {event: "dblclick", handler: this.ondoubleclick, refs: 0}
-		};
+	if (this.nte.isGecko && !this.nte.isWebKit)
+	{
+		this.eventHandlers = 
+			{
+				"onkeydown" : {event: "keydown", handler: this.onkeydown, refs: 0}, 
+				"onkeyup" : {event: "keyup", handler: this.onkeyup, refs: 0}, 
+				"onkeypress" : {event: "keypress", handler: this.onkeypress, refs: 0}, 
+				"onglobalshortcut" : {event: "keypress", handler: this.onglobalshortcut, refs: 0}, 
+				"onshortcut" : {event: "keypress", handler: this.onshortcut, refs: 0}, 
+				"onchar" : {event: "keypress", handler: this.onchar, refs: 0}, 
+				"onclick" : {event: "click", handler: this.onclick, refs: 0}, 
+				"ondoubleclick" : {event: "dblclick", handler: this.ondoubleclick, refs: 0}
+			};
+	}
+	else
+	{
+		this.eventHandlers = 
+			{
+				"onkeydown" : {event: "keydown", handler: this.onkeydown, refs: 0}, 
+				"onkeyup" : {event: "keyup", handler: this.onkeyup, refs: 0}, 
+				"onkeypress" : {event: "keypress", handler: this.onkeypress, refs: 0}, 
+				"onglobalshortcut" : {event: "keydown", handler: this.onglobalshortcut, refs: 0}, 
+				"onshortcut" : {event: "keypress", handler: this.onshortcut, refs: 0}, 
+				"onchar" : {event: "keypress", handler: this.onchar, refs: 0}, 
+				"onclick" : {event: "click", handler: this.onclick, refs: 0}, 
+				"ondoubleclick" : {event: "dblclick", handler: this.ondoubleclick, refs: 0}
+			};
+	}
 }

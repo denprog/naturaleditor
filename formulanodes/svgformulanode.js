@@ -1,6 +1,7 @@
 /**
  * The "svg" tag node.
  * @class SvgFormulaNode
+ * @constructor
  */
 var SvgFormulaNode = FormulaNode.extend(
 	{
@@ -36,6 +37,7 @@ var SvgFormulaNode = FormulaNode.extend(
 				x += n.clientRect.width + this.kerning;
 			}
 			
+			this.update();
 			this.updateClientRect();
 			
 			if (this.clientRect.width == 0 || this.clientRect.height == 0)
@@ -43,39 +45,28 @@ var SvgFormulaNode = FormulaNode.extend(
 			else
 				this.drawLib.setSize(this.clientRect.width + this.rightOffset, this.clientRect.height, this.element);
 
-			this.update();
 			this.updateBoundingRect();
 
 			if (this.baseline != 0)
-			{
-				//var s = this.nte.window.getComputedStyle(this.element.parentNode, null);
-				//var t = parseInt(s.getPropertyValue("line-height"));
-
-				//this.element.style.verticalAlign = -this.clientRect.height + this.baseline + t / 2;
 				this.element.style.verticalAlign = -(this.clientRect.height - this.baseline) + "px";
-			}
 		}, 
 		
 		updateBoundingRect : function()
 		{
-			this.getNodeBounds(this.tempRect);
-			
-			var r = this.groupNode.element.getBoundingClientRect();
-			var b = this.nte.editor.getBoundingClientRect();
-			this.boundingRect.setRect(r.left - this.element.x.baseVal.value - b.left - this.leftOffset, 
-				r.top - this.element.y.baseVal.value - b.top - parseInt(this.element.style.verticalAlign),
-				this.element.width.baseVal.value, 
-				this.element.height.baseVal.value);
-
-//			var b = this.nte.editor.getBoundingClientRect();
-//			var s = this.nte.window.getComputedStyle(this.element.parentNode, null);
-//			var t = parseInt(s.getPropertyValue("line-height"));
-//			this.boundingRect.setRect(r.left - this.element.x.baseVal.value, 
-//				//r.top - this.element.y.baseVal.value - b.top + (this.element.height.baseVal.value < t ? parseInt(this.element.style.verticalAlign) : 0),
-//				//r.top - this.element.y.baseVal.value - b.top + (this.element.height.baseVal.value > t ? -parseInt(this.element.style.verticalAlign) : 0),
-//				r.top - this.element.y.baseVal.value - b.top - parseInt(this.element.style.verticalAlign),
-//				this.element.width.baseVal.value, 
-//				this.element.height.baseVal.value);
+			if (this.nte.isWebKit)
+			{
+				this.boundingRect.setRect(this.element.offsetLeft, this.element.offsetTop, this.element.offsetWidth, this.element.offsetHeight);
+			}
+			else
+			{
+				this.getNodeBounds(this.tempRect);
+				var r = this.element.getBoundingClientRect();
+				var b = this.nte.editor.getBoundingClientRect();
+				this.boundingRect.setRect(r.left - this.element.x.baseVal.value - b.left - this.leftOffset, 
+					this.tempRect.top - this.element.y.baseVal.value, 
+					this.element.width.baseVal.value, 
+					this.element.height.baseVal.value);
+			}
 		}, 
 
 		moveCaretToLineBegin : function()
@@ -110,12 +101,12 @@ var SvgFormulaNode = FormulaNode.extend(
 		 */
 		getFirstPosition : function()
 		{
+			if (this.childNodes.getFirst() instanceof CompoundFormulaNode)
+				return new CaretState(this, 0);
 			var t = this.childNodes.getFirst().getFirstPosition();
 			if (t)
 				return t;
 			return new CaretState(this, 0);
-			//return this.childNodes.getFirst().getFirstPosition();
-			//return this.childNodes.getFirst().getNextPosition(null);
 		}, 
 		
 		/**
@@ -134,7 +125,7 @@ var SvgFormulaNode = FormulaNode.extend(
 			return res;
 		},
 		
-		getNextPosition : function(relativeState)
+		getNextPosition : function(relativeState, params)
 		{
 			var res = null;
 
@@ -152,7 +143,7 @@ var SvgFormulaNode = FormulaNode.extend(
 						var i = relativeState.getPos();
 						//i == this.childNodes.count() means the position is at the end of the collection
 						var n = this.childNodes.get(i == this.childNodes.count() ? i - 1 : i);
-						res = n.getNextPosition(relativeState);
+						res = n.getNextPosition(relativeState, params);
 						if (res)
 							return res;
 						if (i == this.childNodes.count() - 1 && !(n instanceof EmptyFormulaNode))
@@ -162,33 +153,28 @@ var SvgFormulaNode = FormulaNode.extend(
 						var i = this.getFirstLevelChildPos(node);
 				}
 				else if (node == this)
-					return this.parentNode.getNextPosition(relativeState);
+					return this.parentNode.getNextPosition(relativeState, params);
 				else
 					var i = this.getFirstLevelChildPos(node);
 				
-				//for (var pos = i + 1; pos < this.childNodes.count(); ++pos)
-				//{
 				if (i + 1 < this.childNodes.count())
 				{
 					var n = this.childNodes.get(i + 1);
-					res = n.getNextPosition(relativeState);
+					res = n.getNextPosition(relativeState, params);
 					if (!res)
 						res = new CaretState(this, i + 1);
 				}
 				else if (i == this.childNodes.count() - 1 && !relativeState.isEqual(this.getLastPosition()))
 					return new CaretState(this, i + 1);
-				//if (res)
-				//	break;
-				//}
 				
 				if (!res && this.parentNode)
-					res = this.parentNode.getNextPosition(relativeState);
+					res = this.parentNode.getNextPosition(relativeState, params);
 			}
 			
 			return res;
 		}, 
 		
-		getPreviousPosition : function(relativeState)
+		getPreviousPosition : function(relativeState, params)
 		{
 			var res = null;
 			
@@ -204,30 +190,23 @@ var SvgFormulaNode = FormulaNode.extend(
 					var i = relativeState.getPos();
 					//i == this.childNodes.count() means the position is at the end of the collection
 					var n = this.childNodes.get(i == this.childNodes.count() ? i - 1 : i);
-					res = n.getPreviousPosition(relativeState);
+					res = n.getPreviousPosition(relativeState, params);
 					if (res)
 						return res;
 				}
 				else
 					var i = this.getFirstLevelChildPos(node);
 
-//				if (node != this)
-//				{
-//					res = new CaretState(this, i);
-//				}
-//				else
-//				{
 				for (var pos = i - 1; pos >= 0; --pos)
 				{
 					var n = this.childNodes.get(pos);
-					res = n.getPreviousPosition(null);
+					res = n.getPreviousPosition(null, params);
 					if (res)
 						break;
 				}
-//				}
 				
 				if (!res && this.parentNode)
-					res = this.parentNode.getPreviousPosition(relativeState);
+					res = this.parentNode.getPreviousPosition(relativeState, params);
 			}
 			
 			return res;
@@ -255,10 +234,10 @@ var SvgFormulaNode = FormulaNode.extend(
 		
 		//test functions
 		
-		toTex : function()
+		toTex : function(braces)
 		{
 			var tex = "$";
-			tex += this.childNodes.toTex();
+			tex += this.childNodes.toTex(braces);
 			tex += "$";
 			return tex;
 		}

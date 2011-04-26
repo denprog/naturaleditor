@@ -1,6 +1,7 @@
 /**
  * Exponentiation formula node.
  * @class ExponentiationFormulaNode
+ * @constructor
  */
 var ExponentiationFormulaNode = CompoundFormulaNode.extend(
 	{
@@ -64,7 +65,7 @@ var ExponentiationFormulaNode = CompoundFormulaNode.extend(
 			
 			if (this.base && this.exponent)
 			{
-				this.base.move(0, this.exponent.clientRect.height * 2 / 3);
+				this.base.move(0, this.exponent.clientRect.height);
 				
 				this.shape.clearShapes();
 				this.shape.addFillRect(0, 0, 3, this.base.boundingRect.bottom, "white");
@@ -76,6 +77,7 @@ var ExponentiationFormulaNode = CompoundFormulaNode.extend(
 			}
 			
 			this.updateClientRect();
+			this.update();
 		},
 		
 		setLevel : function(level)
@@ -105,8 +107,7 @@ var ExponentiationFormulaNode = CompoundFormulaNode.extend(
 			if (this.exponent)
 			{
 				//update the baseline
-				this.baseline = this.base.baseline + this.exponent.clientRect.height * 2 / 3;
-				//this.baseline = this.base.baseline;
+				this.baseline = this.base.baseline + this.exponent.clientRect.height;
 			}
 		}, 
 
@@ -134,45 +135,6 @@ var ExponentiationFormulaNode = CompoundFormulaNode.extend(
 		},
 
 		//caret functions
-		
-		renderCaret : function(selectedNode, range)
-		{
-			if (this.caret.currentState.getPos() != 1)
-			{
-				this._super();
-				return;
-			}
-			
-			var r = new Rect();
-			if (this.caret.currentState.beginCaretPos)
-				this.getPosBounds(this.caret.currentState.getSelectionStart(), r);
-			else
-				this.getPosBounds(this.caret.currentState.getSelectionEnd(), r);
-			
-			this.caret.paper.clearShapes();
-
-			r.setRect(r.left - 2, r.top, r.width + 2, r.height);
-			
-			this.caret.paper.move(r.left, r.top);
-			this.caret.paper.setSize(r.width + 1, r.height + 1);
-
-			if (this.caret.currentState.beginCaretPos)
-				this.caret.paper.line(0, 0, 0, r.height, "black");
-			else
-				this.caret.paper.line(r.right, 0, r.right, r.height, "black");
-			var t = this.caret.paper.line(0, r.height + 1, r.width, r.height + 1, "black");
-			this.drawLib.animate("visibility", "visible", "hidden", "1", "indefinite", t.parentNode);
-
-//			r.setRect(r.left - 1, r.top, r.width + 2, r.height);
-//			this.caret.paper.move(r.left, r.top);
-//			this.caret.paper.setSize(r.width, r.height);
-//
-//			if (this.caret.currentState.beginCaretPos)
-//				this.caret.paper.line(0, 0, 0, r.height, "black");
-//			else
-//				this.caret.paper.line(r.right, 0, r.right, r.height, "black");
-//			this.caret.paper.line(0, r.height, r.width, r.height, "black");
-		}, 
 
 		//command functions
 		
@@ -204,9 +166,9 @@ var ExponentiationFormulaNode = CompoundFormulaNode.extend(
 
 		//test functions
 		
-		toTex : function()
+		toTex : function(braces)
 		{
-			return this.base.toTex() + "^" + this.exponent.toTex();
+			return this.base.toTex(braces) + "^" + this.exponent.toTex(braces);
 		}
 	}
 );
