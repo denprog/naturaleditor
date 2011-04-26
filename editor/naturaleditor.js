@@ -10,10 +10,6 @@ var NaturalEditor = Class.extend(
 	{
 		init : function(parent, themePath, cx, cy)
 		{
-			//var base = document.location.href.substr(0, document.location.href.lastIndexOf("/NaturalEditor/")) + "/NaturalEditor/";
-			//this.loadCss(document, base + "style/styles.css");
-			//this.loadCss(base + "themes/classic/toolbar.css");
-
 			this.isOpera = window.opera && opera.buildNumber;
 			this.isWebKit = /WebKit/.test(navigator.userAgent);
 			this.isIE = !this.isWebKit && !this.isOpera && (/msie/).test(navigator.userAgent.toLowerCase());
@@ -31,10 +27,7 @@ var NaturalEditor = Class.extend(
 				var i = navigator.userAgent.indexOf("Firefox");
 				var version = parseFloat(navigator.userAgent.substring(i + 8));
 				if (version < 4)
-				{
-					i = navigator.userAgent.indexOf("IE");
 					this.inited = false;
-				}
 				else
 					this.inited = true;
 			}
