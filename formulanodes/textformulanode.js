@@ -135,7 +135,7 @@ var TextFormulaNode = ForeignObjectFormulaNode.extend(
 		{
 			if (pos > 0 && this.parentNode.childNodes.getLast() != this)
 			{
-				var c = this.getNextPosition(nodeEvent.caretState, params);
+				var c = this.getNextPosition(nodeEvent.caretState);
 				this.caret.setNextState(c);
 			}
 			

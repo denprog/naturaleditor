@@ -735,25 +735,12 @@ var TextNode = HtmlNode.extend(
 			var rect;
 			if (this.nte.isWebKit)
 			{
-				//rect = this.element.parentNode.getBoundingClientRect();
-
 				rect = textRange.getClientRects()[0];
 				if (!rect)
 					rect = textRange.getBoundingClientRect();
 				
-				if (!rect || (rect.width == 0 && rect.height == 0))
+				if ((!rect || (rect.width == 0 && rect.height == 0)) && this.element.previousSibling)
 					rect = this.element.previousSibling.getBoundingClientRect();
-
-//				if (pos == this.element.length)
-//				{
-//					textRange.setStart(this.element, 1);
-//					textRange.setEnd(this.element, 1);
-//					textRange.expand("character");
-//
-//					var r = textRange.getClientRects()[0];
-//					if (!r)
-//						r = textRange.getBoundingClientRect();
-//				}
 			}
 			else
 			{
@@ -766,10 +753,6 @@ var TextNode = HtmlNode.extend(
 				Math.round(rect.top + this.nte.editor.scrollTop - r.top), 
 				Math.round(0), 
 				Math.round(rect.height));
-//			posRect.setRect(Math.round((pos == this.element.length ? rect.right : rect.left) - r.left), 
-//				Math.round(rect.top - r.top), 
-//				Math.round(0), 
-//				Math.round(rect.height));
 		}, 
 
 		//test functions

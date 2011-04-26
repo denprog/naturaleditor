@@ -303,7 +303,7 @@ var FormulaNode = HtmlNode.extend(
 									var p = this.childNodes.get(pos).getLastPosition();
 									if (p)
 										c = p.dublicate();
-									c = this.getNextPosition(c, params);
+									c = this.getNextPosition(c);
 									
 									this.caret.setNextState(c);
 									this.removeChildNode(pos);
