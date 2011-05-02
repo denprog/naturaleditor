@@ -323,7 +323,10 @@ function Caret(nte)
 
 		this.move(rect.left, rect.top);
 		this.setSize(1, rect.height);
-		var r = this.nte.drawLib.line(0, 0, 1, rect.height, "black", this.textCaretGroup);
+		if (this.nte.isWebKit)
+			var r = this.nte.drawLib.line(0, 0, 0, rect.height, "black", this.textCaretGroup);
+		else
+			var r = this.nte.drawLib.line(1, 0, 1, rect.height, "black", this.textCaretGroup);
 		this.addShape(r);
 		var c = this.caretSpan;
 		
@@ -370,8 +373,8 @@ function Caret(nte)
 		}
 		else
 		{
-			this.nte.drawLib.setSize(rect.width == 0 ? 1 : rect.width, rect.height, f);
-			this.nte.drawLib.setSize(rect.width == 0 ? 1 : rect.width, rect.height, group);
+			this.nte.drawLib.setSize(rect.width <= 1 ? 2 : rect.width, rect.height, f);
+			this.nte.drawLib.setSize(rect.width <= 1 ? 2 : rect.width, rect.height, group);
 		}
 		
 		if (rect.width > 1)

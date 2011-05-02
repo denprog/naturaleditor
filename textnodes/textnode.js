@@ -148,7 +148,9 @@ var TextNode = HtmlNode.extend(
 		getPreviousPosition : function(relativeState, params)
 		{
 			if (!relativeState)
+			{
 				res = new CaretState(this, this.element.length);
+			}
 			else
 			{
 				var pos = relativeState.getSelectionStart();

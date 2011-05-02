@@ -390,7 +390,12 @@ var NaturalEditor = Class.extend(
 		resetContent : function()
 		{
 			this.rootNode.childNodes.reset();
-		}, 
+		},
+		
+		setSize : function(cx, cy)
+		{
+			this.theme.setSize(cx, cy);
+		},
 		
 //		onDOMContentLoaded : function()
 //		{

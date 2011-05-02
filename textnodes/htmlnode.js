@@ -1038,6 +1038,25 @@ var HtmlNode = Class.extend(
 				
 				if (!res && this.parentNode)
 					res = this.parentNode.getPreviousPosition(relativeState, params);
+				
+				if (res)
+				{
+					res.getRect(this.tempRect);
+					var t = this.tempRect.left;
+					var r = res.getNode().getPreviousPosition(res, params);
+					if (r)
+					{
+						r.getRect(this.tempRect);
+						if (t == this.tempRect.left)
+						{
+							var pos = relativeState.getPos();
+							if (pos == 0)
+								res = r;
+							else
+								res = relativeState.getNode().getFirstPosition();
+						}
+					}
+				}
 			}
 			
 			return res;

@@ -101,5 +101,11 @@ function Theme(nte, parentElement, cx, cy)
 		}
 	};
 	
+	this.setSize = function(cx, cy)
+	{
+		this.editor.style.width = cx;
+		this.editor.style.height = cy;
+	};
+	
 	this.init(parentElement, cx, cy);
 }
