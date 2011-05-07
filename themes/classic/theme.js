@@ -6,6 +6,61 @@ function Theme(nte, parentElement, cx, cy)
 	this.nte = nte;
 	this.name = "classic";
 	
+	this.formats = 
+		{
+			"p" : "Paragraph", 
+			"h1" : "Heading 1", 
+			"h2" : "Heading 2", 
+			"h3" : "Heading 3"
+		};
+
+	this.fontFamilies = 
+		{
+			"Arial" : 
+				[
+					"arial",
+					"helvetica",
+					"sans-serif"
+				],  
+			"Courier New" : 
+				[
+					"courier new", 
+					"courier", 
+					"monospace"
+				],
+			"Times New Roman" : 
+				[
+					"times new roman", 
+					"times", 
+					"serif"
+				],
+			"Tahoma" :
+				[
+					"tahoma", 
+					"arial", 
+					"helvetica", 
+					"sans-serif"
+				],
+			"Verdana" : 
+				[
+					"verdana", 
+					"arial", 
+					"helvetica", 
+					"sans-serif"
+				]
+		};
+	
+	this.fontSizes = 
+		{
+			8 : "8pt", 
+			10 : "10pt", 
+			12 : "12pt", 
+			14 : "14pt", 
+			16 : "16pt", 
+			18 : "18pt", 
+			20 : "20pt"
+		};
+	
 	this.init = function(parentElement, cx, cy)
 	{
 		if (this.nte.isIE)
@@ -42,27 +97,37 @@ function Theme(nte, parentElement, cx, cy)
 		}
 
 		this.editor.document = this.editor.ownerDocument;
-
-//		if (DEBUG_LEVEL)
-//			var base = this.editor.document.location.href.substr(0, this.editor.document.location.href.lastIndexOf("/NaturalEditor/")) + "/NaturalEditor/";
-//		else
-//			var base = this.nte.getCurDirectory();
-//
-//		this.nte.loadCss(DEBUG_LEVEL ? base + "themes/classic/toolbar.css" : base + "toolbar.css");
 		
 		if (this.nte.isIE)
 			this.toolbar = new Toolbar(this.nte, this.name, frame.document.getElementById("toolbar1"));
 		else
 			this.toolbar = new Toolbar(this.nte, this.name, frame.ownerDocument.getElementById("toolbar1"));
+		
 		this.toolbar.addButton("bold", "Ctrl+B", this.nte.onBold);
 		this.toolbar.addButton("italic", "Ctrl+I", this.nte.onItalic);
 		this.toolbar.addButton("underline", "Ctrl+U", this.nte.onUnderline);
 		this.toolbar.addButton("undo", "Ctrl+Z", this.nte.onUndo);
 		this.toolbar.addButton("redo", "Ctrl+Y", this.nte.onRedo);
 		
+		var c = this.toolbar.addComboBox("Format", null, this.nte, this.nte.onFormat);
+		for (var i in this.formats)
+			c.addOption(i, this.formats[i]);
+
+		c = this.toolbar.addComboBox("FontFamily", null, this, this.onFontFamily);
+		for (var i in this.fontFamilies)
+			c.addOption(i, i);
+
+		c = this.toolbar.addComboBox("FontSize", null, this.nte, this.nte.onFontSize);
+		for (var i in this.fontSizes)
+			c.addOption(i, this.fontSizes[i]);
+
 		this.editor.nte = this.nte;
 	};
 	
+	/**
+	 * Updates the toolbar
+	 * @method update
+	 */
 	this.update = function()
 	{
 		if (!this.toolbar)
@@ -98,13 +163,85 @@ function Theme(nte, parentElement, cx, cy)
 
 				p = p.parentNode;
 			}
+			
+			//update format combobox
+			var f = node.getFormat();
+			if (f)
+			{
+				f = f.toLowerCase();
+				for (var i in this.formats)
+				{
+					if (i == f)
+					{
+						this.toolbar.selectComboBox("Format", i);
+						break;
+					}
+				}
+			}
+			
+			//update font family combobox
+			var font = node.getFontFamily();
+			if (font)
+			{
+				(function()
+					{
+						var ar = font.toLowerCase().split(",");
+						for (var k in ar)
+						{
+							font = ar[k];
+							
+							var k = 0;
+							var b = true;
+							while (b)
+							{
+								b = false;
+								for (var i in this.fontFamilies)
+								{
+									var f = this.fontFamilies[i];
+									if (f.length > k)
+									{
+										b = true;
+										if (f[k] == font)
+										{
+											this.toolbar.selectComboBox("FontFamily", i);
+											return;
+										}
+									}
+								}
+								++k;
+							}
+						}
+					}).apply(this, []);
+			}
+			
+			//update font size combobox
+			var size = node.getFontSize();
+			if (size)
+			{
+				for (var i in this.fontSizes)
+				{
+					if (i == size)
+					{
+						this.toolbar.selectComboBox("FontSize", i);
+						break;
+					}
+				}
+			}
 		}
 	};
-	
+
 	this.setSize = function(cx, cy)
 	{
 		this.editor.style.width = cx;
 		this.editor.style.height = cy;
+	};
+	
+	this.onFontFamily = function(value)
+	{
+		var f = this.fontFamilies[value];
+		var s = f[0];
+		for (var i = 1; i < f.length; ++i)
+			s += "," + f[i];
 	};
 	
 	this.init(parentElement, cx, cy);

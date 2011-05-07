@@ -373,8 +373,8 @@ function Caret(nte)
 		}
 		else
 		{
-			this.nte.drawLib.setSize(rect.width <= 1 ? 2 : rect.width, rect.height, f);
-			this.nte.drawLib.setSize(rect.width <= 1 ? 2 : rect.width, rect.height, group);
+			this.nte.drawLib.setSize(rect.width <= 1 ? 2 : rect.width, rect.height + 1, f);
+			this.nte.drawLib.setSize(rect.width <= 1 ? 2 : rect.width, rect.height + 1, group);
 		}
 		
 		if (rect.width > 1)

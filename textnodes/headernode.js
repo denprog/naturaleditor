@@ -3,6 +3,12 @@
  */
 var HeaderNode = TextBaseNode.extend(
 	{
+		//util functions
+
+		getFormat : function()
+		{
+			return this.element.nodeName.toLowerCase();
+		}
 	}
 );
 

@@ -270,8 +270,9 @@ var RootNode = HtmlNode.extend(
 			//fill new node with the child nodes
 			for (var i = 0; i < node.childNodes.count(); ++i)
 			{
-				var n = node.getChildNode(i).dublicate();
-				r.addChildNode(n);
+				node.getChildNode(i).dublicate(r);
+				//var n = node.getChildNode(i).dublicate(r);
+				//r.addChildNode(n);
 			}
 			
 			this.removeChildNode(p + 1);
@@ -295,8 +296,9 @@ var RootNode = HtmlNode.extend(
 			//fill with the child nodes
 			for (var i = 0; i < node.childNodes.count(); ++i)
 			{
-				var n = node.getChildNode(i).dublicate();
-				r.addChildNode(n);
+				node.getChildNode(i).dublicate(r);
+				//var n = node.getChildNode(i).dublicate(r);
+				//r.addChildNode(n);
 			}
 
 			this.removeChildNode(p);

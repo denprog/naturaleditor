@@ -4,19 +4,24 @@ span .caret
 	/*border: 1px solid black;*/
 }
 
+.formula
+{
+	font-size : 12pt;
+}
+	
 .normalFormulaNode
 {
-	font-size : 100%;
+	font-size : 12pt;
 }
 
 .lessFormulaNode
 {
-	font-size : 80%;
+	font-size : 10pt;
 }
 
 .stillLessFormulaNode
 {
-	font-size : 60%;
+	font-size : 8pt;
 }
 
 svg g.normalPlusFormulaNode

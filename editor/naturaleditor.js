@@ -214,6 +214,7 @@ var NaturalEditor = Class.extend(
 			this.caret.setToNodeBegin(this.rootNode.childNodes.get(0));
 			
 			this.rootNode.remake();
+			this.theme.update();
 			this.caret.render();
 		}, 
 
@@ -679,6 +680,21 @@ var NaturalEditor = Class.extend(
 		{
 		},
 
+		onFormat : function(value)
+		{
+			this.changeType(value);
+		},
+
+		onFontFamily : function(value)
+		{
+			this.changeFontName(value);
+		},
+		
+		onFontSize : function(value)
+		{
+			this.changeFontSize(value);
+		},
+		
 		//tool functions
 		
 		//test functions

@@ -44,12 +44,9 @@ var EmptyFormulaNode = ShapeFormulaNode.extend(
 			var s = this.nte.window.getComputedStyle(this.element, null);
 			var h = parseInt(s.getPropertyValue("font-size"));
 			
-			//if (this.shape)
 			this.clearShapes();
 			
-			//this.shape = this.drawLib.rect(2, 2, h / 2 - 2, h - 2, "black", this.element);
 			this.addRect(1, 1, h / 2 - 2, h - 2, "black");
-			//this.addRect(0, 0, h, h, "black");
 		},
 		
 		/**

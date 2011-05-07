@@ -257,7 +257,23 @@ var TextNode = HtmlNode.extend(
 			
 			return null;
 		}, 
+
+		//format functions
 		
+		getFontFamily : function()
+		{
+			var s = this.nte.window.getComputedStyle(this.parentNode.element, null);
+			var f = s.getPropertyValue("font-family");
+			return f;
+		},
+		
+		getFontSize : function()
+		{
+			var s = this.nte.window.getComputedStyle(this.parentNode.element, null);
+			var h = parseInt(s.getPropertyValue("font-size"));
+			return h;
+		},
+
 		//command functions
 
 		insertChild : function(nodeEvent, command)

@@ -557,8 +557,11 @@ var FormulaNode = HtmlNode.extend(
 			
 			while (p && p != this.groupNode)
 			{
-				cx += p.boundingRect.left;
-				cy += p.boundingRect.top;
+				if (p.boundingRect)
+				{
+					cx += p.boundingRect.left;
+					cy += p.boundingRect.top;
+				}
 				p = p.parentNode;
 			}
 			
