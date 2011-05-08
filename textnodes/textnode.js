@@ -5,7 +5,7 @@ var TextNode = HtmlNode.extend(
 	{
 		init : function(textNode, parentNode, pos, nte)
 		{
-			var el = nte.document.createTextNode(textNode ? textNode.textContent : "");
+			var el = nte.document.createTextNode(textNode ? (nte.isIE ? textNode.data : textNode.textContent) : "");
 			this._super(0, el, parentNode, pos, nte);
 		},
 
@@ -738,16 +738,48 @@ var TextNode = HtmlNode.extend(
 
 		getRelativePosBounds : function(pos, posRect)
 		{
-			var textRange = this.document.createRange();
-			if (pos == this.element.length)
+			if (this.nte.isIE)
 			{
-				textRange.setStart(this.element, pos > 0 ? pos - 1 : 0);
-				textRange.setEnd(this.element, pos);
+				var textRange = this.document.selection.createRange();
+				textRange.moveToElementText(this.element.parentNode);
+				
+				var len = 0;
+				for (var i = 0; i < this.element.parentNode.childNodes.length; ++i)
+				{
+					var t = this.element.parentNode.childNodes[i];
+					if (t.nodeName == "#text")
+					{
+						if (t == this.element)
+							break;
+						len += this.element.parentNode.childNodes[i].length;
+					}
+				}
+				
+				len += pos;
+				if (len == this.element.length)
+				{
+					textRange.moveStart("character", len > 0 ? len - 1 : 0);
+					textRange.moveEnd("character", len);
+				}
+				else
+				{
+					textRange.moveStart("character", len);
+					textRange.moveEnd("character", len + 1);
+				}
 			}
 			else
 			{
-				textRange.setStart(this.element, pos);
-				textRange.setEnd(this.element, pos + 1);
+				var textRange = this.document.createRange();
+				if (pos == this.element.length)
+				{
+					textRange.setStart(this.element, pos > 0 ? pos - 1 : 0);
+					textRange.setEnd(this.element, pos);
+				}
+				else
+				{
+					textRange.setStart(this.element, pos);
+					textRange.setEnd(this.element, pos + 1);
+				}
 			}
 
 			var rect;

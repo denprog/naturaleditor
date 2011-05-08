@@ -295,8 +295,13 @@ function Caret(nte)
 	 */
 	this.render = function()
 	{
-		var range = window.getSelection();
-		range.removeAllRanges();
+		if (this.nte.isIE)
+			var range = window.document.selection.createRange();
+		else
+		{
+			var range = window.getSelection();
+			range.removeAllRanges();
+		}
 
 		if (!this.currentState || !this.visible)
 			return;
@@ -347,10 +352,16 @@ function Caret(nte)
 		interval(this, "visible");
 
 		//update the selection range
-		var r = this.nte.document.createRange();
-		r.setStart(parent.element, pos);
-		r.setEnd(parent.element, pos + length);
-		range.addRange(r);
+		if (this.nte.isIE)
+		{
+		}
+		else
+		{
+			var r = this.nte.document.createRange();
+			r.setStart(parent.element, pos);
+			r.setEnd(parent.element, pos + length);
+			range.addRange(r);
+		}
 	},
 	
 	this.renderFormulaCaret = function(rect, parent)

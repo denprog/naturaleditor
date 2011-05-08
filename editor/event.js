@@ -69,9 +69,13 @@ function EventsHandler(nte)
 	{
 		var k = {};
 		if (keys == "+")
+		{
 			var combination = "+";
-		else
-			var combination = keys.split("+");
+			k["key"] = "+";
+			return k;
+		}
+		
+		var combination = keys.split("+");
 		
 		for (var i = 0; i < combination.length; ++i)
 		{

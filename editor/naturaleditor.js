@@ -23,6 +23,16 @@ var NaturalEditor = Class.extend(
 			{
 				this.inited = true;
 			}
+			else if (this.isIE)
+			{
+				//var version = parseFloat(navigator.userAgent.substring(i + 8));
+				var ua = navigator.userAgent;
+		    var re  = new RegExp("MSIE ([0-9]{1,}[\.0-9]{0,})");
+		    if (re.exec(ua) != null)
+		      var version = parseFloat(RegExp.$1);
+				if (version >= 9)
+					this.inited = true;
+			}
 			else if (!this.isGecko)
 			{
 				this.inited = false;
@@ -58,6 +68,28 @@ var NaturalEditor = Class.extend(
 			}
 			
 			this.focus = true;
+
+			if (!window.getComputedStyle)
+			{
+				window.getComputedStyle = function(el, pseudo)
+				{
+					this.el = el;
+					this.getPropertyValue = function(prop)
+					{
+						var re = /(\-([a-z]){1})/g;
+						if (prop == 'float') prop = 'styleFloat';
+						if (re.test(prop))
+						{
+							prop = prop.replace(re, function ()
+								{
+									return arguments[2].toUpperCase();
+								});
+						}
+						return el.currentStyle[prop] ? el.currentStyle[prop] : null;
+					};
+					return this;
+				};
+			}
 			
 			/**
 			 * Shortcuts
@@ -270,12 +302,18 @@ var NaturalEditor = Class.extend(
 			{
 				if (element)
 				{
-					for (var i = 0; i < element.classList.length; ++i)
+					if (this.isIE)
 					{
-						for (var j in t)
+					}
+					else
+					{
+						for (var i = 0; i < element.classList.length; ++i)
 						{
-							if (j == element.classList[i])
-								return window[t[j]];
+							for (var j in t)
+							{
+								if (j == element.classList[i])
+									return window[t[j]];
+							}
 						}
 					}
 				}

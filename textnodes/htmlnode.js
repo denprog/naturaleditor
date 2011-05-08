@@ -79,9 +79,28 @@ var HtmlNode = Class.extend(
 			if (element)	
 				this.element = element;
 			else
-				this.element = this.document.createElementNS("http://www.w3.org/1999/xhtml", nodeType);
+			{
+				if (this.nte.isIE)
+					this.element = this.document.createElement(nodeType);
+				else
+					this.element = this.document.createElementNS("http://www.w3.org/1999/xhtml", nodeType);
+			}
 			
-			this.element.htmlNode = this;
+//			if (this.nte.isIE)
+//			{
+//				if (this.element.nodeName == "#text")
+//				{
+//					this.element.prototype.htmlNode = this;
+//				}
+//				else
+//				{
+//					this.element["htmlNode"] = this;
+//				}
+//				var p = this.element.htmlNode;
+//			}
+//			else
+			if (!this.nte.isIE)
+				this.element.htmlNode = this;
 			
 			this.eventsHandler = this.nte.eventsHandler;
 			this.commandManager = this.nte.commandManager;

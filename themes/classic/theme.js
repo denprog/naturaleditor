@@ -96,7 +96,8 @@ function Theme(nte, parentElement, cx, cy)
 			this.testText = parentElement.ownerDocument.getElementById("testText");
 		}
 
-		this.editor.document = this.editor.ownerDocument;
+		if (!this.nte.isIE)
+			this.editor.document = this.editor.ownerDocument;
 		
 		if (this.nte.isIE)
 			this.toolbar = new Toolbar(this.nte, this.name, frame.document.getElementById("toolbar1"));
