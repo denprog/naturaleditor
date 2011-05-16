@@ -1,6 +1,6 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 
-<html xmlns:v="urn:schemas-microsoft-com:vml">
+<html>
 
 <head>
 	<title>Form test</title>
@@ -22,6 +22,31 @@
 			if (nte.inited)
 			{
 				nte.parse(
+					"<p>Text " + 
+					"<span class='formula'>" + 
+						"<span class='formula_plus'></span>" + 
+						"<span class='formula_exponentiation'>" + 
+							"<span class='formula_group'>" + 
+								"<span class='formula_text'>123</span>" + 
+							"</span>" + 
+							"<span class='formula_group'>" + 
+								"<span class='formula_text'>456</span>" + 
+							"</span>" + 
+						"</span>" + 
+						"<span class='formula_text'>Tgh</span>" + 
+						"<span class='formula_division'>" + 
+							"<span class='formula_group'>" + 
+								"<span class='formula_text'>Yg12</span>" + 
+							"</span>" + 
+							"<span class='formula_group'>" + 
+								"<span class='formula_text'>y267</span>" + 
+							"</span>" + 
+						"</span>" + 
+					"</span>" + 
+					"</p>"
+					);
+
+				/*nte.parse(
 					"<p><span style='font-family:courier new; font-size:14'>This is </span>a simple text with formulas. A formula with numbers, pluses and exponentation: " + 
 					"<span class='formula'>" + 
 						"<span class='formula_text'>78</span>" + 
@@ -70,7 +95,7 @@
 						"</span>" + 
 					"</span>" + 
 					"</p>"
-					);
+					);*/
 			}
 		}
 	</script>

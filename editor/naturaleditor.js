@@ -69,27 +69,28 @@ var NaturalEditor = Class.extend(
 			
 			this.focus = true;
 
-			if (!window.getComputedStyle)
-			{
-				window.getComputedStyle = function(el, pseudo)
-				{
-					this.el = el;
-					this.getPropertyValue = function(prop)
-					{
-						var re = /(\-([a-z]){1})/g;
-						if (prop == 'float') prop = 'styleFloat';
-						if (re.test(prop))
-						{
-							prop = prop.replace(re, function ()
-								{
-									return arguments[2].toUpperCase();
-								});
-						}
-						return el.currentStyle[prop] ? el.currentStyle[prop] : null;
-					};
-					return this;
-				};
-			}
+//			if (!window.getComputedStyle)
+//			{
+//				window.getComputedStyle = function(el, pseudo)
+//				{
+//					this.el = el;
+//					this.getPropertyValue = function(prop)
+//					{
+//						var re = /(\-([a-z]){1})/g;
+//						if (prop == 'float')
+//							prop = 'styleFloat';
+//						if (re.test(prop))
+//						{
+//							prop = prop.replace(re, function ()
+//								{
+//									return arguments[2].toUpperCase();
+//								});
+//						}
+//						return el.currentStyle[prop] ? el.currentStyle[prop] : null;
+//					};
+//					return this;
+//				};
+//			}
 			
 			/**
 			 * Shortcuts
@@ -102,13 +103,8 @@ var NaturalEditor = Class.extend(
 			 */
 			this.eventHandlers = {};
 			this.eventsHandler = new EventsHandler(this);
-
-			//this.eventsHandler.addEvent(this, "onDOMContentLoaded", this.onDOMContentLoaded);
 			
 			this.registerEvents();
-			
-			if (this.isIE)
-				this.document.namespaces.add("rvml", "urn:schemas-microsoft-com:vml", "#default#VML");
 			
 			/**
 			 * Command manager
@@ -282,7 +278,7 @@ var NaturalEditor = Class.extend(
 					{
 						'' : 'SpanNode',
 						'formula' : 'SvgFormulaNode', 
-						'formula_text' : 'TextFormulaNode', 
+						'formula_text' : (this.isIE ? 'TextFormulaNode' : 'ForeignTextFormulaNode'), 
 						'formula_plus' : 'PlusFormulaNode', 
 						'formula_minus' : 'MinusFormulaNode', 
 						'formula_multiply' : 'MultiplyFormulaNode', 
@@ -303,17 +299,16 @@ var NaturalEditor = Class.extend(
 				if (element)
 				{
 					if (this.isIE)
-					{
-					}
+						var classList = element.className.split(' ');
 					else
+						var classList = element.classList;
+					
+					for (var i = 0; i < classList.length; ++i)
 					{
-						for (var i = 0; i < element.classList.length; ++i)
+						for (var j in t)
 						{
-							for (var j in t)
-							{
-								if (j == element.classList[i])
-									return window[t[j]];
-							}
+							if (j != "" && j == classList[i])
+								return window[t[j]];
 						}
 					}
 				}

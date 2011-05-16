@@ -535,6 +535,15 @@ var HtmlNode = Class.extend(
 		{
 			this.childNodes.forEach("remake", []);
 		}, 
+
+		move : function(x, y)
+		{
+		},
+		
+		update : function()
+		{
+			this.childNodes.forEach("update", []);
+		},
 		
 		//caret functions
 

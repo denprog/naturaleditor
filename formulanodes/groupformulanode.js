@@ -44,7 +44,7 @@ var GroupFormulaNode = FormulaNode.extend(
 		
 		move : function(x, y)
 		{
-			this.element.setAttribute("transform", "translate(" + x + ", " + y + ")");
+			this.element.setAttribute("transform", "translate(" + x + " " + y + ")");
 			this.boundingRect.setRect(x, y, this.clientRect.width, this.clientRect.height);
 		}, 
 

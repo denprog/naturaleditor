@@ -64,22 +64,15 @@ var DivisionFormulaNode = CompoundFormulaNode.extend(
 				w = Math.round(w + w / 5);
 				var h = this.dividend.clientRect.height + this.divisor.clientRect.height;
 				
-				this.divisor.move((w - this.divisor.clientRect.width) / 2, this.dividend.clientRect.height + h / 10);
+				this.divisor.move(Math.round((w - this.divisor.clientRect.width) / 2), Math.round(this.dividend.clientRect.height + h / 10));
 				
 				this.shape.clearShapes();
 				if (h / 100 > 1)
-				{
-					//this.shape.addFillRect(0, Math.round(this.dividend.clientRect.height + h / 20), w, Math.round(h / 100), "black");
 					this.shape.addFillRect(0, 0, w, Math.round(h / 100), "black");
-				}
 				else
-				{
-					//this.shape.addLine(0, Math.round(this.dividend.clientRect.height + h / 20), w, 
-					//	Math.round(this.dividend.clientRect.height + h / 20), "black");
 					this.shape.addLine(0, 0, w, 0, "black");
-				}
 				
-				this.shape.move(0, this.dividend.clientRect.height + h / 20);
+				this.shape.move(0, Math.round(this.dividend.clientRect.height + h / 20));
 
 				this.dividend.move(Math.round((w - this.dividend.clientRect.width) / 2), 0);
 			}

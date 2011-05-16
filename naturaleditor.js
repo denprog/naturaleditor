@@ -76,6 +76,7 @@ var DEBUG_LEVEL = true;
 		include('formulanodes/compoundformulanode.js');
 		include('formulanodes/shapeformulanode.js');
 		include('formulanodes/foreignobjectformulanode.js');
+		include('formulanodes/foreigntextformulanode.js');
 		include('formulanodes/textformulanode.js');
 		include('formulanodes/plusformulanode.js');
 		include('formulanodes/minusformulanode.js');

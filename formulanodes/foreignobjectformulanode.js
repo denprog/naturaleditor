@@ -14,8 +14,10 @@ var ForeignObjectFormulaNode = FormulaNode.extend(
 		
 		updateBoundingRect : function()
 		{
-			this.boundingRect.setRect(this.element.x.baseVal.value, this.element.y.baseVal.value, 
-				this.clientRect.width, this.clientRect.height);
+//			if (this.nte.isIE)
+//				this.boundingRect.setRect(parseInt(this.element.x), parseInt(this.element.y),	this.clientRect.width, this.clientRect.height);
+//			else
+			this.boundingRect.setRect(this.element.x.baseVal.value, this.element.y.baseVal.value, this.clientRect.width, this.clientRect.height);
 		}, 
 
 		addTextNode : function(textNode)

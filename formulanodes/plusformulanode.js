@@ -33,16 +33,18 @@ var PlusFormulaNode = ShapeFormulaNode.extend(
 
 		update : function()
 		{
-			var s = this.nte.window.getComputedStyle(this.element, null);
-			var h = parseInt(s.getPropertyValue("max-height"));
-			this.baseline = h;
+			//var s = this.nte.window.getComputedStyle(this.element, null);
+			//this.baseline = parseInt(s.getPropertyValue("max-height"));
+			this.baseline = this.nte.theme.getNodeProperty("PlusFormulaNode", this.level, "height");
 		},
 
 		updateClientRect : function()
 		{
-			var s = this.nte.window.getComputedStyle(this.element, null);
-			var w = parseInt(s.getPropertyValue("max-width"));
-			var h = parseInt(s.getPropertyValue("max-height"));
+			//var s = this.nte.window.getComputedStyle(this.element, null);
+			//var w = parseInt(s.getPropertyValue("max-width"));
+			//var h = parseInt(s.getPropertyValue("max-height"));
+			var w = this.nte.theme.getNodeProperty("PlusFormulaNode", this.level, "width");
+			var h = this.nte.theme.getNodeProperty("PlusFormulaNode", this.level, "height");
 			
 			this.clientRect.setRect(0, 0, w, h);
 		}, 
@@ -58,9 +60,11 @@ var PlusFormulaNode = ShapeFormulaNode.extend(
 
 		render : function()
 		{
-			var s = this.nte.window.getComputedStyle(this.element, null);
-			var w = parseInt(s.getPropertyValue("max-width"));
-			var h = parseInt(s.getPropertyValue("max-height"));
+			//var s = this.nte.window.getComputedStyle(this.element, null);
+			//var w = parseInt(s.getPropertyValue("max-width"));
+			//var h = parseInt(s.getPropertyValue("max-height"));
+			var w = this.nte.theme.getNodeProperty("PlusFormulaNode", this.level, "width");
+			var h = this.nte.theme.getNodeProperty("PlusFormulaNode", this.level, "height");
 			
 			if (this.shape1)
 			{
@@ -68,8 +72,9 @@ var PlusFormulaNode = ShapeFormulaNode.extend(
 				this.drawLib.remove(this.shape2, this.element);
 			}
 			
-			this.shape1 = this.drawLib.fillRect(Math.round(w / 2), 1, 0.5, h - 2, "black", this.element);
-			this.shape2 = this.drawLib.fillRect(1, Math.round(h / 2), w - 2, 0.5, "black", this.element);
+			this.shape1 = this.drawLib.fillRect(Math.round(w / 2), 1, 1, h - 2, "black", this.element);
+			//this.shape1 = this.drawLib.fillRect(1, 1, 10, 10, "black", this.element);
+			this.shape2 = this.drawLib.fillRect(1, Math.round(h / 2), w - 2, 1, "black", this.element);
 		},
 		
 		//test functions

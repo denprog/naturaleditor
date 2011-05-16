@@ -62,10 +62,22 @@ var SvgFormulaNode = FormulaNode.extend(
 				this.getNodeBounds(this.tempRect);
 				var r = this.element.getBoundingClientRect();
 				var b = this.nte.editor.getBoundingClientRect();
-				this.boundingRect.setRect(r.left - this.element.x.baseVal.value - b.left - this.leftOffset, 
-					this.tempRect.top - this.element.y.baseVal.value, 
-					this.element.width.baseVal.value, 
-					this.element.height.baseVal.value);
+				
+				if (this.nte.isIE)
+				{
+					//var b = this.element.getBoundingClientRect();
+					this.boundingRect.setRect(r.left - this.element.offsetLeft - b.left - this.leftOffset, 
+						this.tempRect.top - this.element.offsetTop, 
+						parseInt(this.element.width), 
+						parseInt(this.element.height));
+				}
+				else
+				{
+					this.boundingRect.setRect(r.left - this.element.x.baseVal.value - b.left - this.leftOffset, 
+						this.tempRect.top - this.element.y.baseVal.value, 
+						this.element.width.baseVal.value, 
+						this.element.height.baseVal.value);
+				}
 			}
 		}, 
 

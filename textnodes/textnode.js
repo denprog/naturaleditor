@@ -738,49 +738,49 @@ var TextNode = HtmlNode.extend(
 
 		getRelativePosBounds : function(pos, posRect)
 		{
-			if (this.nte.isIE)
+//			if (this.nte.isIE)
+//			{
+//				var textRange = this.document.selection.createRange();
+//				textRange.moveToElementText(this.element.parentNode);
+//				
+//				var len = 0;
+//				for (var i = 0; i < this.element.parentNode.childNodes.length; ++i)
+//				{
+//					var t = this.element.parentNode.childNodes[i];
+//					if (t.nodeName == "#text")
+//					{
+//						if (t == this.element)
+//							break;
+//						len += this.element.parentNode.childNodes[i].length;
+//					}
+//				}
+//				
+//				len += pos;
+//				if (len == this.element.length)
+//				{
+//					textRange.moveStart("character", len > 0 ? len - 1 : 0);
+//					textRange.moveEnd("character", len);
+//				}
+//				else
+//				{
+//					textRange.moveStart("character", len);
+//					textRange.moveEnd("character", len + 1);
+//				}
+//			}
+//			else
+//			{
+			var textRange = this.document.createRange();
+			if (pos == this.element.length)
 			{
-				var textRange = this.document.selection.createRange();
-				textRange.moveToElementText(this.element.parentNode);
-				
-				var len = 0;
-				for (var i = 0; i < this.element.parentNode.childNodes.length; ++i)
-				{
-					var t = this.element.parentNode.childNodes[i];
-					if (t.nodeName == "#text")
-					{
-						if (t == this.element)
-							break;
-						len += this.element.parentNode.childNodes[i].length;
-					}
-				}
-				
-				len += pos;
-				if (len == this.element.length)
-				{
-					textRange.moveStart("character", len > 0 ? len - 1 : 0);
-					textRange.moveEnd("character", len);
-				}
-				else
-				{
-					textRange.moveStart("character", len);
-					textRange.moveEnd("character", len + 1);
-				}
+				textRange.setStart(this.element, pos > 0 ? pos - 1 : 0);
+				textRange.setEnd(this.element, pos);
 			}
 			else
 			{
-				var textRange = this.document.createRange();
-				if (pos == this.element.length)
-				{
-					textRange.setStart(this.element, pos > 0 ? pos - 1 : 0);
-					textRange.setEnd(this.element, pos);
-				}
-				else
-				{
-					textRange.setStart(this.element, pos);
-					textRange.setEnd(this.element, pos + 1);
-				}
+				textRange.setStart(this.element, pos);
+				textRange.setEnd(this.element, pos + 1);
 			}
+//			}
 
 			var rect;
 			if (this.nte.isWebKit)

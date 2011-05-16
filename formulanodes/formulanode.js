@@ -51,9 +51,12 @@ var FormulaNode = HtmlNode.extend(
 
 		hasClass : function(name)
 		{
+			//if (this.nte.isIE)
+			//	var s = this.element.className;
+			//else
 			var s = this.element.className.baseVal;
-			if (s.indexOf)
-				return s.indexOf(name) != -1;
+			//if (s.indexOf)
+			//	return s.indexOf(name) != -1;
 			return s.indexOf(name) != -1;
 		},
 		
@@ -225,7 +228,7 @@ var FormulaNode = HtmlNode.extend(
 						command.setParam(this, "empty", true);
 					}
 					
-					var n = new TextFormulaNode(this, pos, this.nte);
+					var n = new ForeignTextFormulaNode(this, pos, this.nte);
 					nodeEvent.caretState = n.getFirstPosition();
 					
 					nodeEvent.caretState.getNode().doInsert(0, nodeEvent, command);
