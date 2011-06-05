@@ -79,9 +79,28 @@ var HtmlNode = Class.extend(
 			if (element)	
 				this.element = element;
 			else
-				this.element = this.document.createElementNS("http://www.w3.org/1999/xhtml", nodeType);
+			{
+				if (this.nte.isIE)
+					this.element = this.document.createElement(nodeType);
+				else
+					this.element = this.document.createElementNS("http://www.w3.org/1999/xhtml", nodeType);
+			}
 			
-			this.element.htmlNode = this;
+//			if (this.nte.isIE)
+//			{
+//				if (this.element.nodeName == "#text")
+//				{
+//					this.element.prototype.htmlNode = this;
+//				}
+//				else
+//				{
+//					this.element["htmlNode"] = this;
+//				}
+//				var p = this.element.htmlNode;
+//			}
+//			else
+			if (!this.nte.isIE)
+				this.element.htmlNode = this;
 			
 			this.eventsHandler = this.nte.eventsHandler;
 			this.commandManager = this.nte.commandManager;
@@ -516,6 +535,15 @@ var HtmlNode = Class.extend(
 		{
 			this.childNodes.forEach("remake", []);
 		}, 
+
+		move : function(x, y)
+		{
+		},
+		
+		update : function()
+		{
+			this.childNodes.forEach("update", []);
+		},
 		
 		//caret functions
 
@@ -1055,7 +1083,7 @@ var HtmlNode = Class.extend(
 				n = c.getNode();
 				c = n.getPreviousPosition(c, {lower : true});
 				
-				if (!c || res.isEqual(c))
+				if (!c || res.isEqual(c) || c1.isEqual(c2))
 					return res;
 				
 				n = c.getNode();
@@ -1781,56 +1809,56 @@ var HtmlNode = Class.extend(
 			return true;
 		}, 
 		
-		changeChildNodeType : function(nodeEvent, command)
-		{
-			var pos = this.childNodes.getPos(nodeEvent.nodeId);
-			var node = this.childNodes.get(pos);
-			if (node.getType() == nodeEvent.nodeType.type && this.isEqualStyle(nodeEvent.nodeType.style))
-				return false;
-
-			var caretState = nodeEvent.caretState;
-			
-			var lastType = node.getType();
-			var lastStyle = node.getStyle();
-			
-			var ins = this.nte.createTextNode(nodeEvent.nodeType.type, nodeEvent.nodeType.style, this);
-			this.updateNodeId(command, "insId", ins);
-
-			//copy child nodes of the selected node in the created node
-			this.copyNode(node, ins);
-
-			var parentPos = node.getParentTextChildPos();
-			var t = this.getTextChild(parentPos);
-
-			this.removeChildNode(pos);		
-			this.insertChildNode(ins, parentPos, t == null ? 0 : t.length);
-
-			nodeEvent.resNode = this;
-			
-			nodeEvent.caretState = caretState;
-
-			nodeEvent.undo = function(nodeEvent, command)
-				{
-					var node = this.childNodes.get(pos);
-
-					var ins = this.nte.createTextNode(lastType, lastStyle, this);
-					this.copyNode(node, ins);
-
-					var parentPos = node.getParentTextChildPos();
-					var t = this.getTextChild(parentPos);
-
-					this.removeChildNode(pos);		
-					this.insertChildNode(ins, parentPos, t == null ? 0 : t.length);
-					
-					nodeEvent.resNode = this;
-					nodeEvent.caretState = caretState;
-					nodeEvent.caretState.restore(this.nte);
-
-					return true;
-				};
-				
-			return true;
-		}, 
+//		changeChildNodeType : function(nodeEvent, command)
+//		{
+//			var pos = this.childNodes.getPos(nodeEvent.nodeId);
+//			var node = this.childNodes.get(pos);
+//			if (node.getType() == nodeEvent.nodeType.type && this.isEqualStyle(nodeEvent.nodeType.style))
+//				return false;
+//
+//			var caretState = nodeEvent.caretState;
+//			
+//			var lastType = node.getType();
+//			var lastStyle = node.getStyle();
+//			
+//			var ins = this.nte.createTextNode(nodeEvent.nodeType.type, nodeEvent.nodeType.style, this);
+//			this.updateNodeId(command, "insId", ins);
+//
+//			//copy child nodes of the selected node in the created node
+//			this.copyNode(node, ins);
+//
+//			var parentPos = node.getParentTextChildPos();
+//			var t = this.getTextChild(parentPos);
+//
+//			this.removeChildNode(pos);		
+//			this.insertChildNode(ins, parentPos, t == null ? 0 : t.length);
+//
+//			nodeEvent.resNode = this;
+//			
+//			nodeEvent.caretState = caretState;
+//
+//			nodeEvent.undo = function(nodeEvent, command)
+//				{
+//					var node = this.childNodes.get(pos);
+//
+//					var ins = this.nte.createTextNode(lastType, lastStyle, this);
+//					this.copyNode(node, ins);
+//
+//					var parentPos = node.getParentTextChildPos();
+//					var t = this.getTextChild(parentPos);
+//
+//					this.removeChildNode(pos);		
+//					this.insertChildNode(ins, parentPos, t == null ? 0 : t.length);
+//					
+//					nodeEvent.resNode = this;
+//					nodeEvent.caretState = caretState;
+//					nodeEvent.caretState.restore(this.nte);
+//
+//					return true;
+//				};
+//				
+//			return true;
+//		}, 
 		
 		normilizeChildNodes : function(nodeEvent, command)
 		{

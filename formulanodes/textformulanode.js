@@ -1,30 +1,31 @@
-/**
- * Text formula node
- * @class TextFormulaNode
- * @constructor
- */
-var TextFormulaNode = ForeignObjectFormulaNode.extend(
+var TextFormulaNode = FormulaNode.extend(
 	{
 		init : function(parentNode, pos, nte)
 		{
-			this._super(parentNode, pos, nte);
-			this.className = "TextFormulaNode";
-			
-			this.element.setAttribute("width", 1);
-			this.element.setAttribute("height", 1);
-			
-			this.text = this.createChildNode(window["SpanNode"], "", 0);
-			
-			if (this.groupNode)
-				this.groupNode.remake();
-		},
+			this.drawLib = nte.drawLib;
 
+			this.levelClasses = {};
+			this.levelClasses[NodeLevel.NORMAL] = "normalFormulaNode";
+			this.levelClasses[NodeLevel.LESS] = "lessFormulaNode";
+			this.levelClasses[NodeLevel.STILL_LESS] = "stillLessFormulaNode";
+
+			var el = this.drawLib.createElement("text", parentNode ? parentNode.element : null);
+			this._super("", el, parentNode, pos, nte);
+
+			this.createChildNode(window["TextNode"], "", 0);
+			
+			this.eventsHandler.addCustomEvent(this, "onaftertextinserted", this.onAfterTextInserted);
+			this.eventsHandler.addCustomEvent(this, "onafterchilddeleted", this.onAfterChildDeleted);
+
+			this.className = "TextFormulaNode";
+		},
+		
 		createChildNode : function(nodeClassType, pos)
 		{
-			if (nodeClassType == window["SpanNode"])
-				return new FormulaSpanNode(this, pos, this.nte);
+			if (nodeClassType == window["TextNode"])
+				return new FormulaTextNode(null, this, pos, this.nte);
 			return new nodeClassType(this, pos, this.nte);
-		}, 
+		},
 
 		insertChildNode : function(childNode, pos)
 		{
@@ -32,8 +33,6 @@ var TextFormulaNode = ForeignObjectFormulaNode.extend(
 			if (this.isEmpty())
 				this.childNodes.reset();
 			this._super(childNode, pos);
-			this.text = this.childNodes.get(0);
-			delete this.img;
 			
 			if (this.groupNode)
 				this.groupNode.remake();
@@ -45,41 +44,20 @@ var TextFormulaNode = ForeignObjectFormulaNode.extend(
 			if (this.isEmpty())
 				this.childNodes.reset();
 			this._super(childNode);
-			this.text = this.childNodes.get(0);
-			delete this.img;
 			
 			if (this.groupNode)
 				this.groupNode.remake();
 		}, 
 
+		addTextNode : function(textNode)
+		{
+			this.childNodes.reset();
+			new FormulaTextNode(textNode, this, this.childNodes.count(), this.nte);
+		},
+		
 		remake : function()
 		{
-			this.childNodes.forEach("remake", []);
-
-			if (this.text && !this.img)
-			{
-				var r = new Rectangle();
-				this.text.getNodeBounds(r);
-				
-				if (this.text.element.textContent.length > 0)
-				{
-					//insert an image for calculating the baseline of the content text
-					this.img = this.document.createElement("img");
-					this.img.style.width = 0;
-					this.img.style.height = 0;
-					this.img.src = "absent.jpg";
-					this.text.element.parentNode.insertBefore(this.img, null);
-					var w = r.width;
-					this.element.setAttribute("width", w);
-					this.element.setAttribute("height", r.height);
-					
-					if (this.groupNode.element.width.baseVal.value < w)
-						this.groupNode.size(w, this.groupNode.element.height.baseVal.value);
-				}
-			}
-
-			this.updateClientRect();
-		}, 
+		},
 
 		dublicate : function(parent)
 		{
@@ -94,39 +72,33 @@ var TextFormulaNode = ForeignObjectFormulaNode.extend(
 
 		update : function()
 		{
-			//update the baseline
-			if (this.img)
-			{
-				//this.baseline = this.img.y + this.img.offsetHeight - this.text.element.offsetTop + this.element.y.baseVal.value;
-				//this.baseline = this.img.y + this.text.element.offsetHeight / 2;
-				//this.baseline = this.text.element.offsetHeight / 2;
-				this.baseline = this.img.offsetTop - this.text.element.offsetTop;
-				this.text.element.parentNode.removeChild(this.img);
-				this.img = null;
-			}
 			this.updateClientRect();
-		}, 
+			var c = this.nte.window.getComputedStyle(this.element, null);
+			var s = parseInt(c["fontSize"]);
+			this.baseline = s;
+			
+			this.element.setAttribute("dy", s - this.clientRect.height);
+		},
+
+		updateBoundingRect : function()
+		{
+			if (this.element.x.baseVal.numberOfItems > 0)
+			{
+				this.boundingRect.setRect(this.element.x.baseVal.getItem(0).value, this.element.y.baseVal.getItem(0).value - this.clientRect.height, 
+					this.clientRect.width, this.clientRect.height);
+			}
+		},
+
+		updateClientRect : function()
+		{
+			var b = this.element.getBBox();
+			this.clientRect.setRect(0, 0, Math.round(b.width), Math.round(b.height));
+		},
 
 		move : function(x, y)
 		{
-			this.drawLib.move(x, y, this.element);
+			this.drawLib.move(x, y + this.clientRect.height, this.element);
 			this.updateBoundingRect();
-		}, 
-
-		//caret functions
-		
-		getNextPosition : function(relativeState, params)
-		{
-			if (this.childNodes.count() > 0 && this.childNodes.get(0).childNodes.get(0).empty)
-				return null;
-			return this._super(relativeState, params);
-		},
-
-		getPreviousPosition : function(relativeState, params)
-		{
-			if (this.childNodes.count() > 0 && this.childNodes.get(0).childNodes.get(0).empty)
-				return null;
-			return this._super(relativeState, params);
 		},
 
 		//command functions
@@ -164,9 +136,10 @@ var TextFormulaNode = ForeignObjectFormulaNode.extend(
 			
 			return this._super(node, pos, len, nodeEvent, command);
 		},
-
+		
 		createDivisionFormulaNode : function(nodeEvent, command)
 		{
+			//the result division node will have this node in the dividend
 			var n = new DivisionFormulaNode(this.parentNode, this.parentNode.getChildPos(this), this.nte);
 			var g = new GroupFormulaNode(n, 0, this.nte);
 			g.moveChildNode(this, 0);
@@ -193,6 +166,7 @@ var TextFormulaNode = ForeignObjectFormulaNode.extend(
 
 		createExponentationFormulaNode : function(nodeEvent, command)
 		{
+			//the result exponentation node will have this node in the base 
 			var n = new ExponentiationFormulaNode(this.parentNode, this.parentNode.getChildPos(this), this.nte);
 			var g = new GroupFormulaNode(n, 0, this.nte);
 			g.moveChildNode(this, 0);
@@ -218,104 +192,44 @@ var TextFormulaNode = ForeignObjectFormulaNode.extend(
 			return true;
 		},
 
-		//tool functions
+		//caret functions
 		
-		updateClientRect : function()
+		getFirstPosition : function()
 		{
-			if (this.text)
-			{
-				var r = new Rectangle();
-				this.text.getNodeBounds(r);
-				this.clientRect.setRect(0, 0, r.width, r.height);
-			}
+			if (this.childNodes.count() > 0)
+				return this.childNodes.getFirst().getFirstPosition();
+			return null;
 		},
 		
-		getNodeBounds : function(posRect)
+		getLastPosition : function()
 		{
-			var cx = this.boundingRect.left;
-			var cy = this.boundingRect.top;
-			var p = this;
-			
-			while (p && p != this.groupNode)
+			if (this.childNodes.count() > 0)
+				return this.childNodes.getLast().getLastPosition();
+			return null;
+		},
+
+		getNextPosition : function(relativeState, params)
+		{
+			if (this.childNodes.count() > 0 && this.childNodes.get(0).isEmpty())
+				return null;
+			if (relativeState && relativeState.checkInNode(this))
+				return this._super(relativeState, params);
+			return new CaretState(this.childNodes.get(0), 0);
+		},
+
+		getPreviousPosition : function(relativeState, params)
+		{
+			if (this.childNodes.count() > 0 && this.childNodes.get(0).isEmpty())
+				return null;
+			if (relativeState && relativeState.checkInNode(this))
 			{
-				if (p.boundingRect)
-				{
-					cx += p.boundingRect.left;
-					cy += p.boundingRect.top;
-				}
-				else
-				{
-					cx += p.element.offsetLeft;
-					cy += p.element.offsetTop;
-				}
-				p = p.parentNode;
+				var pos = relativeState.getSelectionStart();
+				if (pos > 0)
+					return new CaretState(this.childNodes.get(0), pos - 1);
 			}
-			
-			var r = this.nte.editor.getBoundingClientRect();
-			var rect = this.element.getBoundingClientRect();
-			
-			this.groupNode.updateBoundingRect();
-			cx += this.groupNode.boundingRect.left;
-			cx -= r.left;
-			cy += this.groupNode.boundingRect.top;
-
-			posRect.setRect(cx, cy, rect.width, rect.height);
-		}
-	}
-);
-
-var FormulaSpanNode = HtmlNode.extend(
-	{
-		init : function(parentNode, pos, nte)
-		{
-			if (parentNode)
-				this.groupNode = parentNode.groupNode;
-
-			this.levelClasses = {};
-			this.levelClasses[NodeLevel.NORMAL] = "normalFormulaNode";
-			this.levelClasses[NodeLevel.LESS] = "lessFormulaNode";
-			this.levelClasses[NodeLevel.STILL_LESS] = "stillLessFormulaNode";
-			
-			this._super("span", null, parentNode, pos, nte);
-			
-			this.className = "FormulaSpanNode";
-
-			this.eventsHandler.addCustomEvent(this, "onaftertextinserted", this.onAfterTextInserted);
-			this.eventsHandler.addCustomEvent(this, "onafterchilddeleted", this.onAfterChildDeleted);
-			
-			this.addTextNode(null);
-		}, 
-
-		insertChildNode : function(childNode, pos)
-		{
-			//replace the child text node
-			if (this.isEmpty())
-				this.childNodes.reset();
-			this._super(childNode, pos);
+			return this._super(relativeState, params);
 		},
-
-		addChildNode : function(childNode)
-		{
-			//replace the child text node
-			if (this.isEmpty())
-				this.childNodes.reset();
-			this._super(childNode);
-		}, 
-
-		addTextNode : function(textNode)
-		{
-			if (this.isEmpty())
-				this.childNodes.reset();
-			new FormulaTextNode(textNode, this, this.childNodes.count(), this.nte);
-		},
-
-		createChildNode : function(nodeClassType, pos)
-		{
-			if (nodeClassType == window["TextNode"])
-				return new FormulaTextNode(null, this, pos, this.nte);
-			return new nodeClassType(this, pos, this.nte);
-		}, 
-
+		
 		setLevel : function(level)
 		{
 			if (this.level != level)
@@ -330,94 +244,6 @@ var FormulaSpanNode = HtmlNode.extend(
 			}
 		},
 
-		dublicate : function(parent)
-		{
-			var res = this._super(parent);
-			res.groupNode = this.groupNode;
-			return res;
-		},
-
-		remake : function()
-		{
-			this.childNodes.forEach("remake", []);
-		},
-
-		update : function()
-		{
-			this.childNodes.forEach("update", []);
-		},
-
-		//caret functions
-
-		moveCaretToLineBegin : function()
-		{
-			return this.parentNode.moveCaretToLineBegin();
-		},
-
-		moveCaretToLineEnd : function()
-		{
-			return this.parentNode.moveCaretToLineEnd();
-		},
-
-		getNextPosition : function(relativeState, params)
-		{
-			if (this.childNodes.count() > 0 && this.childNodes.get(0).empty)
-				return false;
-			return this._super(relativeState, params);
-		},
-
-		getPreviousPosition : function(relativeState, params)
-		{
-			if (this.childNodes.count() > 0 && this.childNodes.get(0).empty)
-				return false;
-			return this._super(relativeState, params);
-		},
-
-		getUpperPosition : function(relativeState)
-		{
-			return this.parentNode.getUpperPosition(relativeState);
-		},
-		
-		getLowerPosition : function(relativeState)
-		{
-			return this.parentNode.getLowerPosition(relativeState);
-		},
-
-		//command functions
-
-		doInsert : function(pos, nodeEvent, command)
-		{
-			return this.parentNode.doInsert(pos, nodeEvent, command);
-		},
-
-		doRemoveChild : function(node, pos, len, nodeEvent, command)
-		{
-			if (this.childNodes.count() == 1)
-				return this.parentNode.doRemoveChild(this.parentNode, this.parentNode.getChildPos(this), 0, nodeEvent, command);
-			
-			return this._super(node, pos, len, nodeEvent, command);
-		},
-
-		createDivisionFormulaNode : function(nodeEvent, command)
-		{
-			return this.parentNode.createDivisionFormulaNode(nodeEvent, command);
-		},
-
-		createExponentationFormulaNode : function(nodeEvent, command)
-		{
-			return this.parentNode.createExponentationFormulaNode(nodeEvent, command);
-		},
-
-		mergeNode : function(caretState)
-		{
-			this._super(caretState);
-			
-			if (caretState.getNode() == null || caretState.getPos() == -1)
-				caretState.setCaretState(this.getFirstPosition());
-			
-			this.groupNode.remake();
-		}, 
-
 		//event functions
 		
 		onAfterTextInserted : function(nodeEvent)
@@ -430,42 +256,23 @@ var FormulaSpanNode = HtmlNode.extend(
 			this.groupNode.remake();
 		},
 
-		//tool functions
-		
-		getNodeBounds : function(posRect)
-		{
-			var rect = this.element.getBoundingClientRect();
-			
-			posRect.setRect(Math.round(this.element.offsetLeft + this.nte.editor.scrollLeft), 
-				Math.round(this.element.offsetTop + this.nte.editor.scrollTop), 
-				rect.width, 
-				rect.height);
-		},
-		
 		//test functions
 		
 		toTex : function()
 		{
-			return this.childNodes.toTex();
+			return this.childNodes.get(0).toTex();
 		}
 	}
-);
+	);
 
 var FormulaTextNode = TextNode.extend(
 	{
 		init : function(textNode, parentNode, pos, nte)
 		{
 			this._super(textNode, parentNode, pos, nte);
-			
-			this.eventsHandler.addCustomEvent(this, "onupdated", this.onUpdated);
-			
 			this.className = "FormulaTextNode";
-		},
-		
-		mergeNode : function(caretState)
-		{
-			this._super(caretState);
-			this.parentNode.groupNode.remake();
+
+			this.eventsHandler.addCustomEvent(this, "onupdated", this.onUpdated);
 		},
 		
 		remake : function()
@@ -483,29 +290,64 @@ var FormulaTextNode = TextNode.extend(
 			return resNode;
 		}, 
 
+		getRelativePosBounds : function(pos, posRect)
+		{
+			var textRange = this.document.createRange();
+			if (pos == this.element.length)
+			{
+				textRange.setStart(this.element, pos > 0 ? pos - 1 : 0);
+				textRange.setEnd(this.element, pos);
+			}
+			else
+			{
+				textRange.setStart(this.element, pos);
+				textRange.setEnd(this.element, pos + 1);
+			}
+
+			var rect;
+			if (this.nte.isWebKit)
+			{
+				rect = textRange.getClientRects()[0];
+				if (!rect)
+					rect = textRange.getBoundingClientRect();
+				
+				if ((!rect || (rect.width == 0 && rect.height == 0)) && this.element.previousSibling)
+					rect = this.element.previousSibling.getBoundingClientRect();
+			}
+			else
+			{
+				rect = textRange.getBoundingClientRect();
+			}
+			
+			var r = this.nte.editor.getBoundingClientRect();
+
+			posRect.setRect(Math.round((pos == this.element.length ? rect.right + this.nte.editor.scrollLeft : rect.left + this.nte.editor.scrollLeft) - r.left), 
+				Math.round(rect.top + this.nte.editor.scrollTop - r.top), 
+				Math.round(0), 
+				Math.round(rect.height));
+		},
+
 		//caret functions
 		
-		renderCaret : function(selectedNode, range)
+		getNextPosition : function(relativeState, params)
 		{
-			var r = this.tempRect;
-			if (this.caret.currentState.beginCaretPos)
-				this.getPosBounds(this.caret.currentState.getSelectionStart(), r);
+			if (!relativeState)
+				res = new CaretState(this, 1);
 			else
-				this.getPosBounds(this.caret.currentState.getSelectionEnd(), r);
-
-			r.width = 1;
-			this.caret.renderFormulaCaret(r, this.parentNode.groupNode);
-		},
-
-		moveCaretToLineBegin : function()
-		{
-			return this.parentNode.moveCaretToLineBegin();
-		},
-
-		moveCaretToLineEnd : function()
-		{
-			return this.parentNode.moveCaretToLineEnd();
-		},
+			{
+				var pos = relativeState.getSelectionStart();
+				var res = null;
+	
+				if (pos == this.element.length - 1)
+					res = new CaretState(this, pos + 1);
+				else if (pos < this.element.length)
+					res = new CaretState(this, pos + 1);
+				else
+					res = this.parentNode.getNextPosition(relativeState, params);
+			}
+			
+			return res;
+		}, 
 
 		getPreviousPosition : function(relativeState, params)
 		{
@@ -516,14 +358,18 @@ var FormulaTextNode = TextNode.extend(
 				var pos = relativeState.getSelectionStart();
 				var res = null;
 	
-				if (pos > 0)
-					res = new CaretState(this, pos - 1);
-				else
+				if (pos == 0 || pos == 1)
 					res = this.parentNode.getPreviousPosition(relativeState, params);
+				else
+				{
+					res = new CaretState(this, pos - 1);
+					if (!res)
+						res = this.parentNode.getPreviousPosition(relativeState, params);
+				}
 			}
 			
 			return res;
-		}, 
+		},
 
 		hasSingleLine : function()
 		{
@@ -531,7 +377,7 @@ var FormulaTextNode = TextNode.extend(
 		},
 
 		//command functions
-		
+
 		doInsert : function(pos, nodeEvent, command)
 		{
 			if (nodeEvent.text == " ")
@@ -543,14 +389,13 @@ var FormulaTextNode = TextNode.extend(
 			if (this._super(pos, nodeEvent, command))
 			{
 				this.parentNode.parentNode.remake();
-				//this.parentNode.parentNode.update();
 				this.parentNode.groupNode.remake();
 				return true;
 			}
 			
 			return false;
 		},
-		
+
 		doRemoveChild : function(node, pos, len, nodeEvent, command)
 		{
 			if ((pos == this.element.length && nodeEvent.right) || (pos == 0 && !nodeEvent.right))
@@ -566,9 +411,6 @@ var FormulaTextNode = TextNode.extend(
 					this.parentNode.groupNode.remake();
 					return true;
 				}
-			}
-			else
-			{
 			}
 			
 			if (!this._super(node, pos, len, nodeEvent, command))
@@ -588,190 +430,104 @@ var FormulaTextNode = TextNode.extend(
 			return this.parentNode.createExponentationFormulaNode(nodeEvent, command);
 		},
 
-		//tool functions
-
-		getPosBounds : function(pos, posRect)
-		{
-			if (this.nte.isIE)
-			{
-				var textRange = this.document.body.createTextRange();
-				textRange.moveToElementText(this.element);
-				textRange.collapse(true);
-				textRange.moveStart("character", pos);
-				textRange.moveEnd("character", pos + 1);
-			}
-			else
-			{
-				var textRange = this.document.createRange();
-				if (pos == this.element.length)
-				{
-					textRange.setStart(this.element, pos - 1);
-					textRange.setEnd(this.element, pos);
-				}
-				else
-				{
-					textRange.setStart(this.element, pos);
-					textRange.setEnd(this.element, pos + 1);
-				}
-			}
-
-			var rect = textRange.getBoundingClientRect();
-			var p = this.parentNode;
-
-			if (this.nte.isWebKit)
-			{
-				var cx = 0;
-				var cy = 0;
-				while (p && p != this.parentNode.groupNode)
-				{
-					if (p.boundingRect)
-					{
-						cx += p.boundingRect.left;
-						cy += p.boundingRect.top;
-					}
-					p = p.parentNode;
-				}
-				
-				cy = Math.round(cy);
-
-				textRange.setStart(this.element, 0);
-				textRange.setEnd(this.element, 1);
-				var r = textRange.getBoundingClientRect();
-
-				posRect.setRect((pos == this.element.length ? rect.right - r.left : rect.left - r.left) + cx, 
-					cy, 
-					rect.width, 
-					rect.height);
-			}
-			else
-			{
-				var cx = 0;
-				var cy = rect.top;
-				while (p && p != this.parentNode.groupNode)
-				{
-					if (p.boundingRect)
-					{
-						cx += p.boundingRect.left;
-						cy += p.boundingRect.top;
-					}
-					p = p.parentNode;
-				}
-				
-				cx = Math.round(cx);
-				cy = Math.round(cy);
-				
-				posRect.setRect((pos == this.element.length ? rect.right : rect.left) + cx, 
-					rect.top + cy, 
-					rect.width, 
-					rect.height);
-			}
-		},
+		//editing
 		
-		getRelativePosBounds : function(pos, posRect)
+		split : function(pos, command)
 		{
-			if (this.nte.isIE)
+			var p = this.parentNode.getChildPos(this);
+			if (pos == 0)
 			{
-				var textRange = this.document.body.createTextRange();
-				textRange.moveToElementText(this.element);
-				textRange.collapse(true);
-				textRange.moveStart("character", pos);
-				textRange.moveEnd("character", pos + 1);
+				var n = new FormulaTextNode(null, this.parentNode, p, this.nte);
+				//store the parameter
+				command.setParam(this, "leftSplit", true);
 			}
 			else
 			{
-				var textRange = this.document.createRange();
-				if (pos == this.element.length)
-				{
-					textRange.setStart(this.element, pos - 1);
-					textRange.setEnd(this.element, pos);
-				}
-				else
-				{
-					textRange.setStart(this.element, pos);
-					textRange.setEnd(this.element, pos + 1);
-				}
+				if (pos < this.element.data.length)
+					var t = this.element.splitText(pos);
+				var n = new FormulaTextNode(t, this.parentNode, p + 1, this.nte);
+				if (t)
+					this.element.parentNode.removeChild(t);
+				//store the parameter
+				command.setParam(this, "leftSplit", false);
 			}
-
-			var rect = textRange.getBoundingClientRect();
-			var p = this.parentNode;
 			
-			if (this.nte.isWebKit)
+			return n;
+		}, 
+		
+		merge : function(command)
+		{
+			var pos = this.parentNode.getChildPos(this);
+			if (pos == -1)
+				return null;
+
+			//restore the parameter
+			var leftSplit = command.getParam(this, "leftSplit");
+			
+			if (leftSplit)
 			{
-				var cx = 0;
-				var cy = 0;
-				while (p && p != this.parentNode.groupNode)
+				if (pos > 0)
 				{
-					if (p.boundingRect)
+					var n = this.parentNode.childNodes.get(pos - 1);
+					if (n instanceof FormulaTextNode)
 					{
-						cx += p.boundingRect.left;
-						cy += p.boundingRect.top;
+						this.element.data = n.element.data + this.element.data;
+						this.parentNode.removeChildNode(pos - 1);
+						return this;
 					}
-					p = p.parentNode;
 				}
-				
-				cy = Math.round(cy);
-
-				textRange.setStart(this.element, 0);
-				textRange.setEnd(this.element, 1);
-				var r = textRange.getBoundingClientRect();
-				
-				this.parentNode.groupNode.updateBoundingRect();
-				var b = this.parentNode.groupNode.boundingRect;
-
-				posRect.setRect((pos == this.element.length ? rect.right - r.left : rect.left - r.left) + cx + b.left, 
-					cy + b.top, 
-					rect.width, 
-					rect.height);
 			}
 			else
 			{
-				var cx = 0;
-				var cy = rect.top;
-				
-				while (p && p != this.parentNode.groupNode)
+				if (pos + 1 < this.parentNode.childNodes.count())
 				{
-					if (p.boundingRect)
+					var n = this.parentNode.childNodes.get(pos + 1);
+					if (n instanceof FormulaTextNode)
 					{
-						cx += p.boundingRect.left;
-						cy += p.boundingRect.top;
+						this.element.data += n.element.data;
+						this.parentNode.removeChildNode(pos + 1);
+						return this;
 					}
-					p = p.parentNode;
 				}
-				
-				cx = Math.round(cx);
-				cy = Math.round(cy);
-				
-				//var r = this.nte.editor.getBoundingClientRect();
-				this.parentNode.groupNode.updateBoundingRect();
-				var b = this.parentNode.groupNode.boundingRect;
-				
-				posRect.setRect((pos == this.element.length ? rect.right : rect.left) + cx + b.left, 
-					rect.top + cy + b.top, 
-					rect.width, 
-					rect.height);
 			}
-		},
-
-		getNodeBounds : function(posRect)
+			
+			return null;
+		}, 
+		
+		mergeWithNextNode : function(nodeEvent, command)
 		{
-			this.parentNode.getNodeBounds(posRect);
+			var pos = this.parentNode.getChildPos(this);
+			if (pos + 1 < this.parentNode.childNodes.count())
+			{
+				var n = this.parentNode.childNodes.get(pos + 1);
+				if (n instanceof FormulaTextNode)
+				{
+					var i = this.element.data.length;
+					this.mergeNode(nodeEvent.caretState);
 
-			var pos = 0;
-			var textRange = this.document.createRange();
-			textRange.setStart(this.element, pos);
-			textRange.setEnd(this.element, pos + 1);
-			var rect = textRange.getBoundingClientRect();
+					nodeEvent.resNode = this.parentNode;
+					nodeEvent.undoActionNodePos = this.getCaretPosition();
+					
+					nodeEvent.undo = function(nodeEvent, command)
+						{
+							//split the text node
+							var t = this.element.data.substr(i);
+							this.element.data = this.element.data.substr(0, i);
+							var n = this.parentNode.createChildNode(window["TextNode"], this.parentNode.getChildPos(this) + 1);
+							n.element.textContent = t;
 
-			var left = posRect.left + rect.left;
-			var top = posRect.top + rect.top;
+							if (this.caretState)
+								this.caretState.insertSelectedNode(0, new SelectedNode(null, this, 0, this.element.data.length));
+
+							return true;
+						};
+					
+					return true;
+				}
+			}
 			
-			pos = this.element.length;
-			textRange.setStart(this.element, pos > 0 ? pos - 1 : 0);
-			textRange.setEnd(this.element, pos);
-			rect = textRange.getBoundingClientRect();
-			
-			posRect.setRect(left, top, rect.left, rect.bottom);
-		},
+			return false;
+		}, 
 
 		//event functions
 		
@@ -781,10 +537,10 @@ var FormulaTextNode = TextNode.extend(
 		},
 
 		//test functions
-		
+
 		toTex : function()
 		{
 			return this.element.data;
 		}
 	}
-);
+	);

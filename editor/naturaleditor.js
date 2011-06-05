@@ -23,6 +23,16 @@ var NaturalEditor = Class.extend(
 			{
 				this.inited = true;
 			}
+			else if (this.isIE)
+			{
+				//var version = parseFloat(navigator.userAgent.substring(i + 8));
+				var ua = navigator.userAgent;
+		    var re  = new RegExp("MSIE ([0-9]{1,}[\.0-9]{0,})");
+		    if (re.exec(ua) != null)
+		      var version = parseFloat(RegExp.$1);
+				if (version >= 9)
+					this.inited = true;
+			}
 			else if (!this.isGecko)
 			{
 				this.inited = false;
@@ -58,6 +68,29 @@ var NaturalEditor = Class.extend(
 			}
 			
 			this.focus = true;
+
+//			if (!window.getComputedStyle)
+//			{
+//				window.getComputedStyle = function(el, pseudo)
+//				{
+//					this.el = el;
+//					this.getPropertyValue = function(prop)
+//					{
+//						var re = /(\-([a-z]){1})/g;
+//						if (prop == 'float')
+//							prop = 'styleFloat';
+//						if (re.test(prop))
+//						{
+//							prop = prop.replace(re, function ()
+//								{
+//									return arguments[2].toUpperCase();
+//								});
+//						}
+//						return el.currentStyle[prop] ? el.currentStyle[prop] : null;
+//					};
+//					return this;
+//				};
+//			}
 			
 			/**
 			 * Shortcuts
@@ -70,13 +103,8 @@ var NaturalEditor = Class.extend(
 			 */
 			this.eventHandlers = {};
 			this.eventsHandler = new EventsHandler(this);
-
-			//this.eventsHandler.addEvent(this, "onDOMContentLoaded", this.onDOMContentLoaded);
 			
 			this.registerEvents();
-			
-			if (this.isIE)
-				this.document.namespaces.add("rvml", "urn:schemas-microsoft-com:vml", "#default#VML");
 			
 			/**
 			 * Command manager
@@ -246,11 +274,12 @@ var NaturalEditor = Class.extend(
 				'h3' : "Header3Node",
 				'br' : "BreakNode", 
 				'a' : "ReferenceNode", 
+				'div' : "DivNode", 
 				'span' : 
 					{
 						'' : 'SpanNode',
 						'formula' : 'SvgFormulaNode', 
-						'formula_text' : 'TextFormulaNode', 
+						'formula_text' : (this.isIE ? 'TextFormulaNode' : 'ForeignTextFormulaNode'), 
 						'formula_plus' : 'PlusFormulaNode', 
 						'formula_minus' : 'MinusFormulaNode', 
 						'formula_multiply' : 'MultiplyFormulaNode', 
@@ -270,11 +299,16 @@ var NaturalEditor = Class.extend(
 			{
 				if (element)
 				{
-					for (var i = 0; i < element.classList.length; ++i)
+					if (this.isIE)
+						var classList = element.className.split(' ');
+					else
+						var classList = element.classList;
+					
+					for (var i = 0; i < classList.length; ++i)
 					{
 						for (var j in t)
 						{
-							if (j == element.classList[i])
+							if (j != "" && j == classList[i])
 								return window[t[j]];
 						}
 					}

@@ -15,7 +15,7 @@ var ShapeFormulaNode = GroupFormulaNode.extend(
 		updateClientRect : function()
 		{
 			var w = 0, h = 0;
-			
+
 			for (var i = 0; i < this.element.childNodes.length; ++i)
 			{
 				var el = this.element.childNodes[i];
@@ -37,7 +37,6 @@ var ShapeFormulaNode = GroupFormulaNode.extend(
 			
 			this.clientRect.setRect(0, 0, w, h);
 
-			//var x = Number.MAX_VALUE, y = Number.MAX_VALUE;
 			w = 0;
 			h = 0;
 
@@ -46,10 +45,6 @@ var ShapeFormulaNode = GroupFormulaNode.extend(
 				var el = this.element.childNodes[i];
 				if (el.width)
 				{
-//					if (el.x.baseVal.value < x)
-//						x = el.x.baseVal.value;
-//					if (el.y.baseVal.value < y)
-//						y = el.y.baseVal.value;
 					if (w < el.width.baseVal.value)
 						w = el.width.baseVal.value;
 					if (h < el.height.baseVal.value)
@@ -57,10 +52,6 @@ var ShapeFormulaNode = GroupFormulaNode.extend(
 				}
 				else if (el.x1)
 				{
-//					if (el.x1.baseVal.value < x)
-//						x = el.x1.baseVal.value;
-//					if (el.y1.baseVal.value < y)
-//						y = el.y1.baseVal.value;
 					if (w < el.x2.baseVal.value - el.x1.baseVal.value)
 						w = el.x2.baseVal.value - el.x1.baseVal.value;
 					if (h < el.y2.baseVal.value - el.y1.baseVal.value)
@@ -68,7 +59,6 @@ var ShapeFormulaNode = GroupFormulaNode.extend(
 				}
 			}
 			
-			//this.boundingRect.setRect(x, y, w, h);
 			this.boundingRect.setRect(this.boundingRect.left, this.boundingRect.top, w, h);
 		}, 
 

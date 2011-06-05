@@ -61,6 +61,64 @@ function Theme(nte, parentElement, cx, cy)
 			20 : "20pt"
 		};
 	
+	this.nodeStyles = 
+		{
+			"PlusFormulaNode" : 
+				{
+					1 : 
+						{
+							"width" : 10,
+							"height" : 10
+						}, 
+					2 : 
+						{
+							"width" : 8, 
+							"height" : 8
+						}, 
+					3 : 
+						{
+							"width" : 6, 
+							"height" : 6
+						}
+				},
+			"MinusFormulaNode" : 
+				{
+					1 : 
+						{
+							"width" : 10,
+							"height" : 10
+						}, 
+					2 : 
+						{
+							"width" : 8, 
+							"height" : 8
+						}, 
+					3 : 
+						{
+							"width" : 6, 
+							"height" : 6
+						}
+				},
+			"MultiplyFormulaNode" : 
+			{
+				1 : 
+					{
+						"width" : 10,
+						"height" : 10
+					}, 
+				2 : 
+					{
+						"width" : 8, 
+						"height" : 8
+					}, 
+				3 : 
+					{
+						"width" : 6, 
+						"height" : 6
+					}
+			}
+		};
+	
 	this.init = function(parentElement, cx, cy)
 	{
 		if (this.nte.isIE)
@@ -96,7 +154,8 @@ function Theme(nte, parentElement, cx, cy)
 			this.testText = parentElement.ownerDocument.getElementById("testText");
 		}
 
-		this.editor.document = this.editor.ownerDocument;
+		if (!this.nte.isIE)
+			this.editor.document = this.editor.ownerDocument;
 		
 		if (this.nte.isIE)
 			this.toolbar = new Toolbar(this.nte, this.name, frame.document.getElementById("toolbar1"));
@@ -242,6 +301,11 @@ function Theme(nte, parentElement, cx, cy)
 		var s = f[0];
 		for (var i = 1; i < f.length; ++i)
 			s += "," + f[i];
+	};
+
+	this.getNodeProperty = function(nodeName, level, property)
+	{
+		return this.nodeStyles[nodeName][level][property];
 	};
 	
 	this.init(parentElement, cx, cy);

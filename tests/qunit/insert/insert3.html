@@ -1,6 +1,6 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 
-<html xmlns:v="urn:schemas-microsoft-com:vml">
+<html>
 
 <head>
 	<title>Insertion test</title>
@@ -326,114 +326,78 @@
 
  						nte.setCaret(0, 0);
  						nte.insertLine();
-						if (nte.isIE)
-	 						ok(testHtml("<p>&nbsp;</p>\r\n<p>Text<b>Bold</b><i>Italic</i></p>", 0));
-						else
-	 						ok(testHtml("<p><br></p><p>Text<b>Bold</b><i>Italic</i></p>", 0));
+ 						ok(testHtml("<p><br></p><p>Text<b>Bold</b><i>Italic</i></p>", 0));
 						
  						nte.onUndo();
  						ok(testHtml("<p>Text<b>Bold</b><i>Italic</i></p>", 0));
  						
  						nte.onRedo();
-						if (nte.isIE)
-	 						ok(testHtml("<p>&nbsp;</p>\r\n<p>Text<b>Bold</b><i>Italic</i></p>", 0));
-						else
-	 						ok(testHtml("<p><br></p><p>Text<b>Bold</b><i>Italic</i></p>", 0));
+ 						ok(testHtml("<p><br></p><p>Text<b>Bold</b><i>Italic</i></p>", 0));
 						
  						nte.onUndo();
  						ok(testHtml("<p>Text<b>Bold</b><i>Italic</i></p>", 0));
 
  						nte.setCaret(4, 0);
  						nte.insertLine();
-						if (nte.isIE)
-	 						ok(testHtml("<p>Text</p>\r\n<p><b>Bold</b><i>Italic</i></p>", 0));
-						else
-	 						ok(testHtml("<p>Text</p><p><b>Bold</b><i>Italic</i></p>", 0));
+ 						ok(testHtml("<p>Text</p><p><b>Bold</b><i>Italic</i></p>", 0));
 						
  						nte.onUndo();
  						ok(testHtml("<p>Text<b>Bold</b><i>Italic</i></p>", 4));
  						
  						nte.onRedo();
-						if (nte.isIE)
-	 						ok(testHtml("<p>Text</p>\r\n<p><b>Bold</b><i>Italic</i></p>", 0));
-						else
-	 						ok(testHtml("<p>Text</p><p><b>Bold</b><i>Italic</i></p>", 0));
+ 						ok(testHtml("<p>Text</p><p><b>Bold</b><i>Italic</i></p>", 0));
 						
  						nte.onUndo();
  						ok(testHtml("<p>Text<b>Bold</b><i>Italic</i></p>", 4));
 
  						nte.setCaret(5, 0);
  						nte.insertLine();
-						if (nte.isIE)
-	 						ok(testHtml("<p>Text<b>B</b></p>\r\n<p><b>old</b><i>Italic</i></p>", 0));
-						else
-	 						ok(testHtml("<p>Text<b>B</b></p><p><b>old</b><i>Italic</i></p>", 0));
+ 						ok(testHtml("<p>Text<b>B</b></p><p><b>old</b><i>Italic</i></p>", 0));
 						
  						nte.onUndo();
  						ok(testHtml("<p>Text<b>Bold</b><i>Italic</i></p>", 1));
  						
  						nte.onRedo();
-						if (nte.isIE)
-	 						ok(testHtml("<p>Text<b>B</b></p>\r\n<p><b>old</b><i>Italic</i></p>", 0));
-						else
-	 						ok(testHtml("<p>Text<b>B</b></p><p><b>old</b><i>Italic</i></p>", 0));
+ 						ok(testHtml("<p>Text<b>B</b></p><p><b>old</b><i>Italic</i></p>", 0));
 						
  						nte.onUndo();
  						ok(testHtml("<p>Text<b>Bold</b><i>Italic</i></p>", 1));
 
  						nte.setCaret(8, 0);
  						nte.insertLine();
-						if (nte.isIE)
-	 						ok(testHtml("<p>Text<b>Bold</b></p>\r\n<p><i>Italic</i></p>", 0));
-						else
-	 						ok(testHtml("<p>Text<b>Bold</b></p><p><i>Italic</i></p>", 0));
+ 						ok(testHtml("<p>Text<b>Bold</b></p><p><i>Italic</i></p>", 0));
 						
  						nte.onUndo();
  						ok(testHtml("<p>Text<b>Bold</b><i>Italic</i></p>", 4));
  						
  						nte.onRedo();
-						if (nte.isIE)
-	 						ok(testHtml("<p>Text<b>Bold</b></p>\r\n<p><i>Italic</i></p>", 0));
-						else
-	 						ok(testHtml("<p>Text<b>Bold</b></p><p><i>Italic</i></p>", 0));
+ 						ok(testHtml("<p>Text<b>Bold</b></p><p><i>Italic</i></p>", 0));
 						
  						nte.onUndo();
  						ok(testHtml("<p>Text<b>Bold</b><i>Italic</i></p>", 4));
 
  						nte.setCaret(9, 0);
  						nte.insertLine();
-						if (nte.isIE)
-	 						ok(testHtml("<p>Text<b>Bold</b><i>I</i></p>\r\n<p><i>talic</i></p>", 0));
-						else
-	 						ok(testHtml("<p>Text<b>Bold</b><i>I</i></p><p><i>talic</i></p>", 0));
+ 						ok(testHtml("<p>Text<b>Bold</b><i>I</i></p><p><i>talic</i></p>", 0));
 						
  						nte.onUndo();
  						ok(testHtml("<p>Text<b>Bold</b><i>Italic</i></p>", 1));
  						
  						nte.onRedo();
-						if (nte.isIE)
-	 						ok(testHtml("<p>Text<b>Bold</b><i>I</i></p>\r\n<p><i>talic</i></p>", 0));
-						else
-	 						ok(testHtml("<p>Text<b>Bold</b><i>I</i></p><p><i>talic</i></p>", 0));
+ 						ok(testHtml("<p>Text<b>Bold</b><i>I</i></p><p><i>talic</i></p>", 0));
 						
  						nte.onUndo();
  						ok(testHtml("<p>Text<b>Bold</b><i>Italic</i></p>", 1));
 
  						nte.setCaret(14, 0);
  						nte.insertLine();
-						if (nte.isIE)
-	 						ok(testHtml("<p>Text<b>Bold</b><i>Italic</i></p>\r\n<p></p>", 0));
-						else
-	 						ok(testHtml("<p>Text<b>Bold</b><i>Italic</i></p><p><br></p>", 0));
+ 						ok(testHtml("<p>Text<b>Bold</b><i>Italic</i></p><p><br></p>", 0));
 						
  						nte.onUndo();
  						ok(testHtml("<p>Text<b>Bold</b><i>Italic</i></p>", 6));
  						
  						nte.onRedo();
-						if (nte.isIE)
-	 						ok(testHtml("<p>Text<b>Bold</b><i>Italic</i></p>\r\n<p></p>", 0));
-						else
-	 						ok(testHtml("<p>Text<b>Bold</b><i>Italic</i></p><p><br></p>", 0));
+ 						ok(testHtml("<p>Text<b>Bold</b><i>Italic</i></p><p><br></p>", 0));
 						
  						nte.onUndo();
  						ok(testHtml("<p>Text<b>Bold</b><i>Italic</i></p>", 6));
