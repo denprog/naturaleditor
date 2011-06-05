@@ -21,7 +21,8 @@ function CaretState(node, pos, length)
 	{
 		clearSelectedNodes.apply(this);
 		var p = node.getFirstPosition();
-		this.selectedNodes = p.selectedNodes;
+		if (p)
+			this.selectedNodes = p.selectedNodes;
 		this.updateSelectedNodes();
 	};
 	

@@ -1,6 +1,6 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 
-<html xmlns:v="urn:schemas-microsoft-com:vml">
+<html>
 
 <head>
 	<title>Caret moving test</title>
@@ -9,6 +9,14 @@
 	<script type="text/javascript" src="../../../lib/qunit.js"></script>
 	<script type="text/javascript" src="../../../naturaleditor.js"></script>
 	<script type="text/javascript" src="../tool.js"></script>
+	
+	<style>
+		p
+		{
+			font-family: 'trebuchet ms', verdana, arial;
+			font-size: 16px;
+		}
+	</style>
 </head>
 
 <body>
@@ -311,8 +319,6 @@
 				
 				test("Caret moving in text and formula 1", function()
 					{
-						expect(30);
-						
 						nte.parse(
 							"<p>Aliquam scelerisque ante eget dolor volutpat ut aliquam elit rutrum. " + 
 							"Proin dictum, lacus vel <b><i>euismod</i> cursus</b>, enim metus molestie mauris, eu tincidunt mi ante eget orci. " + 
@@ -344,8 +350,7 @@
 						nte.onDown();
 						nte.onDown();
 
-						for (var i = 0; i < 16; ++i)
-							nte.onRight();
+						nte.moveCaretRight(16);
 						nte.onUp();
 						nte.onRight();
 						nte.onRight();
@@ -354,99 +359,194 @@
 						nte.onDown();
 						ok(testCaretPosition(1));
 						
-						nte.onUp();
-						ok(testCaretPosition(93));
-						
-						nte.onRight();
-						nte.onDown();
-						ok(testCaretPosition(2));
+						if (nte.isIE)
+						{
+							nte.onUp();
+							ok(testCaretPosition(92));
 
-						nte.onDown();
-						ok(testCaretPosition(50));
-						
-						nte.onUp();
-						ok(testCaretPosition(2));
-						
-						nte.onDown();
-						ok(testCaretPosition(50));
-
-						nte.onDown();
-						ok(testCaretPosition(76));
-
-						nte.onDown();
-						ok(testCaretPosition(19));
-
-						nte.onDown();
-						ok(testCaretPosition(98));
-
-						nte.onDown();
-						ok(testCaretPosition(182));
-
-						nte.onDown();
-						ok(testCaretPosition(263));
-
-						nte.onDown();
-						ok(testCaretPosition(263));
-
-						nte.onUp();
-						ok(testCaretPosition(182));
-
-						nte.onUp();
-						ok(testCaretPosition(98));
-
-						nte.onUp();
-						ok(testCaretPosition(19));
-
-						nte.onUp();
-						ok(testCaretPosition(76));
-
-						nte.onUp();
-						ok(testCaretPosition(51));
-
-						nte.onUp();
-						ok(testCaretPosition(3));
-
-						nte.onLeft();
-						nte.onLeft();
-						nte.onUp();
-						ok(testCaretPosition(93));
-
-						nte.onUp();
-						ok(testCaretPosition(17));
-
-						nte.onUp();
-						ok(testCaretPosition(17));
-						
-						nte.onRight();
-						nte.onDown();
-						nte.onDown();
-						nte.onRight();
-						nte.onUp();
-						ok(testCaretPosition(2));
-
-						nte.onDown();
-						nte.onRight();
-						nte.onDown();
-						ok(testCaretPosition(3));
-
-						for (var i = 0; i < 19; ++i)
 							nte.onRight();
-						nte.onUp();
-						ok(testCaretPosition(0));
+							nte.onDown();
+							ok(testCaretPosition(1));
 
-						nte.onUp();
-						ok(testCaretPosition(6));
+							nte.onDown();
+							ok(testCaretPosition(42));
+							
+							nte.onUp();
+							ok(testCaretPosition(1));
+							
+							nte.onDown();
+							ok(testCaretPosition(42));
 
-						for (var i = 0; i < 8; ++i)
+							nte.onDown();
+							ok(testCaretPosition(69));
+
+							nte.onDown();
+							ok(testCaretPosition(18));
+							
+							nte.onDown();
+							ok(testCaretPosition(97));
+
+							nte.onDown();
+							ok(testCaretPosition(175));
+
+							nte.onDown();
+							ok(testCaretPosition(251));
+							
+							nte.onDown();
+							ok(testCaretPosition(251));
+							
+							nte.onUp();
+							ok(testCaretPosition(175));
+
+							nte.onUp();
+							ok(testCaretPosition(97));
+
+							nte.onUp();
+							ok(testCaretPosition(18));
+
+							nte.onUp();
+							ok(testCaretPosition(69));
+
+							nte.onUp();
+							ok(testCaretPosition(42));
+
+							nte.onUp();
+							ok(testCaretPosition(1));
+
 							nte.onLeft();
-						nte.onDown();
-						ok(testCaretPosition(0));
+							nte.onLeft();
+							nte.onUp();
+							ok(testCaretPosition(90));
 
-						nte.onDown();
-						ok(testCaretPosition(9));
+							nte.onUp();
+							ok(testCaretPosition(15));
 
-						nte.onUp();
-						ok(testCaretPosition(0));
+							nte.onUp();
+							ok(testCaretPosition(15));
+								
+							nte.onRight();
+							nte.onDown();
+							nte.onDown();
+							nte.onRight();
+							nte.onUp();
+							ok(testCaretPosition(92));
+
+							nte.onDown();
+							nte.onRight();
+							nte.onDown();
+							ok(testCaretPosition(43));
+
+							nte.moveCaretRight(19);
+							nte.onUp();
+							ok(testCaretPosition(1));
+
+							nte.onUp();
+							ok(testCaretPosition(5));
+
+							nte.moveCaretLeft(8);
+							nte.onDown();
+							ok(testCaretPosition(7));
+
+							nte.onDown();
+							ok(testCaretPosition(1));
+
+							nte.onUp();
+							ok(testCaretPosition(4));
+						}
+						else
+						{
+							nte.onUp();
+							ok(testCaretPosition(93));
+
+							nte.onRight();
+							nte.onDown();
+							ok(testCaretPosition(2));
+
+							nte.onDown();
+							ok(testCaretPosition(50));
+							
+							nte.onUp();
+							ok(testCaretPosition(2));
+							
+							nte.onDown();
+							ok(testCaretPosition(50));
+
+							nte.onDown();
+							ok(testCaretPosition(76));
+
+							nte.onDown();
+							ok(testCaretPosition(19));
+							
+							nte.onDown();
+							ok(testCaretPosition(98));
+
+							nte.onDown();
+							ok(testCaretPosition(182));
+
+							nte.onDown();
+							ok(testCaretPosition(263));
+							
+							nte.onDown();
+							ok(testCaretPosition(263));
+							
+							nte.onUp();
+							ok(testCaretPosition(182));
+
+							nte.onUp();
+							ok(testCaretPosition(98));
+
+							nte.onUp();
+							ok(testCaretPosition(19));
+
+							nte.onUp();
+							ok(testCaretPosition(76));
+
+							nte.onUp();
+							ok(testCaretPosition(51));
+
+							nte.onUp();
+							ok(testCaretPosition(3));
+
+							nte.onLeft();
+							nte.onLeft();
+							nte.onUp();
+							ok(testCaretPosition(93));
+
+							nte.onUp();
+							ok(testCaretPosition(17));
+
+							nte.onUp();
+							ok(testCaretPosition(17));
+								
+							nte.onRight();
+							nte.onDown();
+							nte.onDown();
+							nte.onRight();
+							nte.onUp();
+							ok(testCaretPosition(2));
+
+							nte.onDown();
+							nte.onRight();
+							nte.onDown();
+							ok(testCaretPosition(3));
+
+							nte.moveCaretRight(19);
+							nte.onUp();
+							ok(testCaretPosition(0));
+
+							nte.onUp();
+							ok(testCaretPosition(6));
+
+							nte.moveCaretLeft(8);
+							nte.onDown();
+							ok(testCaretPosition(0));
+
+							nte.onDown();
+							ok(testCaretPosition(9));
+
+							nte.onUp();
+							ok(testCaretPosition(0));
+						}
 					}
 					);
 				
@@ -454,81 +554,11 @@
 					{
 						expect(13);
 						
-						nte.parse(
-							"<p>Aliquam scelerisque ante eget dolor volutpat ut aliquam elit rutrum. " + 
-							"Proin dictum, lacus vel <b><i>euismod</i> cursus</b>, enim metus molestie mauris, eu tincidunt mi ante eget orci. " + 
-							"<span class='formula'>" + 
-								"<span class='formula_text'>789</span>" + 
-								"<span class='formula_plus'></span>" + 
-								"<span class='formula_exponentiation'>" + 
-									"<span class='formula_text'>Text123</span>" + 
-									"<span class='formula_group'>" + 
-										"<span class='formula_text'>Text456</span>" + 
-										"<span class='formula_plus'></span>" + 
-										"<span class='formula_text'>sum</span>" + 
-									"</span>" + 
-								"</span>" + 
-								"<span class='formula_plus'></span>" + 
-								"<span class='formula_text'>555</span>" + 
-							"</span>" + 
-							" Mauris at pellentesque neque. Mauris sit amet est <i>vel</i> neque iaculis blandit. " + 
-							"Nullam tincidunt ligula id sapien vulputate id tempus erat pretium. Aliquam " + 
-							"erat volutpat.</p>" + 
-							"<p>Sed leo eros, condimentum et facilisis vel, scelerisque ac eros. Praesent non lorem ligula, eget varius dui. " + 
-							"Vestibulum ante ipsum primis in faucibus orci luctus <i>et</i> ultrices posuere cubilia Curae; " + 
-							"Sed adipiscing feugiat neque, eget adipiscing tortor vehicula eu. Nam eget justo rutrum massa faucibus convallis."
-							);
-						
-						nte.setCaret(0, 0);
-						ok(testCaretPosition(0));
-						
-						for (var i = 0; i < 6; ++i)
-							nte.onDown();
-						nte.onDown();
-						ok(testCaretPosition(0));
-
-						nte.onDown();
-						ok(testCaretPosition(79));
-
-						nte.onUp();
-						ok(testCaretPosition(0));
-
-						nte.onUp();
-						ok(testCaretPosition(78));
-						
-						nte.onEnd();
-						ok(testCaretPosition(161));
-
-						nte.onDown();
-						ok(testCaretPosition(78));
-
-						nte.onDown();
-						ok(testCaretPosition(146));
-
-						nte.onUp();
-						ok(testCaretPosition(66));
-
-						nte.onUp();
-						ok(testCaretPosition(147));
-
-						nte.onEnd();
-						ok(testCaretPosition(161));
-
-						nte.onUp();
-						ok(testCaretPosition(77));
-
-						nte.onUp();
-						ok(testCaretPosition(114));
-					}
-					);
-					
-					test("Caret moving in text and formula 3", function()
+						if (nte.isIE)
 						{
-							expect(43);
-							
 							nte.parse(
 								"<p>Aliquam scelerisque ante eget dolor volutpat ut aliquam elit rutrum. " + 
-								"<b>Proin</b> <b>dictum</b>, lacus vel <b><i>euismod</i> cursus</b>, enim metus molestie mauris, eu tincidunt mi ante eget orci. " + 
+								"Proin dictum, lacus vel <b><i>euismod</i> cursus</b>, enim metus molestie mauris, eu tincidunt mi ante eget orci. " + 
 								"<span class='formula'>" + 
 									"<span class='formula_text'>789</span>" + 
 									"<span class='formula_plus'></span>" + 
@@ -544,61 +574,340 @@
 									"<span class='formula_text'>555</span>" + 
 								"</span>" + 
 								" Mauris at pellentesque neque. Mauris sit amet est <i>vel</i> neque iaculis blandit. " + 
-								"Nullam tincidunt ligula id <i>sapien</i> <b>vulputate</b> id tempus erat pretium. Aliquam " + 
+								"Nullam tincidunt ligula id sapien vulputate id tempus erat pretium. Aliquam " + 
 								"erat volutpat.</p>" + 
-								"<p>Sed leo eros, condimentum et facilisis vel, scelerisque ac eros. Praesent <b>non lorem</b> ligula, eget varius dui. " + 
+								"<p>Sed leo eros, condimentum et facilisis vel, scelerisque ac eros. Praesent non lorem ligula, eget varius dui. " + 
+								"Vestibulum ante ipsum primis in faucibus orciety <i>et</i> ultrices posuere cubilia Curae; " + 
+								"Sed adipiscing feugiat neque, eget adipiscing tortor vehicula eu. Nam eget justo rutrum massa faucibus convallis."
+								);
+								
+							nte.setCaret(0, 0);
+							ok(testCaretPosition(0));
+
+							nte.moveCaretDown(7);
+							ok(testCaretPosition(158));
+
+							nte.onDown();
+							ok(testCaretPosition(79));
+	
+							nte.onUp();
+							ok(testCaretPosition(158));
+	
+							nte.onUp();
+							ok(testCaretPosition(78));
+							
+							nte.onEnd();
+							ok(testCaretPosition(157));
+	
+							nte.onDown();
+							ok(testCaretPosition(77));
+	
+							nte.onDown();
+							ok(testCaretPosition(146));
+	
+							nte.onUp();
+							ok(testCaretPosition(66));
+	
+							nte.onUp();
+							ok(testCaretPosition(146));
+	
+							nte.onEnd();
+							ok(testCaretPosition(157));
+	
+							nte.onUp();
+							ok(testCaretPosition(77));
+	
+							nte.onUp();
+							ok(testCaretPosition(114));
+						}
+						else
+						{
+							nte.parse(
+								"<p>Aliquam scelerisque ante eget dolor volutpat ut aliquam elit rutrum. " + 
+								"Proin dictum, lacus vel <b><i>euismod</i> cursus</b>, enim metus molestie mauris, eu tincidunt mi ante eget orci. " + 
+								"<span class='formula'>" + 
+									"<span class='formula_text'>789</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_exponentiation'>" + 
+										"<span class='formula_text'>Text123</span>" + 
+										"<span class='formula_group'>" + 
+											"<span class='formula_text'>Text456</span>" + 
+											"<span class='formula_plus'></span>" + 
+											"<span class='formula_text'>sum</span>" + 
+										"</span>" + 
+									"</span>" + 
+									"<span class='formula_plus'></span>" + 
+									"<span class='formula_text'>555</span>" + 
+								"</span>" + 
+								" Mauris at pellentesque neque. Mauris sit amet est <i>vel</i> neque iaculis blandit. " + 
+								"Nullam tincidunt ligula id sapien vulputate id tempus erat pretium. Aliquam " + 
+								"erat volutpat.</p>" + 
+								"<p>Sed leo eros, condimentum et facilisis vel, scelerisque ac eros. Praesent non lorem ligula, eget varius dui. " + 
 								"Vestibulum ante ipsum primis in faucibus orci luctus <i>et</i> ultrices posuere cubilia Curae; " + 
-								"Sed adipiscing feugiat neque, eget <b>adipiscing </b>tortor vehicula eu. Nam eget justo rutrum massa faucibus convallis."
+								"Sed adipiscing feugiat neque, eget adipiscing tortor vehicula eu. Nam eget justo rutrum massa faucibus convallis."
 								);
 							
-						nte.setCaret(0, 0);
-						ok(testCaretPosition(0));
+							nte.setCaret(0, 0);
+							ok(testCaretPosition(0));
+
+							nte.moveCaretDown(7);
+							ok(testCaretPosition(0));
+
+							nte.onDown();
+							ok(testCaretPosition(79));
+	
+							nte.onUp();
+							ok(testCaretPosition(0));
+	
+							nte.onUp();
+							ok(testCaretPosition(78));
+							
+							nte.onEnd();
+							ok(testCaretPosition(161));
+	
+							nte.onDown();
+							ok(testCaretPosition(78));
+	
+							nte.onDown();
+							ok(testCaretPosition(146));
+	
+							nte.onUp();
+							ok(testCaretPosition(66));
+	
+							nte.onUp();
+							ok(testCaretPosition(147));
+	
+							nte.onEnd();
+							ok(testCaretPosition(161));
+	
+							nte.onUp();
+							ok(testCaretPosition(77));
+	
+							nte.onUp();
+							ok(testCaretPosition(114));
+						}
+					}
+					);
+					
+				test("Caret moving in text and formula 3", function()
+					{
+						expect(43);
+					
+						nte.parse(
+							"<p>Aliquam scelerisque ante eget dolor volutpat ut aliquam elit rutrum. " + 
+							"<b>Proin</b> <b>dictum</b>, lacus vel <b><i>euismod</i> cursus</b>, enim metus molestie mauris, eu tincidunt mi ante eget orci. " + 
+							"<span class='formula'>" + 
+							"<span class='formula_text'>789</span>" + 
+								"<span class='formula_plus'></span>" + 
+								"<span class='formula_exponentiation'>" + 
+									"<span class='formula_text'>Text123</span>" + 
+									"<span class='formula_group'>" + 
+										"<span class='formula_text'>Text456</span>" + 
+										"<span class='formula_plus'></span>" + 
+										"<span class='formula_text'>sum</span>" + 
+									"</span>" + 
+								"</span>" + 
+								"<span class='formula_plus'></span>" + 
+								"<span class='formula_text'>555</span>" + 
+							"</span>" + 
+							" Mauris at pellentesque neque. Mauris sit amet est <i>vel</i> neque iaculis blandit. " + 
+							"Nullam tincidunt ligula id <i>sapien</i> <b>vulputate</b> id tempus erat pretium. Aliquam " + 
+							"erat volutpat.</p>" + 
+							"<p>Sed leo eros, condimentum et facilisis vel, scelerisque ac eros. Praesent <b>non lorem</b> ligula, eget varius dui. " + 
+							"Vestibulum ante ipsum primis in faucibus orci luctus <i>et</i> ultrices posuere cubilia Curae; " + 
+							"Sed adipiscing feugiat neque, eget <b>adipiscing </b>tortor vehicula eu. Nam eget justo rutrum massa faucibus convallis."
+							);
+				
+					nte.setCaret(0, 0);
+					ok(testCaretPosition(0));
+					
+					if (nte.isIE)
+					{
+						nte.onEnd();
+						ok(testCaretPosition(5));
 						
+						nte.onRight();
+						ok(testCaretPosition(1));
+	
+						nte.onRight();
+						ok(testCaretPosition(1));
+	
+						nte.onLeft();
+						ok(testCaretPosition(1));
+	
+						nte.onLeft();
+						ok(testCaretPosition(5));
+													
+						nte.onDown();
+						nte.onDown();
+						nte.onDown();
+						ok(testCaretPosition(45));
+	
+						nte.onRight();
+						nte.onRight();
+						ok(testCaretPosition(47));
+	
+						nte.onRight();
+						ok(testCaretPosition(48));
+	
+						nte.onRight();
+						ok(testCaretPosition(49));
+							
+						nte.onLeft();
+						ok(testCaretPosition(48));
+	
+						nte.onLeft();
+						ok(testCaretPosition(47));
+	
+						nte.onLeft();
+						ok(testCaretPosition(46));
+	
+						nte.onDown();
+						nte.onDown();
+						ok(testCaretPosition(66));
+							
+						nte.moveCaretRight(19);
+						ok(testCaretPosition(2));
+
+						nte.onRight();
+						ok(testCaretPosition(3));
+
+						nte.onRight();
+						ok(testCaretPosition(4));
+
+						nte.onLeft();
+						ok(testCaretPosition(3));
+
+						nte.onLeft();
+						ok(testCaretPosition(2));
+
+						nte.onLeft();
+						ok(testCaretPosition(1));
+							
+						nte.onDown();
+						ok(testCaretPosition(79));
+
+						nte.onDown();
+						nte.moveCaretRight(4);
+						ok(testCaretPosition(11));
+
+						nte.onRight();
+						ok(testCaretPosition(1));
+						
+						nte.onRight();
+						ok(testCaretPosition(2));
+
+						nte.onLeft();
+						ok(testCaretPosition(1));
+
+						nte.onLeft();
+						ok(testCaretPosition(11));
+							
+						nte.onHome();
+						ok(testCaretPosition(0));
+							
+						nte.onUp();
+						ok(testCaretPosition(72));
+
+						nte.onUp();
+						ok(testCaretPosition(4));
+
+						nte.onUp();
+						ok(testCaretPosition(0));
+
+						nte.onUp();
+						ok(testCaretPosition(0));
+
+						nte.onUp();
+						ok(testCaretPosition(24));
+							
+						nte.moveCaretRight(17);
+						nte.onEnd();
+						ok(testCaretPosition(50));
+							
+						nte.onLeft();
+						nte.onEnd();
+						ok(testCaretPosition(50));
+
+						nte.onEnd();
+						ok(testCaretPosition(50));
+
+						nte.moveCaretLeft(35);
+						nte.onHome();
+						ok(testCaretPosition(24));
+
+						nte.onRight();
+						nte.onHome();
+						ok(testCaretPosition(24));
+
+						nte.moveCaretRight(5);
+						nte.onHome();
+						ok(testCaretPosition(24));
+
+						nte.moveCaretRight(20);
+						nte.onHome();
+						ok(testCaretPosition(24));
+
+						nte.onEnd();
+						ok(testCaretPosition(50));
+
+						nte.onHome();
+						nte.onHome();
+						nte.onHome();
+						ok(testCaretPosition(24));
+						
+						nte.onHome();
+						ok(testCaretPosition(24));
+
+						nte.onHome();
+						ok(testCaretPosition(24));
+					}
+					else
+					{
 						nte.onEnd();
 						ok(testCaretPosition(5));
 						
 						nte.onRight();
 						ok(testCaretPosition(0));
-
+						
 						nte.onRight();
 						ok(testCaretPosition(1));
-
+	
 						nte.onLeft();
 						ok(testCaretPosition(0));
-
+	
 						nte.onLeft();
 						ok(testCaretPosition(5));
-												
+													
 						nte.onDown();
 						nte.onDown();
 						nte.onDown();
 						ok(testCaretPosition(4));
-
+	
 						nte.onRight();
 						nte.onRight();
 						ok(testCaretPosition(6));
-
+	
 						nte.onRight();
 						ok(testCaretPosition(0));
-
+	
 						nte.onRight();
 						ok(testCaretPosition(1));
 						
 						nte.onLeft();
 						ok(testCaretPosition(0));
-
+	
 						nte.onLeft();
 						ok(testCaretPosition(6));
-
+	
 						nte.onLeft();
 						ok(testCaretPosition(5));
-
+	
 						nte.onDown();
 						nte.onDown();
 						ok(testCaretPosition(58));
-
-						for (var i = 0; i < 19; ++i)
-							nte.onRight();
+							
+						nte.moveCaretRight(19);
 						ok(testCaretPosition(3));
 
 						nte.onRight();
@@ -615,13 +924,12 @@
 
 						nte.onLeft();
 						ok(testCaretPosition(2));
-						
+							
 						nte.onDown();
 						ok(testCaretPosition(72));
 
 						nte.onDown();
-						for (var i = 0; i < 4; ++i)
-							nte.onRight();
+						nte.moveCaretRight(4);
 						ok(testCaretPosition(10));
 
 						nte.onRight();
@@ -635,10 +943,10 @@
 
 						nte.onLeft();
 						ok(testCaretPosition(10));
-						
+							
 						nte.onHome();
 						ok(testCaretPosition(0));
-						
+							
 						nte.onUp();
 						ok(testCaretPosition(4));
 
@@ -647,19 +955,17 @@
 
 						nte.onUp();
 						ok(testCaretPosition(0));
-
+						
 						nte.onUp();
 						ok(testCaretPosition(31));
 
 						nte.onUp();
 						ok(testCaretPosition(46));
-						
-						
-						for (var i = 0; i < 17; ++i)
-							nte.onRight();
+							
+						nte.moveCaretRight(17);
 						nte.onEnd();
 						ok(testCaretPosition(3));
-						
+							
 						nte.onLeft();
 						nte.onEnd();
 						ok(testCaretPosition(3));
@@ -667,8 +973,7 @@
 						nte.onEnd();
 						ok(testCaretPosition(30));
 
-						for (var i = 0; i < 35; ++i)
-							nte.onLeft();
+						nte.moveCaretLeft(35);
 						nte.onHome();
 						ok(testCaretPosition(0));
 
@@ -676,13 +981,11 @@
 						nte.onHome();
 						ok(testCaretPosition(0));
 
-						for (var i = 0; i < 5; ++i)
-							nte.onRight();
+						nte.moveCaretRight(5);
 						nte.onHome();
 						ok(testCaretPosition(0));
 
-						for (var i = 0; i < 20; ++i)
-							nte.onRight();
+						nte.moveCaretRight(20);
 						nte.onHome();
 						ok(testCaretPosition(0));
 
@@ -700,7 +1003,8 @@
 						nte.onHome();
 						ok(testCaretPosition(46));
 					}
-					);
+				}
+				);
 		  }
 			);
 	</script>

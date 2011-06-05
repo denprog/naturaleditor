@@ -23,6 +23,16 @@ var NaturalEditor = Class.extend(
 			{
 				this.inited = true;
 			}
+			else if (this.isIE)
+			{
+				//var version = parseFloat(navigator.userAgent.substring(i + 8));
+				var ua = navigator.userAgent;
+		    var re  = new RegExp("MSIE ([0-9]{1,}[\.0-9]{0,})");
+		    if (re.exec(ua) != null)
+		      var version = parseFloat(RegExp.$1);
+				if (version >= 9)
+					this.inited = true;
+			}
 			else if (!this.isGecko)
 			{
 				this.inited = false;
@@ -70,13 +80,8 @@ var NaturalEditor = Class.extend(
 			 */
 			this.eventHandlers = {};
 			this.eventsHandler = new EventsHandler(this);
-
-			//this.eventsHandler.addEvent(this, "onDOMContentLoaded", this.onDOMContentLoaded);
 			
 			this.registerEvents();
-			
-			if (this.isIE)
-				this.document.namespaces.add("rvml", "urn:schemas-microsoft-com:vml", "#default#VML");
 			
 			/**
 			 * Command manager
@@ -98,6 +103,8 @@ var NaturalEditor = Class.extend(
 			 */
 			this.clientRect = this.editor.getBoundingClientRect();
 
+			this.editTime = Date.now();
+			
 			this.caret.setToNodeBegin(this.rootNode);			
 		}, 
 
@@ -214,7 +221,10 @@ var NaturalEditor = Class.extend(
 			this.caret.setToNodeBegin(this.rootNode.childNodes.get(0));
 			
 			this.rootNode.remake();
+			this.theme.update();
 			this.caret.render();
+			
+			this.updateEditTime();
 		}, 
 
 		parseHtml : function(htmlText)
@@ -227,6 +237,8 @@ var NaturalEditor = Class.extend(
 			
 			for (var i = 0; i < el.childNodes.length; ++i)
 				this.parseElement(el.childNodes[i], resNode, i);
+
+			this.updateEditTime();
 			
 			return resNode;
 		}, 
@@ -245,11 +257,12 @@ var NaturalEditor = Class.extend(
 				'h3' : "Header3Node",
 				'br' : "BreakNode", 
 				'a' : "ReferenceNode", 
+				'div' : "DivNode", 
 				'span' : 
 					{
 						'' : 'SpanNode',
 						'formula' : 'SvgFormulaNode', 
-						'formula_text' : 'TextFormulaNode', 
+						'formula_text' : (this.isIE ? 'TextFormulaNode' : 'ForeignTextFormulaNode'), 
 						'formula_plus' : 'PlusFormulaNode', 
 						'formula_minus' : 'MinusFormulaNode', 
 						'formula_multiply' : 'MultiplyFormulaNode', 
@@ -269,11 +282,16 @@ var NaturalEditor = Class.extend(
 			{
 				if (element)
 				{
-					for (var i = 0; i < element.classList.length; ++i)
+					if (this.isIE)
+						var classList = element.className.split(' ');
+					else
+						var classList = element.classList;
+					
+					for (var i = 0; i < classList.length; ++i)
 					{
 						for (var j in t)
 						{
-							if (j == element.classList[i])
+							if (j != "" && j == classList[i])
 								return window[t[j]];
 						}
 					}
@@ -345,35 +363,11 @@ var NaturalEditor = Class.extend(
 			
 			return null;
 		},
-		
-//		loadCss : function(fileName)
-//		{
-//			//alert(fileName);
-//			var r = document.createElement("link");
-//			r.setAttribute("rel", "stylesheet");
-//		  r.setAttribute("type", "text/css");
-//		  r.setAttribute("href", fileName);
-//		  
-//		  if (typeof(r) != "undefined")
-//		  	document.getElementsByTagName("head")[0].appendChild(r);
-//		},
-//
-//		getCurDirectory : function()
-//		{
-//			var scripts = document.getElementsByTagName('script');
-//			var name = "naturaleditor.js";
-//
-//	    for (var i = scripts.length - 1; i >= 0; --i)
-//	    {
-//	      var src = scripts[i].src;
-//	      var n = src.length;
-//	      var length = name.length;
-//	      if (src.substr(n - length) == name)
-//	        return src.substr(0, n - length);
-//	    }
-//	    
-//	    return "";
-//		},
+
+		updateEditTime : function()
+		{
+			this.editTime = Date.now();
+		},
 		
 		setFocus : function()
 		{
@@ -390,7 +384,12 @@ var NaturalEditor = Class.extend(
 		resetContent : function()
 		{
 			this.rootNode.childNodes.reset();
-		}, 
+		},
+		
+		setSize : function(cx, cy)
+		{
+			this.theme.setSize(cx, cy);
+		},
 		
 //		onDOMContentLoaded : function()
 //		{
@@ -674,6 +673,21 @@ var NaturalEditor = Class.extend(
 		{
 		},
 
+		onFormat : function(value)
+		{
+			this.changeType(value);
+		},
+
+		onFontFamily : function(value)
+		{
+			this.changeFontName(value);
+		},
+		
+		onFontSize : function(value)
+		{
+			this.changeFontSize(value);
+		},
+		
 		//tool functions
 		
 		//test functions

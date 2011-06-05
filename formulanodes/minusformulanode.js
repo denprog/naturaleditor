@@ -31,17 +31,19 @@ var MinusFormulaNode = ShapeFormulaNode.extend(
 
 		update : function()
 		{
-			var s = this.nte.window.getComputedStyle(this.element, null);
-			var h = parseInt(s.getPropertyValue("max-height"));
-			this.baseline = h;
-			//this.baseline = this.clientRect.height;
+//			var s = this.nte.window.getComputedStyle(this.element, null);
+//			var h = parseInt(s.getPropertyValue("max-height"));
+//			this.baseline = h;
+			this.baseline = this.nte.theme.getNodeProperty("MinusFormulaNode", this.level, "height");
 		},
 
 		updateClientRect : function()
 		{
-			var s = this.nte.window.getComputedStyle(this.element, null);
-			var w = parseInt(s.getPropertyValue("max-width"));
-			var h = parseInt(s.getPropertyValue("max-height"));
+//			var s = this.nte.window.getComputedStyle(this.element, null);
+//			var w = parseInt(s.getPropertyValue("max-width"));
+//			var h = parseInt(s.getPropertyValue("max-height"));
+			var w = this.nte.theme.getNodeProperty("MinusFormulaNode", this.level, "width");
+			var h = this.nte.theme.getNodeProperty("MinusFormulaNode", this.level, "height");
 			
 			this.clientRect.setRect(0, 0, w, h);
 		}, 
@@ -54,9 +56,11 @@ var MinusFormulaNode = ShapeFormulaNode.extend(
 
 		render : function()
 		{
-			var s = this.nte.window.getComputedStyle(this.element, null);
-			var w = parseInt(s.getPropertyValue("max-width"));
-			var h = parseInt(s.getPropertyValue("max-height"));
+			//var s = this.nte.window.getComputedStyle(this.element, null);
+			//var w = parseInt(s.getPropertyValue("max-width"));
+			//var h = parseInt(s.getPropertyValue("max-height"));
+			var w = this.nte.theme.getNodeProperty("MinusFormulaNode", this.level, "width");
+			var h = this.nte.theme.getNodeProperty("MinusFormulaNode", this.level, "height");
 			
 			if (this.shape)
 				this.drawLib.remove(this.shape, this.element);

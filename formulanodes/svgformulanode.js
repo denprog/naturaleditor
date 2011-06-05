@@ -49,6 +49,14 @@ var SvgFormulaNode = FormulaNode.extend(
 
 			if (this.baseline != 0)
 				this.element.style.verticalAlign = -(this.clientRect.height - this.baseline) + "px";
+			
+			if (this.nte.isIE)
+			{
+				//refresh DOM
+				var n = this.parentNode.childNodes.get(this.parentNode.getChildPos(this) + 1);
+				if (n)
+					n.getRelativePosBounds(0, this.tempRect);
+			}
 		}, 
 		
 		updateBoundingRect : function()
@@ -62,7 +70,10 @@ var SvgFormulaNode = FormulaNode.extend(
 				this.getNodeBounds(this.tempRect);
 				var r = this.element.getBoundingClientRect();
 				var b = this.nte.editor.getBoundingClientRect();
+				
 				this.boundingRect.setRect(r.left - this.element.x.baseVal.value - b.left - this.leftOffset, 
+				//this.boundingRect.setRect(r.left - this.element.x.baseVal.value - b.left, 
+				//this.boundingRect.setRect(this.tempRect.left - this.element.x.baseVal.value, 
 					this.tempRect.top - this.element.y.baseVal.value, 
 					this.element.width.baseVal.value, 
 					this.element.height.baseVal.value);

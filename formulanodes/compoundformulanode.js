@@ -17,7 +17,7 @@ var CompoundFormulaNode = GroupFormulaNode.extend(
 			var c = this.createChildNode;
 			this.createChildNode = null;
 
-			var res = new TextFormulaNode(this, this.childNodes.count(), this.nte);
+			var res = new ForeignTextFormulaNode(this, this.childNodes.count(), this.nte);
 
 			this.createChildNode = c;
 			
@@ -64,7 +64,8 @@ var CompoundFormulaNode = GroupFormulaNode.extend(
 					if (node == this)
 					{
 						var i = relativeState.getPos();
-						var n = this.childNodes.get(i);
+						//var n = this.childNodes.get(i);
+						var n = this.childNodes.get(i == this.childNodes.count() ? i - 1 : i);
 						res = n.getNextPosition(relativeState, params);
 						if (res)
 							return res;

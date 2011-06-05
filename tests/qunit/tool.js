@@ -10,7 +10,8 @@ function testHtml(html, caretPos)
 	
 	if (caretState.isSelected())
 		return false;
-	if (caretState.getSelectionStart() != caretPos)
+	var s = caretState.getSelectionStart();
+	if (s != caretPos)
 		return false;
 	
 	return true;
@@ -57,7 +58,8 @@ function testCaretPosition(caretPos)
 	var caretState = nte.caret.getState();
 	if (caretState.isSelected())
 		return false;
-	if (caretState.getSelectionStart() != caretPos)
+	var s = caretState.getSelectionStart();
+	if (s != caretPos)
 		return false;
 	
 	return true;

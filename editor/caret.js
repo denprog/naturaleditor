@@ -295,8 +295,13 @@ function Caret(nte)
 	 */
 	this.render = function()
 	{
+		//if (this.nte.isIE)
+		//	var range = window.document.selection.createRange();
+		//else
+		//{
 		var range = window.getSelection();
 		range.removeAllRanges();
+		//}
 
 		if (!this.currentState || !this.visible)
 			return;
@@ -323,7 +328,10 @@ function Caret(nte)
 
 		this.move(rect.left, rect.top);
 		this.setSize(1, rect.height);
-		var r = this.nte.drawLib.line(0, 0, 1, rect.height, "black", this.textCaretGroup);
+		if (this.nte.isWebKit)
+			var r = this.nte.drawLib.line(0, 0, 0, rect.height, "black", this.textCaretGroup);
+		else
+			var r = this.nte.drawLib.line(1, 0, 1, rect.height, "black", this.textCaretGroup);
 		this.addShape(r);
 		var c = this.caretSpan;
 		
@@ -354,40 +362,66 @@ function Caret(nte)
 	{
 		this.clearShapes();
 
-		var f = this.nte.drawLib.createElement("foreignObject", parent.element);
-		var s = this.nte.editor.document.createElementNS("http://www.w3.org/1999/xhtml", "span");
-		f.appendChild(s);
-		parent.element.appendChild(f);
-		
-		var group = this.nte.drawLib.svg(s);
-		this.nte.drawLib.move(rect.left, rect.top, f);
-		if (this.nte.isWebKit)
+		if (this.nte.isIE)
 		{
-			if (rect.bottom >= parent.groupNode.clientRect.height)
-				rect.setSize(rect.width, rect.height - 1);
-			this.nte.drawLib.setSize(rect.width <= 1 ? 2 : rect.width, rect.height + 1, f);
+			var group = this.nte.drawLib.group(parent.element);
+			this.nte.drawLib.move(rect.left, rect.top, group);
+			
+			//if (rect.bottom >= parent.groupNode.clientRect.height)
+			//	rect.setSize(rect.width, rect.height - 1);
 			this.nte.drawLib.setSize(rect.width <= 1 ? 2 : rect.width, rect.height + 1, group);
-		}
-		else
-		{
-			this.nte.drawLib.setSize(rect.width == 0 ? 1 : rect.width, rect.height, f);
-			this.nte.drawLib.setSize(rect.width == 0 ? 1 : rect.width, rect.height, group);
-		}
-		
-		if (rect.width > 1)
-		{
-			this.nte.drawLib.line(1, 0, 1, rect.height, "black", group);
-			this.nte.drawLib.line(1, rect.height, rect.width, rect.height, "black", group);
-		}
-		else
-		{
-			this.nte.drawLib.line(1, 0, 1, rect.height, "black", group);
-		}
-		
-		//this.nte.drawLib.animate("visibility", "visible", "hidden", "1", "indefinite", group);
-		this.addShape(f, parent.element);
+			
+			if (rect.width > 1)
+			{
+				this.nte.drawLib.line(0, 0, 0, rect.height + 1, "black", group);
+				this.nte.drawLib.line(0, rect.height + 1, rect.width, rect.height + 1, "black", group);
+			}
+			else
+			{
+				this.nte.drawLib.line(0, 0, 0, rect.height + 1, "black", group);
+			}
 
-		if (this.nte.isWebKit)
+			var s = group;
+			
+			this.addShape(group, parent.element);
+		}
+		else
+		{
+			var f = this.nte.drawLib.createElement("foreignObject", parent.element);
+			var s = this.nte.editor.document.createElementNS("http://www.w3.org/1999/xhtml", "span");
+			f.appendChild(s);
+			parent.element.appendChild(f);
+			
+			var group = this.nte.drawLib.svg(s);
+			this.nte.drawLib.move(rect.left, rect.top, f);
+		
+			if (this.nte.isWebKit)
+			{
+				if (rect.bottom >= parent.groupNode.clientRect.height)
+					rect.setSize(rect.width, rect.height - 1);
+				this.nte.drawLib.setSize(rect.width <= 1 ? 2 : rect.width, rect.height + 1, f);
+				this.nte.drawLib.setSize(rect.width <= 1 ? 2 : rect.width, rect.height + 1, group);
+			}
+			else
+			{
+				this.nte.drawLib.setSize(rect.width <= 1 ? 2 : rect.width, rect.height + 1, f);
+				this.nte.drawLib.setSize(rect.width <= 1 ? 2 : rect.width, rect.height + 1, group);
+			}
+
+			if (rect.width > 1)
+			{
+				this.nte.drawLib.line(1, 0, 1, rect.height, "black", group);
+				this.nte.drawLib.line(1, rect.height, rect.width, rect.height, "black", group);
+			}
+			else
+			{
+				this.nte.drawLib.line(1, 0, 1, rect.height, "black", group);
+			}
+			
+			this.addShape(f, parent.element);
+		}
+		
+		if (this.nte.isWebKit || this.nte.isIE)
 		{
 			clearTimeout(this.tid);
 			

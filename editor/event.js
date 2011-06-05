@@ -32,6 +32,11 @@ function EventsHandler(nte)
 //		intermediateHandler(event, obj);
 //	};
 	
+//	this.eventHandler = function(event)
+//	{
+//		obj.eventHandlers[type].handler.apply(obj, [event]);
+//	};
+	
 	this.attach = function(type)
 	{
 		if (this.nte.isIE)
@@ -45,13 +50,11 @@ function EventsHandler(nte)
 		}
 		else
 		{
-			this.nte.window.addEventListener(obj.eventHandlers[type].event,
-				function(event)
+			obj.eventHandlers[type].listener = function(event)
 				{
 					obj.eventHandlers[type].handler.apply(obj, [event]);
-				},
-				true
-				);
+				};
+			this.nte.window.addEventListener(obj.eventHandlers[type].event, obj.eventHandlers[type].listener, true);
 		}
 	};
 	
@@ -60,7 +63,10 @@ function EventsHandler(nte)
 		if (this.nte.isIE)
 			this.nte.document.body.detachEvent(type, this.eventHandlers[type]);
 		else
-			this.nte.window.removeEventListener(type, this.eventHandlers[type], false);
+		{
+			//this.nte.window.removeEventListener(type, this.eventHandlers[type], false);
+			this.nte.window.removeEventListener(this.eventHandlers[type].event, this.eventHandlers[type].listener, true);
+		}
 	};
 	
 	//shortcuts
@@ -69,9 +75,13 @@ function EventsHandler(nte)
 	{
 		var k = {};
 		if (keys == "+")
+		{
 			var combination = "+";
-		else
-			var combination = keys.split("+");
+			k["key"] = "+";
+			return k;
+		}
+		
+		var combination = keys.split("+");
 		
 		for (var i = 0; i < combination.length; ++i)
 		{
@@ -140,8 +150,8 @@ function EventsHandler(nte)
 		var h = this.eventHandlers["onglobalshortcut"];
 		if (h.refs > 0)
 		{
-			--h.refs;
-			this.detach("onglobalshortcut");
+			if (--h.refs == 0)
+				this.detach("onglobalshortcut");
 		}
 	};
 	
@@ -207,8 +217,11 @@ function EventsHandler(nte)
 		}
 		
 		var h = this.eventHandlers["onshortcut"];
-		if (--h.refs <= 0)
-			this.detach("onshortcut");
+		if (h.refs > 0)
+		{
+			if (--h.refs <= 0)
+				this.detach("onshortcut");
+		}
 	};
 
 	//custom events

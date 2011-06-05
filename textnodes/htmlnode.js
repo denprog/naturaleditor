@@ -79,10 +79,16 @@ var HtmlNode = Class.extend(
 			if (element)	
 				this.element = element;
 			else
-				this.element = this.document.createElementNS("http://www.w3.org/1999/xhtml", nodeType);
+			{
+				if (this.nte.isIE)
+					this.element = this.document.createElement(nodeType);
+				else
+					this.element = this.document.createElementNS("http://www.w3.org/1999/xhtml", nodeType);
+			}
 			
-			this.element.htmlNode = this;
-			
+			if (!this.nte.isIE)
+				this.element.htmlNode = this;
+
 			this.eventsHandler = this.nte.eventsHandler;
 			this.commandManager = this.nte.commandManager;
 		
@@ -91,6 +97,9 @@ var HtmlNode = Class.extend(
 			this.nextCaretPos = false;
 			
 			this.childNodes = new NodesCollection(1);
+
+			this.storeTime = 0;
+			this.storedItems = new Array();
 
 			if (parentNode)
 				parentNode.insertChildNode(this, pos);
@@ -265,12 +274,6 @@ var HtmlNode = Class.extend(
 			return false;
 		},
 		
-//		remakeLevel : function()
-//		{
-//			for (var i = 0; i < this.childNodes.count(); ++i)
-//				this.childNodes.get(i).remakeLevel();
-//		},
-		
 		setLevel : function(level)
 		{
 			this.level = level;
@@ -292,7 +295,7 @@ var HtmlNode = Class.extend(
 				return this.level + 1;
 			return this.level;
 		},
-		
+
 		moveChildNode : function(childNode, pos)
 		{
 			var p = childNode.parentNode.getChildPos(childNode);
@@ -344,48 +347,6 @@ var HtmlNode = Class.extend(
 			if (b2)
 				caretState.addSelectedNode(new SelectedNode(caretState, this, len, 1));
 		},
-		
-//		mergeNode : function(caretState)
-//		{
-//			var pos = this.parentNode.getChildPos(this);
-//			var node = this.parentNode.childNodes.get(pos + 1);
-//			
-//			var c = node.caretState;
-//			if (c)
-//				var s = c.findSelectedNode(node);
-//
-//			var p = this.parentNode.caretState;
-//			if (p)
-//			{
-//				if (p.isNodeSelected(node))
-//				{
-//					p.removeInnerSelectedNode(node);
-//					var b2 = true;
-//				}
-//				if (p.isNodeSelected(this))
-//				{
-//					p.removeInnerSelectedNode(this);
-//					var b1 = true;
-//				}
-//			}
-//
-//			if (this.isEmpty())
-//				this.childNodes.reset();
-//			if (node.isEmpty())
-//				node.childNodes.reset();
-//			
-//			var len = this.childNodes.count();
-//			for (var i = 0; !node.isEmpty(); ++i)
-//				this.moveChildNode(node.childNodes.get(0), len + i);
-//			this.parentNode.removeChildNode(pos + 1);
-//			
-//			if (c && s)
-//				c.replaceSelectedNode(node, this, len + s.getPos(), s.length);
-//			if (b1)
-//				p.addSelectedNode(new SelectedNode(p, this, 0, len));
-//			if (b2)
-//				p.addSelectedNode(new SelectedNode(p, this, len, 1));
-//		}, 
 
 		/**
 		 * Creates a child node. Default implementation.
@@ -564,6 +525,15 @@ var HtmlNode = Class.extend(
 		{
 			this.childNodes.forEach("remake", []);
 		}, 
+
+		move : function(x, y)
+		{
+		},
+		
+		update : function()
+		{
+			this.childNodes.forEach("update", []);
+		},
 		
 		//caret functions
 
@@ -1038,6 +1008,25 @@ var HtmlNode = Class.extend(
 				
 				if (!res && this.parentNode)
 					res = this.parentNode.getPreviousPosition(relativeState, params);
+				
+				if (res)
+				{
+					res.getRect(this.tempRect);
+					var t = this.tempRect.left;
+					var r = res.getNode().getPreviousPosition(res, params);
+					if (r)
+					{
+						r.getRect(this.tempRect);
+						if (t == this.tempRect.left)
+						{
+							var pos = relativeState.getPos();
+							if (pos == 0)
+								res = r;
+							else
+								res = relativeState.getNode().getFirstPosition();
+						}
+					}
+				}
 			}
 			
 			return res;
@@ -1084,7 +1073,7 @@ var HtmlNode = Class.extend(
 				n = c.getNode();
 				c = n.getPreviousPosition(c, {lower : true});
 				
-				if (!c || res.isEqual(c))
+				if (!c || res.isEqual(c) || c1.isEqual(c2))
 					return res;
 				
 				n = c.getNode();
@@ -1256,8 +1245,24 @@ var HtmlNode = Class.extend(
 			}
 			
 			return new Rectangle(rect.left - r.left, rect.top - r.top, rect.width, rect.height);
-		}, 
-
+		},
+		
+		getStoredItem : function(pos)
+		{
+			if (this.storeTime < this.nte.editTime)
+			{
+				this.storedItems.length = 0;
+				this.storeTime = Date.now();
+			}
+			
+			return this.storedItems[pos];
+		},
+		
+		setStoredItem : function(pos, item)
+		{
+			this.storedItems[pos] = item;
+		},
+		
 		//editing
 		
 		dublicate : function(parent)
@@ -1277,24 +1282,6 @@ var HtmlNode = Class.extend(
 			resNode.nextCaretPos = this.nextCaretPos;
 			resNode.caretState = this.caretState;
 			resNode.childNodes.copyFrom(this.childNodes, resNode);
-
-//			if (this.element.style.cssText != "")
-//			{
-//				//copy the style in the new node
-//				for (var name in this.element.style)
-//				{
-//					if (!(name >= "0" && name <= "9") && name != "cssText")
-//					{
-//						var s = this.element.style[name];
-//						if (s && typeof(s) != "function" && s != "")
-//						{
-//							var m = {};
-//							m[name] = s;
-//							resNode.addStyle(m);
-//						}
-//					}
-//				}
-//			}
 
 			return resNode;
 		}, 
@@ -1351,7 +1338,6 @@ var HtmlNode = Class.extend(
 							this.insertChildNode(n.childNodes.get(j).dublicate(), j);
 						this.parentNode.removeChildNode(pos - 1);
 						
-						//return this;
 						return this.childNodes.get(c);
 					}
 				}
@@ -1754,9 +1740,7 @@ var HtmlNode = Class.extend(
 							//copy the style in the new node
 							for (var name in n.element.style)
 							{
-								//var p = parseInt(name);
 								if (!(name >= "0" && name <= "9") && name != "cssText")
-								//if (p >= "0" && p <= "9" && name != "cssText")
 								{
 									var s = n.element.style[name];
 									if (s && typeof(s) != "function" && s != "")
@@ -1831,56 +1815,56 @@ var HtmlNode = Class.extend(
 			return true;
 		}, 
 		
-		changeChildNodeType : function(nodeEvent, command)
-		{
-			var pos = this.childNodes.getPos(nodeEvent.nodeId);
-			var node = this.childNodes.get(pos);
-			if (node.getType() == nodeEvent.nodeType.type && this.isEqualStyle(nodeEvent.nodeType.style))
-				return false;
-
-			var caretState = nodeEvent.caretState;
-			
-			var lastType = node.getType();
-			var lastStyle = node.getStyle();
-			
-			var ins = this.nte.createTextNode(nodeEvent.nodeType.type, nodeEvent.nodeType.style, this);
-			this.updateNodeId(command, "insId", ins);
-
-			//copy child nodes of the selected node in the created node
-			this.copyNode(node, ins);
-
-			var parentPos = node.getParentTextChildPos();
-			var t = this.getTextChild(parentPos);
-
-			this.removeChildNode(pos);		
-			this.insertChildNode(ins, parentPos, t == null ? 0 : t.length);
-
-			nodeEvent.resNode = this;
-			
-			nodeEvent.caretState = caretState;
-
-			nodeEvent.undo = function(nodeEvent, command)
-				{
-					var node = this.childNodes.get(pos);
-
-					var ins = this.nte.createTextNode(lastType, lastStyle, this);
-					this.copyNode(node, ins);
-
-					var parentPos = node.getParentTextChildPos();
-					var t = this.getTextChild(parentPos);
-
-					this.removeChildNode(pos);		
-					this.insertChildNode(ins, parentPos, t == null ? 0 : t.length);
-					
-					nodeEvent.resNode = this;
-					nodeEvent.caretState = caretState;
-					nodeEvent.caretState.restore(this.nte);
-
-					return true;
-				};
-				
-			return true;
-		}, 
+//		changeChildNodeType : function(nodeEvent, command)
+//		{
+//			var pos = this.childNodes.getPos(nodeEvent.nodeId);
+//			var node = this.childNodes.get(pos);
+//			if (node.getType() == nodeEvent.nodeType.type && this.isEqualStyle(nodeEvent.nodeType.style))
+//				return false;
+//
+//			var caretState = nodeEvent.caretState;
+//			
+//			var lastType = node.getType();
+//			var lastStyle = node.getStyle();
+//			
+//			var ins = this.nte.createTextNode(nodeEvent.nodeType.type, nodeEvent.nodeType.style, this);
+//			this.updateNodeId(command, "insId", ins);
+//
+//			//copy child nodes of the selected node in the created node
+//			this.copyNode(node, ins);
+//
+//			var parentPos = node.getParentTextChildPos();
+//			var t = this.getTextChild(parentPos);
+//
+//			this.removeChildNode(pos);		
+//			this.insertChildNode(ins, parentPos, t == null ? 0 : t.length);
+//
+//			nodeEvent.resNode = this;
+//			
+//			nodeEvent.caretState = caretState;
+//
+//			nodeEvent.undo = function(nodeEvent, command)
+//				{
+//					var node = this.childNodes.get(pos);
+//
+//					var ins = this.nte.createTextNode(lastType, lastStyle, this);
+//					this.copyNode(node, ins);
+//
+//					var parentPos = node.getParentTextChildPos();
+//					var t = this.getTextChild(parentPos);
+//
+//					this.removeChildNode(pos);		
+//					this.insertChildNode(ins, parentPos, t == null ? 0 : t.length);
+//					
+//					nodeEvent.resNode = this;
+//					nodeEvent.caretState = caretState;
+//					nodeEvent.caretState.restore(this.nte);
+//
+//					return true;
+//				};
+//				
+//			return true;
+//		}, 
 		
 		normilizeChildNodes : function(nodeEvent, command)
 		{
@@ -2017,7 +2001,6 @@ var HtmlNode = Class.extend(
 						pos, nodePos, textPos);
 					if (!command.nodeParams.lastNodes)
 						lastNodes.push(node.id);
-					//nodePos = node.parentNode.childNodes.getPos(node.id);
 					nodePos = node.parentNode.getChildPos(node) - 1;
 				}
 				
@@ -2049,6 +2032,25 @@ var HtmlNode = Class.extend(
 			return true;
 		}, 
 		
+		//utils functions
+		
+		getFormat : function()
+		{
+			if (this.parentNode)
+				return this.parentNode.getFormat();
+			return null;
+		},
+		
+		getFontFamily : function()
+		{
+			return null;
+		},
+		
+		getFontSize : function()
+		{
+			return null;
+		},
+
 		//test functions
 		
 		setCaret : function(pos, length)
@@ -2116,9 +2118,5 @@ var HtmlNode = Class.extend(
 			
 			return true;
 		}
-		
-//		toTex : function()
-//		{
-//		}
 	} 
 );

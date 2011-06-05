@@ -42,6 +42,13 @@ var FormulaNode = HtmlNode.extend(
 				this.groupNode.remake();
 		}, 
 
+		createTextNode : function(pos)
+		{
+			if (this.nte.isIE)
+				return new TextFormulaNode(this, pos, this.nte);
+			return new ForeignTextFormulaNode(this, pos, this.nte);
+		},
+		
 		removeChildNode : function(pos)
 		{
 			this._super(pos);
@@ -51,9 +58,12 @@ var FormulaNode = HtmlNode.extend(
 
 		hasClass : function(name)
 		{
+			//if (this.nte.isIE)
+			//	var s = this.element.className;
+			//else
 			var s = this.element.className.baseVal;
-			if (s.indexOf)
-				return s.indexOf(name) != -1;
+			//if (s.indexOf)
+			//	return s.indexOf(name) != -1;
 			return s.indexOf(name) != -1;
 		},
 		
@@ -201,6 +211,78 @@ var FormulaNode = HtmlNode.extend(
 			return this.parentNode.getLowerPosition(relativeState);
 		},
 		
+		getNextPosition : function(relativeState, params)
+		{
+			var res = null;
+			
+			if (!relativeState)
+			{
+				res = this.getFirstPosition();
+				if (res)
+					res = res.getNode().getNextPosition(res, params);
+			}
+			else
+			{
+				var node = relativeState.getNode();
+				var i = this.getFirstLevelChildPos(node);
+
+				if (i != -1)
+				{
+					for (var pos = i + 1; pos < this.childNodes.count(); ++pos)
+					{
+						var n = this.childNodes.get(pos);
+						//whether to skip the first position
+						if (pos == i + 1 && this.childNodes.get(i).skipFirstPosition())
+							res = n.getNextPosition(null, params);
+						else
+							res = n.getFirstPosition();
+						if (res)
+							break;
+					}
+				}
+				
+				if (!res && this.parentNode)
+					res = this.parentNode.getNextPosition(relativeState, params);
+			}
+			
+			return res;
+		}, 
+
+		getPreviousPosition : function(relativeState, params)
+		{
+			var res = null;
+			
+			if (!relativeState)
+			{
+				res = this.getLastPosition();
+			}
+			else
+			{
+				var node = relativeState.getNode();
+				var i = this.getFirstLevelChildPos(node);
+				
+				//whether the first position was skipped
+				if (i > 0 && relativeState.getPos() > 0 && !this.childNodes.get(i - 1).skipFirstPosition())
+					res = this.childNodes.get(i).getFirstPosition();
+				
+				if (!res)
+				{
+					for (var pos = i - 1; pos >= 0; --pos)
+					{
+						var n = this.childNodes.get(pos);
+						res = n.getPreviousPosition(null, params);
+						if (res)
+							break;
+					}
+				}
+				
+				if (!res && this.parentNode)
+					res = this.parentNode.getPreviousPosition(relativeState, params);
+			}
+			
+			return res;
+		}, 
+
 		hasSingleLine : function()
 		{
 			return true;
@@ -225,11 +307,13 @@ var FormulaNode = HtmlNode.extend(
 						command.setParam(this, "empty", true);
 					}
 					
-					var n = new TextFormulaNode(this, pos, this.nte);
+					//var n = new ForeignTextFormulaNode(this, pos, this.nte);
+					var n = this.createTextNode(pos);
 					nodeEvent.caretState = n.getFirstPosition();
 					
 					nodeEvent.caretState.getNode().doInsert(0, nodeEvent, command);
 					this.groupNode.remake();
+					this.parentNode.remake();
 
 					nodeEvent.undoActionNodePos = this.getCaretPosition();
 					
@@ -557,8 +641,11 @@ var FormulaNode = HtmlNode.extend(
 			
 			while (p && p != this.groupNode)
 			{
-				cx += p.boundingRect.left;
-				cy += p.boundingRect.top;
+				if (p.boundingRect)
+				{
+					cx += p.boundingRect.left;
+					cy += p.boundingRect.top;
+				}
 				p = p.parentNode;
 			}
 			
@@ -609,6 +696,7 @@ var FormulaNode = HtmlNode.extend(
 		{
 			this.getPosBounds(pos, rect);
 			
+			this.groupNode.updateBoundingRect();
 			var r = this.groupNode.boundingRect;
 
 //			rect.setRect(rect.left + this.nte.editor.scrollLeft + r.left, 

@@ -44,6 +44,11 @@ function Rectangle(left, top, width, height)
 		this.bottom = this.top + this.height;
 	};
 	
+	this.dublicate = function()
+	{
+		return new Rectangle(this.left, this.top, this.width, this.height);
+	};
+	
 	if (typeof(left) == "undefined" || typeof(top) == "undefined" || 
 		typeof(width) == "undefined" || typeof(height) == "undefined")
 		this.setRectEmpty();

@@ -5,7 +5,7 @@ var TextNode = HtmlNode.extend(
 	{
 		init : function(textNode, parentNode, pos, nte)
 		{
-			var el = nte.document.createTextNode(textNode ? textNode.textContent : "");
+			var el = nte.document.createTextNode(textNode ? (nte.isIE ? textNode.data : textNode.textContent) : "");
 			this._super(0, el, parentNode, pos, nte);
 		},
 
@@ -118,13 +118,16 @@ var TextNode = HtmlNode.extend(
 							p = p.parentNode;
 						}
 						
-						for (var pos = i + 1; pos < p.childNodes.count(); ++pos)
+						if (p)
 						{
-							var n = p.childNodes.get(pos);
-							//whether to skip the first position
-							res = n.getFirstPosition();
-							if (res)
-								break;
+							for (var pos = i + 1; pos < p.childNodes.count(); ++pos)
+							{
+								var n = p.childNodes.get(pos);
+								//whether to skip the first position
+								res = n.getFirstPosition();
+								if (res)
+									break;
+							}
 						}
 						
 						if (!res && this.parentNode)
@@ -209,9 +212,11 @@ var TextNode = HtmlNode.extend(
 			}
 			else
 			{
-				var t = this.element.splitText(pos);
+				if (pos < this.element.data.length)
+					var t = this.element.splitText(pos);
 				var n = new TextNode(t, this.parentNode, p + 1, this.nte);
-				this.element.parentNode.removeChild(t);
+				if (t)
+					this.element.parentNode.removeChild(t);
 				command.setParam(this, "leftSplit", false);
 			}
 			
@@ -255,7 +260,23 @@ var TextNode = HtmlNode.extend(
 			
 			return null;
 		}, 
+
+		//format functions
 		
+		getFontFamily : function()
+		{
+			var s = this.nte.window.getComputedStyle(this.parentNode.element, null);
+			var f = s.getPropertyValue("font-family");
+			return f;
+		},
+		
+		getFontSize : function()
+		{
+			var s = this.nte.window.getComputedStyle(this.parentNode.element, null);
+			var h = parseInt(s.getPropertyValue("font-size"));
+			return h;
+		},
+
 		//command functions
 
 		insertChild : function(nodeEvent, command)
@@ -714,12 +735,18 @@ var TextNode = HtmlNode.extend(
 			}
 
 			var rect = textRange.getBoundingClientRect();
-
 			posRect.setRect(Math.round(pos == this.element.length ? rect.right : rect.left), 0, 0, rect.height);
 		},
 
 		getRelativePosBounds : function(pos, posRect)
 		{
+			var r = this.getStoredItem(pos);
+			if (r)
+			{
+				posRect.setRect(r.left, r.top, r.width, r.height);
+				return;
+			}
+			
 			var textRange = this.document.createRange();
 			if (pos == this.element.length)
 			{
@@ -729,7 +756,7 @@ var TextNode = HtmlNode.extend(
 			else
 			{
 				textRange.setStart(this.element, pos);
-				textRange.setEnd(this.element, pos + 1);
+				textRange.setEnd(this.element, this.nte.isIE ? pos : pos + 1);
 			}
 
 			var rect;
@@ -746,13 +773,101 @@ var TextNode = HtmlNode.extend(
 			{
 				rect = textRange.getBoundingClientRect();
 			}
+
+			if (this.nte.isIE)
+			{
+				var p = this.parentNode.getChildPos(this);
+				el = this.document.createElement("span");
+				el.innerText = ".";
+				this.element.parentNode.insertBefore(el, this.element);
+				var t = el.getBoundingClientRect();
+				var t1 = t.left;
+				this.element.parentNode.removeChild(el);
+				
+				if (rect.top >= t.bottom)
+				{
+					el = this.document.createElement("span");
+					el.innerText = ".";
+					this.element.parentNode.insertBefore(el, this.element.nextSibling);
+					t = el.getBoundingClientRect();
+					this.element.parentNode.removeChild(el);
+				}
+				
+				if (Math.abs(rect.height - t.height) > 1)
+				{
+					rect.top = t.top;
+					rect.bottom = t.bottom;
+				}
+			}
 			
 			var r = this.nte.editor.getBoundingClientRect();
-			
-			posRect.setRect(Math.round((pos == this.element.length ? rect.right + this.nte.editor.scrollLeft : rect.left + this.nte.editor.scrollLeft) - r.left), 
-				Math.round(rect.top + this.nte.editor.scrollTop - r.top), 
-				Math.round(0), 
-				Math.round(rect.height));
+
+			if (this.nte.isIE)
+			{
+				if (rect.left == r.left)
+				{
+					if (r.left == t1)
+					{
+						if (pos == this.element.length && this.element.textContent[pos - 1] == ' ')
+						{
+							posRect.setRect(Math.round(rect.left + this.nte.editor.scrollLeft - r.left), 
+								Math.round(rect.top + this.nte.editor.scrollTop - r.top), 
+								Math.round(0), 
+								Math.round(rect.height));
+						}
+						else
+						{
+							posRect.setRect(Math.round(rect.right + this.nte.editor.scrollLeft - r.left), 
+								Math.round(rect.top + this.nte.editor.scrollTop - r.top), 
+								Math.round(0), 
+								Math.round(rect.height));
+						}
+						return;
+					}
+					else if (pos == this.element.length)
+					{
+						if (this.element.length > 1 && this.element.textContent[pos - 1] == ' ')
+						{
+							if (pos > 1)
+							{
+								textRange.setStart(this.element, pos - 2);
+								textRange.setEnd(this.element, pos - 1);
+								rect = textRange.getBoundingClientRect();
+							}
+							
+							posRect.setRect(Math.round(rect.right + this.nte.editor.scrollLeft - r.left), 
+								Math.round(t.top + this.nte.editor.scrollTop - r.top), 
+								Math.round(0), 
+								Math.round(rect.height));
+							return;
+						}
+						
+						if (this.element.nextSibling)
+							t = this.element.nextSibling.getBoundingClientRect();
+						
+						posRect.setRect(Math.round(rect.left + this.nte.editor.scrollLeft - r.left), 
+							Math.round(t.top + this.nte.editor.scrollTop - r.top), 
+							Math.round(0), 
+							Math.round(rect.height));
+						return;
+					}
+				}
+				
+				posRect.setRect(Math.round((pos == this.element.length ? rect.right + this.nte.editor.scrollLeft : rect.left + this.nte.editor.scrollLeft) - r.left), 
+					Math.round(rect.top + this.nte.editor.scrollTop - r.top), 
+					Math.round(0), 
+					Math.round(rect.height));
+			}
+			else
+			{
+				posRect.setRect(Math.round((pos == this.element.length ? rect.right + this.nte.editor.scrollLeft : rect.left + this.nte.editor.scrollLeft) - r.left), 
+					Math.round(rect.top + this.nte.editor.scrollTop - r.top), 
+					Math.round(0), 
+					Math.round(rect.height));
+			}
+
+			//store the bounds
+			this.setStoredItem(pos, posRect.dublicate());
 		}, 
 
 		//test functions

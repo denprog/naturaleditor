@@ -404,7 +404,12 @@ var ParagraphNode = TextBaseNode.extend(
 		}, 
 
 		//util functions
-		
+
+		getFormat : function()
+		{
+			return "p";
+		},
+
 		//command functions
 		
 		//test functions
