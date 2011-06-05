@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 
 <html>
 
@@ -9,6 +9,14 @@
 	<script type="text/javascript" src="../../../lib/qunit.js"></script>
 	<script type="text/javascript" src="../../../naturaleditor.js"></script>
 	<script type="text/javascript" src="../tool.js"></script>
+
+	<style>
+		p
+		{
+			font-family: 'trebuchet ms', verdana, arial;
+			font-size: 16px;
+		}
+	</style>
 </head>
 
 <body>
@@ -28,8 +36,6 @@
 		    
 				test("Caret moving 1", function()
 					{
-						expect(24);
-						
 						nte.parse(
 							"<p>This is a simple text with formulas. A formula with numbers" + 
 							"<span class='formula'>" + 
@@ -92,6 +98,11 @@
 						ok(testCaretPosition(0));
 
 						nte.moveCaretDown(1);
+						nte.moveCaretLeft(1);
+						nte.moveCaretUp(1);
+						ok(testCaretPosition(0));
+
+						nte.moveCaretDown(1);
 						nte.moveCaretRight(1);
 						nte.moveCaretUp(1);
 						ok(testCaretPosition(1));
@@ -105,22 +116,22 @@
 
 						nte.moveCaretRight(6);
 						nte.moveCaretUp(1);
-						ok(testCaretPosition(11));
+						ok(testCaretPosition(nte.isIE ? 10 : 11));
 
 						nte.moveCaretRight(2);
 						nte.moveCaretDown(1);
-						ok(testCaretPosition(2));
+						ok(testCaretPosition(nte.isIE ? 0 : 2));
 
 						nte.moveCaretDown(1);
-						ok(testCaretPosition(61));
+						ok(testCaretPosition(nte.isIE ? 59 : 61));
 
 						nte.moveCaretRight(6);
 						nte.moveCaretUp(1);
-						ok(testCaretPosition(3));
+						ok(testCaretPosition(nte.isIE ? 1 : 3));
 
 						nte.moveCaretRight(3);
 						nte.moveCaretDown(1);
-						ok(testCaretPosition(71));
+						ok(testCaretPosition(nte.isIE ? 68 : 71));
 
 						nte.moveCaretDown(4);
 						ok(testCaretPosition(2));
@@ -363,7 +374,7 @@
 							ok(testCaretPosition(29));
 						
 						nte.moveCaretDown(1);
-						ok(testCaretPosition(1));
+						ok(testCaretPosition(nte.isIE ? 3 : 1));
 						
 						nte.moveCaretRight(8);
 						nte.moveCaretUp(1);

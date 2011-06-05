@@ -70,6 +70,7 @@ var DEBUG_LEVEL = true;
 		include('textnodes/spannode.js');
 		include('textnodes/headernode.js');
 		include('textnodes/referencenode.js');
+		include('textnodes/divnode.js');
 		include('formulanodes/formulanode.js');
 		include('formulanodes/svgformulanode.js');
 		include('formulanodes/groupformulanode.js');

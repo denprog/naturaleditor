@@ -74,8 +74,49 @@ function Theme(nte, parentElement, cx, cy)
 						{
 							"width" : 8, 
 							"height" : 8
+						}, 
+					3 : 
+						{
+							"width" : 6, 
+							"height" : 6
 						}
-				}
+				},
+			"MinusFormulaNode" : 
+				{
+					1 : 
+						{
+							"width" : 10,
+							"height" : 10
+						}, 
+					2 : 
+						{
+							"width" : 8, 
+							"height" : 8
+						}, 
+					3 : 
+						{
+							"width" : 6, 
+							"height" : 6
+						}
+				},
+			"MultiplyFormulaNode" : 
+			{
+				1 : 
+					{
+						"width" : 10,
+						"height" : 10
+					}, 
+				2 : 
+					{
+						"width" : 8, 
+						"height" : 8
+					}, 
+				3 : 
+					{
+						"width" : 6, 
+						"height" : 6
+					}
+			}
 		};
 	
 	this.init = function(parentElement, cx, cy)

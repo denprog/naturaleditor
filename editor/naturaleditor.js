@@ -274,6 +274,7 @@ var NaturalEditor = Class.extend(
 				'h3' : "Header3Node",
 				'br' : "BreakNode", 
 				'a' : "ReferenceNode", 
+				'div' : "DivNode", 
 				'span' : 
 					{
 						'' : 'SpanNode',

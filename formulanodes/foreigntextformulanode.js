@@ -358,16 +358,51 @@ var ForeignFormulaSpanNode = HtmlNode.extend(
 
 		getNextPosition : function(relativeState, params)
 		{
-			if (this.childNodes.count() > 0 && this.childNodes.get(0).empty)
+			if (this.childNodes.count() > 0 && this.childNodes.get(0).isEmpty())
 				return false;
-			return this._super(relativeState, params);
+			//return this._super(relativeState, params);
+			
+			if (!relativeState)
+				res = new CaretState(this, 1);
+			else
+			{
+				var pos = relativeState.getSelectionStart();
+				var res = null;
+	
+				if (pos == this.element.length - 1)
+					res = new CaretState(this, pos + 1);
+				else if (pos < this.element.length)
+					res = new CaretState(this, pos + 1);
+				else
+					res = this.parentNode.getNextPosition(relativeState, params);
+			}
+			
+			return res;
 		},
 
 		getPreviousPosition : function(relativeState, params)
 		{
-			if (this.childNodes.count() > 0 && this.childNodes.get(0).empty)
+			if (this.childNodes.count() > 0 && this.childNodes.get(0).isEmpty())
 				return false;
-			return this._super(relativeState, params);
+			//return this._super(relativeState, params);
+
+			if (!relativeState)
+				res = new CaretState(this, this.element.length);
+			else
+			{
+				var pos = relativeState.getSelectionStart();
+				var res = null;
+	
+				if (pos == 0 || pos == 1)
+					res = this.parentNode.getPreviousPosition(relativeState, params);
+				else if (pos > 1)
+					res = new CaretState(this, pos - 1);
+				
+				if (!res)
+					res = this.parentNode.getPreviousPosition(relativeState, params);
+			}
+			
+			return res;
 		},
 
 		getUpperPosition : function(relativeState)
@@ -540,8 +575,6 @@ var ForeignFormulaTextNode = TextNode.extend(
 			if (this._super(pos, nodeEvent, command))
 			{
 				this.parentNode.parentNode.remake();
-				//this.parentNode.parentNode.update();
-				this.parentNode.groupNode.remake();
 				return true;
 			}
 			
@@ -563,9 +596,6 @@ var ForeignFormulaTextNode = TextNode.extend(
 					this.parentNode.groupNode.remake();
 					return true;
 				}
-			}
-			else
-			{
 			}
 			
 			if (!this._super(node, pos, len, nodeEvent, command))
@@ -589,16 +619,6 @@ var ForeignFormulaTextNode = TextNode.extend(
 
 		getPosBounds : function(pos, posRect)
 		{
-//			if (this.nte.isIE)
-//			{
-//				var textRange = this.document.body.createTextRange();
-//				textRange.moveToElementText(this.element);
-//				textRange.collapse(true);
-//				textRange.moveStart("character", pos);
-//				textRange.moveEnd("character", pos + 1);
-//			}
-//			else
-//			{
 			var textRange = this.document.createRange();
 			if (pos == this.element.length)
 			{
@@ -610,7 +630,6 @@ var ForeignFormulaTextNode = TextNode.extend(
 				textRange.setStart(this.element, pos);
 				textRange.setEnd(this.element, pos + 1);
 			}
-//			}
 
 			var rect = textRange.getBoundingClientRect();
 			var p = this.parentNode;
@@ -666,16 +685,6 @@ var ForeignFormulaTextNode = TextNode.extend(
 		
 		getRelativePosBounds : function(pos, posRect)
 		{
-//			if (this.nte.isIE)
-//			{
-//				var textRange = this.document.body.createTextRange();
-//				textRange.moveToElementText(this.element);
-//				textRange.collapse(true);
-//				textRange.moveStart("character", pos);
-//				textRange.moveEnd("character", pos + 1);
-//			}
-//			else
-//			{
 			var textRange = this.document.createRange();
 			if (pos == this.element.length)
 			{
@@ -687,7 +696,6 @@ var ForeignFormulaTextNode = TextNode.extend(
 				textRange.setStart(this.element, pos);
 				textRange.setEnd(this.element, pos + 1);
 			}
-//			}
 
 			var rect = textRange.getBoundingClientRect();
 			var p = this.parentNode;
@@ -738,7 +746,6 @@ var ForeignFormulaTextNode = TextNode.extend(
 				cx = Math.round(cx);
 				cy = Math.round(cy);
 				
-				//var r = this.nte.editor.getBoundingClientRect();
 				this.parentNode.groupNode.updateBoundingRect();
 				var b = this.parentNode.groupNode.boundingRect;
 				

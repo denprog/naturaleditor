@@ -9,6 +9,14 @@
 	<script type="text/javascript" src="../../lib/qunit.js"></script>-->
 	<script type="text/javascript" src="../../naturaleditor.js"></script>
 	<!--<script type="text/javascript" src="tool.js"></script>-->
+	
+	<style>
+		p
+		{
+			font-family: 'trebuchet ms', verdana, arial;
+			font-size: 16px;
+		}
+	</style>
 </head>
 
 <body onload="onLoad();">
@@ -23,27 +31,31 @@
 			{
 				nte.parse(
 					"<p>Text " + 
-					"<span class='formula'>" + 
-						"<span class='formula_plus'></span>" + 
-						"<span class='formula_exponentiation'>" + 
-							"<span class='formula_group'>" + 
-								"<span class='formula_text'>123</span>" + 
+					//"<div style='display:inline'>" + 
+					//"<span style='display:inline-block; vertical-align:-17px'>" + 
+						"<span class='formula'>" + 
+							"<span class='formula_plus'></span>" + 
+							"<span class='formula_exponentiation'>" + 
+								"<span class='formula_group'>" + 
+									"<span class='formula_text'>123</span>" + 
+								"</span>" + 
+								"<span class='formula_group'>" + 
+									"<span class='formula_text'>456</span>" + 
+								"</span>" + 
 							"</span>" + 
-							"<span class='formula_group'>" + 
-								"<span class='formula_text'>456</span>" + 
+							"<span class='formula_text'>Tgh</span>" + 
+							"<span class='formula_division'>" + 
+								"<span class='formula_group'>" + 
+									"<span class='formula_text'>Yg12</span>" + 
+								"</span>" + 
+								"<span class='formula_group'>" + 
+									"<span class='formula_text'>y267</span>" + 
+								"</span>" + 
 							"</span>" + 
 						"</span>" + 
-						"<span class='formula_text'>Tgh</span>" + 
-						"<span class='formula_division'>" + 
-							"<span class='formula_group'>" + 
-								"<span class='formula_text'>Yg12</span>" + 
-							"</span>" + 
-							"<span class='formula_group'>" + 
-								"<span class='formula_text'>y267</span>" + 
-							"</span>" + 
-						"</span>" + 
-					"</span>" + 
-					"</p>"
+					//"</span>" + 
+					//"</div>" + 
+					"Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text </p>"
 					);
 
 				/*nte.parse(
