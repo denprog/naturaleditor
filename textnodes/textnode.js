@@ -735,12 +735,18 @@ var TextNode = HtmlNode.extend(
 			}
 
 			var rect = textRange.getBoundingClientRect();
-
 			posRect.setRect(Math.round(pos == this.element.length ? rect.right : rect.left), 0, 0, rect.height);
 		},
 
 		getRelativePosBounds : function(pos, posRect)
 		{
+			var r = this.getStoredItem(pos);
+			if (r)
+			{
+				posRect.setRect(r.left, r.top, r.width, r.height);
+				return;
+			}
+			
 			var textRange = this.document.createRange();
 			if (pos == this.element.length)
 			{
@@ -859,6 +865,9 @@ var TextNode = HtmlNode.extend(
 					Math.round(0), 
 					Math.round(rect.height));
 			}
+
+			//store the bounds
+			this.setStoredItem(pos, posRect.dublicate());
 		}, 
 
 		//test functions

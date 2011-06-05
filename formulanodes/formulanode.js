@@ -696,6 +696,7 @@ var FormulaNode = HtmlNode.extend(
 		{
 			this.getPosBounds(pos, rect);
 			
+			this.groupNode.updateBoundingRect();
 			var r = this.groupNode.boundingRect;
 
 //			rect.setRect(rect.left + this.nte.editor.scrollLeft + r.left, 

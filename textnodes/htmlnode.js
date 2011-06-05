@@ -86,22 +86,9 @@ var HtmlNode = Class.extend(
 					this.element = this.document.createElementNS("http://www.w3.org/1999/xhtml", nodeType);
 			}
 			
-//			if (this.nte.isIE)
-//			{
-//				if (this.element.nodeName == "#text")
-//				{
-//					this.element.prototype.htmlNode = this;
-//				}
-//				else
-//				{
-//					this.element["htmlNode"] = this;
-//				}
-//				var p = this.element.htmlNode;
-//			}
-//			else
 			if (!this.nte.isIE)
 				this.element.htmlNode = this;
-			
+
 			this.eventsHandler = this.nte.eventsHandler;
 			this.commandManager = this.nte.commandManager;
 		
@@ -110,6 +97,9 @@ var HtmlNode = Class.extend(
 			this.nextCaretPos = false;
 			
 			this.childNodes = new NodesCollection(1);
+
+			this.storeTime = 0;
+			this.storedItems = new Array();
 
 			if (parentNode)
 				parentNode.insertChildNode(this, pos);
@@ -1255,8 +1245,24 @@ var HtmlNode = Class.extend(
 			}
 			
 			return new Rectangle(rect.left - r.left, rect.top - r.top, rect.width, rect.height);
-		}, 
-
+		},
+		
+		getStoredItem : function(pos)
+		{
+			if (this.storeTime < this.nte.editTime)
+			{
+				this.storedItems.length = 0;
+				this.storeTime = Date.now();
+			}
+			
+			return this.storedItems[pos];
+		},
+		
+		setStoredItem : function(pos, item)
+		{
+			this.storedItems[pos] = item;
+		},
+		
 		//editing
 		
 		dublicate : function(parent)

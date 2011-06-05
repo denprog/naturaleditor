@@ -7,16 +7,6 @@ var RootNode = HtmlNode.extend(
 		{
 			this._super(null, element, parentNode, pos, nte);
 		}, 
-		
-		getLineBegin : function(childNode, continuousPos, y)
-		{
-			return new CaretState(null, 0, -1);
-		}, 
-		
-		getLineEnd : function(childNode, continuousPos, y)
-		{
-			return new CaretState(null, 0, -1);
-		}, 
 
 		//caret functions
 		
