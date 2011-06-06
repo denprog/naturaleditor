@@ -71,6 +71,8 @@ function CommandManager(nte)
 			this.undoCommands.splice(0, 0, new CommandsDelimiter(lastCaretState, nodeCaretState.dublicate()));
 		}
 
+		this.nte.updateEditTime();
+		
 		this.nte.caret.setState(nodeCaretState);
 		
 		return true;
@@ -128,6 +130,8 @@ function CommandManager(nte)
 			this.undoCommands.splice(0, 0, new CommandsDelimiter(lastCaretState.dublicate(), nodeCaretState.dublicate()));
 		}
 
+		this.nte.updateEditTime();
+		
 		this.nte.caret.setState(nodeCaretState);
 		
 		return true;
@@ -197,7 +201,9 @@ function CommandManager(nte)
 				this.undoCommands.splice(0, 0, new CommandsDelimiter(lastCaretState, nodeCaretState.dublicate()));
 			}
 		}
-		
+
+		this.nte.updateEditTime();
+
 		if (nodeCaretState)
 			this.nte.caret.setState(nodeCaretState);
 		
@@ -310,6 +316,8 @@ function CommandManager(nte)
 			}
 		}
 		
+		this.nte.updateEditTime();
+
 		if (resCaretState.selectedNodes.length > 0)
 			this.nte.caret.setState(resCaretState);
 
@@ -352,7 +360,9 @@ function CommandManager(nte)
 				this.undoCommands.splice(0, 0, new CommandsDelimiter(lastCaretState, nodeCaretState.dublicate()));
 			}
 		}
-		
+
+		this.nte.updateEditTime();
+
 		if (nodeCaretState)
 			this.nte.caret.setState(nodeCaretState);
 		
@@ -414,7 +424,9 @@ function CommandManager(nte)
 				this.undoCommands.splice(0, 0, new CommandsDelimiter(lastCaretState, nodeCaretState.dublicate()));
 			}
 		}
-		
+
+		this.nte.updateEditTime();
+
 		if (nodeCaretState)
 			this.nte.caret.setState(nodeCaretState);
 
@@ -451,7 +463,9 @@ function CommandManager(nte)
 				return false;
 			}
 		}
-		
+
+		this.nte.updateEditTime();
+
 		if (delimiter)
 		{
 			this.nte.caret.setState(delimiter.caretState.dublicate());
@@ -479,10 +493,7 @@ function CommandManager(nte)
 		while (this.redoCommands.length != 0 && !(this.redoCommands[0] instanceof CommandsDelimiter))
 		{
 			var command = this.redoCommands[0];
-		
-			if (command.doAction(command.nodeEvent))
-			{
-			}
+			command.doAction(command.nodeEvent);
 			
 			this.undoCommands.splice(0, 0, command);
 			this.redoCommands.splice(0, 1);
@@ -490,7 +501,9 @@ function CommandManager(nte)
 
 		if (delimiter.afterCaretState)
 			this.nte.caret.setState(delimiter.afterCaretState);
-		
+
+		this.nte.updateEditTime();
+
 		this.undoCommands.splice(0, 0, delimiter);
 
 		return true;

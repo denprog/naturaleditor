@@ -68,29 +68,6 @@ var NaturalEditor = Class.extend(
 			}
 			
 			this.focus = true;
-
-//			if (!window.getComputedStyle)
-//			{
-//				window.getComputedStyle = function(el, pseudo)
-//				{
-//					this.el = el;
-//					this.getPropertyValue = function(prop)
-//					{
-//						var re = /(\-([a-z]){1})/g;
-//						if (prop == 'float')
-//							prop = 'styleFloat';
-//						if (re.test(prop))
-//						{
-//							prop = prop.replace(re, function ()
-//								{
-//									return arguments[2].toUpperCase();
-//								});
-//						}
-//						return el.currentStyle[prop] ? el.currentStyle[prop] : null;
-//					};
-//					return this;
-//				};
-//			}
 			
 			/**
 			 * Shortcuts
@@ -126,6 +103,8 @@ var NaturalEditor = Class.extend(
 			 */
 			this.clientRect = this.editor.getBoundingClientRect();
 
+			this.editTime = Date.now();
+			
 			this.caret.setToNodeBegin(this.rootNode);			
 		}, 
 
@@ -244,6 +223,8 @@ var NaturalEditor = Class.extend(
 			this.rootNode.remake();
 			this.theme.update();
 			this.caret.render();
+			
+			this.updateEditTime();
 		}, 
 
 		parseHtml : function(htmlText)
@@ -256,6 +237,8 @@ var NaturalEditor = Class.extend(
 			
 			for (var i = 0; i < el.childNodes.length; ++i)
 				this.parseElement(el.childNodes[i], resNode, i);
+
+			this.updateEditTime();
 			
 			return resNode;
 		}, 
@@ -380,35 +363,11 @@ var NaturalEditor = Class.extend(
 			
 			return null;
 		},
-		
-//		loadCss : function(fileName)
-//		{
-//			//alert(fileName);
-//			var r = document.createElement("link");
-//			r.setAttribute("rel", "stylesheet");
-//		  r.setAttribute("type", "text/css");
-//		  r.setAttribute("href", fileName);
-//		  
-//		  if (typeof(r) != "undefined")
-//		  	document.getElementsByTagName("head")[0].appendChild(r);
-//		},
-//
-//		getCurDirectory : function()
-//		{
-//			var scripts = document.getElementsByTagName('script');
-//			var name = "naturaleditor.js";
-//
-//	    for (var i = scripts.length - 1; i >= 0; --i)
-//	    {
-//	      var src = scripts[i].src;
-//	      var n = src.length;
-//	      var length = name.length;
-//	      if (src.substr(n - length) == name)
-//	        return src.substr(0, n - length);
-//	    }
-//	    
-//	    return "";
-//		},
+
+		updateEditTime : function()
+		{
+			this.editTime = Date.now();
+		},
 		
 		setFocus : function()
 		{

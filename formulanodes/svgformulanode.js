@@ -72,6 +72,8 @@ var SvgFormulaNode = FormulaNode.extend(
 				var b = this.nte.editor.getBoundingClientRect();
 				
 				this.boundingRect.setRect(r.left - this.element.x.baseVal.value - b.left - this.leftOffset, 
+				//this.boundingRect.setRect(r.left - this.element.x.baseVal.value - b.left, 
+				//this.boundingRect.setRect(this.tempRect.left - this.element.x.baseVal.value, 
 					this.tempRect.top - this.element.y.baseVal.value, 
 					this.element.width.baseVal.value, 
 					this.element.height.baseVal.value);

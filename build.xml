@@ -36,8 +36,9 @@
 				<file name="formulanodes/groupformulanode.js"/>
 				<file name="formulanodes/compoundformulanode.js"/>
 				<file name="formulanodes/shapeformulanode.js"/>
-				<file name="formulanodes/foreignobjectformulanode.js"/>
 				<file name="formulanodes/textformulanode.js"/>
+				<file name="formulanodes/foreignobjectformulanode.js"/>
+				<file name="formulanodes/foreigntextformulanode.js"/>
 				<file name="formulanodes/plusformulanode.js"/>
 				<file name="formulanodes/minusformulanode.js"/>
 				<file name="formulanodes/multiplyformulanode.js"/>
