@@ -808,7 +808,8 @@ var TextNode = HtmlNode.extend(
 				{
 					if (r.left == t1)
 					{
-						if (pos == this.element.length && this.element.textContent[pos - 1] == ' ')
+						if (pos == this.element.length && this.element.textContent[pos - 1] == ' ' && 
+							this.element.nextSibling && this.element.nextSibling.nodeName != "svg")
 						{
 							posRect.setRect(Math.round(rect.left + this.nte.editor.scrollLeft - r.left), 
 								Math.round(rect.top + this.nte.editor.scrollTop - r.top), 
