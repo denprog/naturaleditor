@@ -26,16 +26,6 @@ function EventsHandler(nte)
 
 		node.eventHandlers[type] = null;
 	};
-
-//	this.eventFunc = function(event)
-//	{
-//		intermediateHandler(event, obj);
-//	};
-	
-//	this.eventHandler = function(event)
-//	{
-//		obj.eventHandlers[type].handler.apply(obj, [event]);
-//	};
 	
 	this.attach = function(type)
 	{
@@ -63,10 +53,7 @@ function EventsHandler(nte)
 		if (this.nte.isIE)
 			this.nte.document.body.detachEvent(type, this.eventHandlers[type]);
 		else
-		{
-			//this.nte.window.removeEventListener(type, this.eventHandlers[type], false);
 			this.nte.window.removeEventListener(this.eventHandlers[type].event, this.eventHandlers[type].listener, true);
-		}
 	};
 	
 	//shortcuts

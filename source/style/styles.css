@@ -114,20 +114,20 @@ svg g.stillLessEmptyFormulaNode
 h1
 {
 	font-size: 170%;
-	background-color: #FFFFFF;
+	/*background-color: #FFFFFF;*/
 	font-weight: normal;
 }
 
 h2
 {
 	font-size: 150%;
-	background-color: #FFFFFF;
+	/*background-color: #FFFFFF;*/
 	font-weight: normal;
 }
 
 h3
 {
 	font-size: 130%;
-	background-color: #FFFFFF;
+	/*background-color: #FFFFFF;*/
 	font-weight: normal;
 }

@@ -485,7 +485,7 @@ var HtmlNode = Class.extend(
 		scrollIntoView : function(pos)
 		{
 			var cr = this.nte.clientRect;
-			var r = this.tempRect;
+			var r = new Rectangle();
 			
 			if (typeof(pos) != "undefined" && pos != -1)
 				this.getRelativePosBounds(pos, r);

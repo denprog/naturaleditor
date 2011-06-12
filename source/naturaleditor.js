@@ -39,7 +39,7 @@ var DEBUG_LEVEL = true;
 	}
 
 	if (DEBUG_LEVEL)
-		var base = this.location.href.substr(0, this.location.href.lastIndexOf("/NaturalEditor/")) + "/NaturalEditor/";
+		var base = this.location.href.substr(0, this.location.href.lastIndexOf("/NaturalEditor/")) + "/NaturalEditor/source/";
 	else
 		var base = getCurDirectory();
 
