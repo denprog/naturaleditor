@@ -86,7 +86,8 @@ var HtmlNode = Class.extend(
 					this.element = this.document.createElementNS("http://www.w3.org/1999/xhtml", nodeType);
 			}
 			
-			if (!this.nte.isIE)
+			//if (!this.nte.isIE)
+			if (this.element.nodeName != "#text")
 				this.element.htmlNode = this;
 
 			this.eventsHandler = this.nte.eventsHandler;
@@ -1158,8 +1159,33 @@ var HtmlNode = Class.extend(
 			return res;
 		},
 		
-		getNearsetPosition : function(x, y)
+		getNearestPosition : function(x, y)
 		{
+			var p = this.getFirstPosition();
+			var lastPos = this.getLastPosition();
+			
+			var r = new Rectangle();
+			var delta = Number.MAX_VALUE, t;
+			var n = p.getNode();
+
+			n.getRelativePosBounds(p.getPos(), r);
+			var t = delta = r.distToPoint(x, y);
+			var res = p;
+			
+			while (p && !p.isEqual(lastPos))
+			{
+				p = n.getNextPosition(p);
+				n = p.getNode();
+				n.getRelativePosBounds(p.getPos(), r);
+				t = r.distToPoint(x, y);
+				if (t < delta)
+				{
+					delta = t;
+					res = p;
+				}
+			}
+			
+			return res;
 		},
 		
 		canExpandSelection : function(selectedNode)

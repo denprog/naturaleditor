@@ -13,6 +13,7 @@ var BoldNode = HtmlNode.extend(
 		init : function(parentNode, pos, nte)
 		{
 			this._super("b", null, parentNode, pos, nte);
+			this.className = "BoldNode";
 		}
 	}
 );

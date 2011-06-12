@@ -6,6 +6,7 @@ var RootNode = HtmlNode.extend(
 		init : function(element, parentNode, pos, nte)
 		{
 			this._super(null, element, parentNode, pos, nte);
+			this.className = "RootNode";
 		}, 
 
 		//caret functions
@@ -86,30 +87,30 @@ var RootNode = HtmlNode.extend(
 			return this.childNodes.get(p + 1).getLowerPosition(relativeState);
 		},
 
-//		getNearsetPosition : function(x, y)
-//		{
-//			var dy = Number.MAX_VALUE;
-//			var node = null;
-//			
-//			for (var i = 0; i < this.childNodes.count(); ++i)
-//			{
-//				var n = this.childNodes.get(i);
-//				n.getNodeBounds(this.tempRect);
-//				
-//				if (Max.abs(y - this.tempRect.top) < dy)
-//				{
-//					dy = Max.abs(y - this.tempRect.top);
-//					node = n;
-//				}
-//				if (Max.abs(y - this.tempRect.bottom) < dy)
-//				{
-//					dy = Max.abs(y - this.tempRect.bottom);
-//					node = n;
-//				}
-//			}
-//			
-//			return node.getNearesPosition(x, y);
-//		},
+		getNearsetPosition : function(x, y)
+		{
+			var dy = Number.MAX_VALUE;
+			var node = null;
+			
+			for (var i = 0; i < this.childNodes.count(); ++i)
+			{
+				var n = this.childNodes.get(i);
+				n.getNodeBounds(this.tempRect);
+				
+				if (Math.abs(y - this.tempRect.top) < dy)
+				{
+					dy = Math.abs(y - this.tempRect.top);
+					node = n;
+				}
+				if (Math.abs(y - this.tempRect.bottom) < dy)
+				{
+					dy = Math.abs(y - this.tempRect.bottom);
+					node = n;
+				}
+			}
+			
+			return node ? node.getNearestPosition(x, y) : null;
+		},
 
 		canExpandSelection : function(selectedNode)
 		{

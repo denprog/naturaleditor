@@ -505,16 +505,17 @@ var NaturalEditor = Class.extend(
 			var r = this.editor.getBoundingClientRect();
 			if (x > r.left && x < r.right && y > r.top && y < r.bottom)
 			{
-//				var n = this.document.elementFromPoint(x, y);
-//				if (n)
-//				{
-//					var node = n.htmlNode;
-//					if (!node)
-//						return true;
-//					var c = node.getNearsetPosition(x - r.left, y - r.top);
-//					if (c)
-//						this.caret.setCaretState(c);
-//				}
+				var n = this.document.elementFromPoint(x, y);
+				if (n)
+				{
+					var node = n.htmlNode;
+					if (node)
+					{
+						var c = node.getNearestPosition(x - r.left + this.editor.scrollLeft, y - r.top + this.editor.scrollTop);
+						if (c)
+							this.caret.setState(c);
+					}
+				}
 
 				this.setFocus();
 				return true;

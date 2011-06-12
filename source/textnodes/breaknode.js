@@ -6,6 +6,7 @@ var BreakNode = HtmlNode.extend(
 		init : function(parentNode, nodePos, textPos, nte)
 		{
 			this._super("br", null, parentNode, nodePos, textPos, nte);
+			this.className = "BreakNode";
 		}, 
 		
 		//caret functions

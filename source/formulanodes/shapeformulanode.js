@@ -108,31 +108,36 @@ var ShapeFormulaNode = GroupFormulaNode.extend(
 		
 		addLine : function(left, top, right, bottom, color)
 		{
-			this.drawLib.line(left, top, right, bottom, color, this.element);
+			var f = this.drawLib.line(left, top, right, bottom, color, this.element);
+			f.htmlNode = this.parentNode;
 			this.updateClientRect();
 		},
 
 		addRect : function(x, y, width, height, color)
 		{
-			this.drawLib.rect(x, y, width, height, color, this.element);
+			var f = this.drawLib.rect(x, y, width, height, color, this.element);
+			f.htmlNode = this.parentNode;
 			this.updateClientRect();
 		},
 
 		addFillRect : function(x, y, width, height, color)
 		{
-			this.drawLib.fillRect(x, y, width, height, color, this.element);
+			var f = this.drawLib.fillRect(x, y, width, height, color, this.element);
+			f.htmlNode = this.parentNode;
 			this.updateClientRect();
 		},
 		
 		addPolygon : function(points, color)
 		{
-			this.drawLib.polygon(points, color, this.element);
+			var f = this.drawLib.polygon(points, color, this.element);
+			f.htmlNode = this.parentNode;
 			this.updateClientRect();
 		},
 		
 		addBezier : function(path, color)
 		{
-			this.drawLib.bezier(path, color, this.element);
+			var f = this.drawLib.bezier(path, color, this.element);
+			f.htmlNode = this.parentNode;
 			this.updateClientRect();
 		},
 		

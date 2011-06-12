@@ -66,6 +66,7 @@ var MinusFormulaNode = ShapeFormulaNode.extend(
 				this.drawLib.remove(this.shape, this.element);
 			
 			this.shape = this.drawLib.fillRect(1, h / 2, w - 2, 0.1, "black", this.element);
+			this.shape.htmlNode = this.parentNode;
 		},
 		
 		//test functions

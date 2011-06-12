@@ -73,8 +73,9 @@ var PlusFormulaNode = ShapeFormulaNode.extend(
 			}
 			
 			this.shape1 = this.drawLib.fillRect(Math.round(w / 2), 1, 1, h - 2, "black", this.element);
-			//this.shape1 = this.drawLib.fillRect(1, 1, 10, 10, "black", this.element);
+			this.shape1.htmlNode = this.parentNode;
 			this.shape2 = this.drawLib.fillRect(1, Math.round(h / 2), w - 2, 1, "black", this.element);
+			this.shape2.htmlNode = this.parentNode;
 		},
 		
 		//test functions

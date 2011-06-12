@@ -67,6 +67,7 @@ var MultiplyFormulaNode = ShapeFormulaNode.extend(
 				this.drawLib.remove(this.shape, this.element);
 			
 			this.shape = this.drawLib.fillCircle(Math.round(w / 2), Math.round(h / 2), Math.round(w / 8), "black", this.element);
+			this.shape.htmlNode = this.parentNode;
 		},
 		
 		//test functions

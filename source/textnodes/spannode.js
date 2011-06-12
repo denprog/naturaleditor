@@ -9,6 +9,7 @@ var SpanNode = HtmlNode.extend(
 		init : function(parentNode, pos, nte, element)
 		{
 			this._super("span", element, parentNode, pos, nte);
+			this.className = "SpanNode";
 		}
 	}
 );

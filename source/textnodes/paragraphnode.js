@@ -6,6 +6,7 @@ var ParagraphNode = TextBaseNode.extend(
 		init : function(parentNode, pos, nte)
 		{
 			this._super("p", null, parentNode, pos, nte);
+			this.className = "ParagraphNode";
 			this.nte.createNode("br", null, this, 0);
 		}, 
 		
@@ -136,6 +137,41 @@ var ParagraphNode = TextBaseNode.extend(
 				return new CaretState(this, 0);
 			return this._super();
 		}, 
+
+		getNearestPosition : function(x, y)
+		{
+			var p = this.getFirstPosition();
+			var lastPos = this.getLastPosition();
+			
+			var r = this.tempRect;
+			var delta = Number.MAX_VALUE, t;
+			var n = p.getNode();
+
+			n.getRelativePosBounds(p.getPos(), r);
+			var t = delta = r.distToPoint(x, y);
+			var res = p;
+			
+			while (p && !p.isEqual(lastPos))
+			{
+				p = n.getNextPosition(p);
+				n = p.getNode();
+				//a little optimization
+				if (!(n instanceof TextNode))
+				{
+					p = n.getLastPosition();
+					continue;
+				}
+				n.getRelativePosBounds(p.getPos(), r);
+				t = r.distToPoint(x, y);
+				if (t < delta)
+				{
+					delta = t;
+					res = p;
+				}
+			}
+			
+			return res;
+		},
 
 		//editing
 

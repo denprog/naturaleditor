@@ -15,16 +15,6 @@ var SquareRootFormulaNode = CompoundFormulaNode.extend(
 		
 		insertChildNode : function(childNode, pos)
 		{
-//			if (!this.shape)
-//			{
-//				this._super(childNode, pos);
-//				this.shape = this.childNodes.get(1);
-//				return;
-//			}
-//			
-//			if (pos == 1)
-//				return;
-
 			this._super(childNode, pos);
 			
 			switch (pos)
@@ -97,6 +87,18 @@ var SquareRootFormulaNode = CompoundFormulaNode.extend(
 			return null;
 		},
 		
+		//caret functions
+		
+//		getNearestPosition : function(x, y)
+//		{
+//			this.getRelativePosBounds(1, this.tempRect);
+//			this.tempRect.setSize(this.shape.clientRect.width, this.shape.clientRect.height);
+//			if (this.tempRect.pointInRect(x, y))
+//				return new CaretState(this, 1);
+//				
+//			return this._super(x, y);
+//		},
+//		
 		//command functions
 		
 		doRemoveChild : function(node, pos, len, nodeEvent, command)
