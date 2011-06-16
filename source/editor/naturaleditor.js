@@ -131,7 +131,7 @@ var NaturalEditor = Class.extend(
 			this.eventsHandler.addGlobalShortcut("Enter", this.onEnter);
 
 			this.eventsHandler.addGlobalShortcut("+", this.onPlus);
-			this.eventsHandler.addGlobalShortcut("-", this.onPlus);
+			this.eventsHandler.addGlobalShortcut("-", this.onMinus);
 			this.eventsHandler.addGlobalShortcut("*", this.onMultiply);
 			this.eventsHandler.addGlobalShortcut("/", this.onDivision);
 			this.eventsHandler.addGlobalShortcut("^", this.onCircumflex);
@@ -271,6 +271,7 @@ var NaturalEditor = Class.extend(
 						'formula_squareroot' : 'SquareRootFormulaNode', 
 						'formula_nthroot' : 'NthRootFormulaNode', 
 						'formula_brackets' : 'BracketsFormulaNode', 
+						'formula_sum' : 'SumFormulaNode', 
 						'formula_group' : 'GroupFormulaNode'
 					},
 				'foreignobject' : 'ForeignObjectFormulaNode', 

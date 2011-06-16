@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "NaturalEditor", "..\..\..\NaturalEditor\", "{A221A389-4FE1-40E7-B607-5206FDF2478E}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFramework = "3.5"
+		Debug.AspNetCompiler.VirtualPath = "/NaturalEditor"
+		Debug.AspNetCompiler.PhysicalPath = "..\..\..\NaturalEditor\"
+		Debug.AspNetCompiler.TargetPath = "..\..\..\NaturalEditor\release"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/NaturalEditor"
+		Release.AspNetCompiler.PhysicalPath = "..\..\..\NaturalEditor\"
+		Release.AspNetCompiler.TargetPath = "..\..\..\NaturalEditor\release"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "1396"
+		DefaultWebSiteLanguage = "Visual Basic"
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|.NET = Debug|.NET
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A221A389-4FE1-40E7-B607-5206FDF2478E}.Debug|.NET.ActiveCfg = Debug|.NET
+		{A221A389-4FE1-40E7-B607-5206FDF2478E}.Debug|.NET.Build.0 = Debug|.NET
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

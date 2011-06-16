@@ -88,6 +88,8 @@ var DEBUG_LEVEL = true;
 		include('formulanodes/nthrootformulanode.js');
 		include('formulanodes/emptyformulanode.js');
 		include('formulanodes/bracketsformulanode.js');
+		include('formulanodes/iterateformulanode.js');
+		include('formulanodes/sumformulanode.js');
 		include('util/toolbar.js');
 		include('themes/classic/theme.js');
 	}
