@@ -74,6 +74,8 @@ var HtmlNode = Class.extend(
 
 			this.level = NodeLevel.NORMAL;
 
+			this.canSetCaret = true;
+
 			this.tempRect = new Rectangle();
 			
 			if (element)	
@@ -947,7 +949,7 @@ var HtmlNode = Class.extend(
 						if (pos == i + 1 && this.childNodes.get(i).skipFirstPosition())
 						{
 							res = n.getNextPosition(null, params);
-							if (n.getLength() == 1)
+							if (res && n.getLength() == 1)
 							{
 								relativeState.getRect(this.tempRect);
 								var left = this.tempRect.left;

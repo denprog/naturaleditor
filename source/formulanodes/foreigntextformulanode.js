@@ -5,7 +5,7 @@
  */
 var ForeignTextFormulaNode = ForeignObjectFormulaNode.extend(
 	{
-		init : function(parentNode, pos, nte)
+		init : function(parentNode, pos, nte, element, activeState)
 		{
 			this._super(parentNode, pos, nte);
 			this.className = "ForeignTextFormulaNode";
@@ -17,6 +17,10 @@ var ForeignTextFormulaNode = ForeignObjectFormulaNode.extend(
 			
 			if (this.groupNode)
 				this.groupNode.remake();
+
+			if (typeof(activeState) == "undefined")
+				activeState = true;
+			this.canSetCaret = activeState;
 		},
 
 		createChildNode : function(nodeClassType, pos)
@@ -110,10 +114,18 @@ var ForeignTextFormulaNode = ForeignObjectFormulaNode.extend(
 			this.updateBoundingRect();
 		}, 
 
+		setText : function(text)
+		{
+			if (this.childNodes.count() > 0)
+				this.childNodes.get(0).childNodes.get(0).element.data = text;
+		},
+
 		//caret functions
 		
 		getNextPosition : function(relativeState, params)
 		{
+			if (!this.canSetCaret)
+				return null;
 			if (this.childNodes.count() > 0 && this.childNodes.get(0).childNodes.get(0).empty)
 				return null;
 			return this._super(relativeState, params);
@@ -121,6 +133,8 @@ var ForeignTextFormulaNode = ForeignObjectFormulaNode.extend(
 
 		getPreviousPosition : function(relativeState, params)
 		{
+			if (!this.canSetCaret)
+				return null;
 			if (this.childNodes.count() > 0 && this.childNodes.get(0).childNodes.get(0).empty)
 				return null;
 			return this._super(relativeState, params);
@@ -384,7 +398,6 @@ var ForeignFormulaSpanNode = HtmlNode.extend(
 		{
 			if (this.childNodes.count() > 0 && this.childNodes.get(0).isEmpty())
 				return false;
-			//return this._super(relativeState, params);
 
 			if (!relativeState)
 				res = new CaretState(this, this.element.length);

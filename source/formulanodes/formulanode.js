@@ -42,11 +42,11 @@ var FormulaNode = HtmlNode.extend(
 				this.groupNode.remake();
 		}, 
 
-		createTextNode : function(pos)
+		createTextNode : function(pos, activeState)
 		{
 			if (this.nte.isIE)
-				return new TextFormulaNode(this, pos, this.nte);
-			return new ForeignTextFormulaNode(this, pos, this.nte);
+				return new TextFormulaNode(this, pos, this.nte, null, activeState);
+			return new ForeignTextFormulaNode(this, pos, this.nte, null, activeState);
 		},
 		
 		removeChildNode : function(pos)

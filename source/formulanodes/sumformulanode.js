@@ -105,6 +105,7 @@
 			resNode.caretState = this.caretState;
 			this.variable.dublicate(resNode);
 			this.limit.dublicate(resNode);
+			this.expression.dublicate(resNode);
 			
 			resNode.groupNode = this.groupNode;
 			

@@ -182,7 +182,7 @@ var GroupFormulaNode = FormulaNode.extend(
 					{
 						var n = this.childNodes.get(i + 1);
 						res = n.getNextPosition(null, params);
-						if (!res)
+						if (!res && n.canSetCaret)
 							res = new CaretState(this, i + 1);
 					}
 					else if (i == this.childNodes.count() - 1 && !relativeState.isEqual(this.getLastPosition()))

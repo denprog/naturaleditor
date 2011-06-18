@@ -1,6 +1,6 @@
 var TextFormulaNode = FormulaNode.extend(
 	{
-		init : function(parentNode, pos, nte)
+		init : function(parentNode, pos, nte, element, activeState)
 		{
 			this.drawLib = nte.drawLib;
 
@@ -18,6 +18,10 @@ var TextFormulaNode = FormulaNode.extend(
 			this.eventsHandler.addCustomEvent(this, "onafterchilddeleted", this.onAfterChildDeleted);
 
 			this.className = "TextFormulaNode";
+
+			if (typeof(activeState) == "undefined")
+				activeState = true;
+			this.canSetCaret = activeState;
 		},
 		
 		createChildNode : function(nodeClassType, pos)
@@ -99,6 +103,11 @@ var TextFormulaNode = FormulaNode.extend(
 		{
 			this.drawLib.move(x, y + this.clientRect.height, this.element);
 			this.updateBoundingRect();
+		},
+
+		setText : function(text)
+		{
+			this.childNodes.get(0).element.data = text;
 		},
 
 		//command functions
@@ -196,20 +205,22 @@ var TextFormulaNode = FormulaNode.extend(
 		
 		getFirstPosition : function()
 		{
-			if (this.childNodes.count() > 0)
+			if (this.canSetCaret && this.childNodes.count() > 0)
 				return this.childNodes.getFirst().getFirstPosition();
 			return null;
 		},
 		
 		getLastPosition : function()
 		{
-			if (this.childNodes.count() > 0)
+			if (this.canSetCaret && this.childNodes.count() > 0)
 				return this.childNodes.getLast().getLastPosition();
 			return null;
 		},
 
 		getNextPosition : function(relativeState, params)
 		{
+			if (!this.canSetCaret)
+				return null;
 			if (this.childNodes.count() > 0 && this.childNodes.get(0).isEmpty())
 				return null;
 			if (relativeState && relativeState.checkInNode(this))
@@ -219,6 +230,8 @@ var TextFormulaNode = FormulaNode.extend(
 
 		getPreviousPosition : function(relativeState, params)
 		{
+			if (!this.canSetCaret)
+				return null;
 			if (this.childNodes.count() > 0 && this.childNodes.get(0).isEmpty())
 				return null;
 			if (relativeState && relativeState.checkInNode(this))
