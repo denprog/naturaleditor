@@ -77,7 +77,13 @@ var CompoundFormulaNode = GroupFormulaNode.extend(
 					{
 						var n = this.childNodes.get(i + 1);
 						res = n.getNextPosition(null, params);
-						if (!res)
+						while (!res && !n.canSetCaret)
+						{
+							++i;
+							n = this.childNodes.get(i + 1);
+							res = n.getNextPosition(null, params);
+						}
+						if (!res && n.canSetCaret)
 							res = new CaretState(this, i + 1);
 					}
 					

@@ -91,6 +91,7 @@ var DEBUG_LEVEL = true;
 		include('formulanodes/iterateformulanode.js');
 		include('formulanodes/sumformulanode.js');
 		include('formulanodes/definiteintegralformulanode.js');
+		include('formulanodes/indefiniteintegralformulanode.js');
 		include('util/toolbar.js');
 		include('themes/classic/theme.js');
 	}

@@ -1,4 +1,4 @@
-﻿var SumFormulaNode = IterateFormulaNode.extend(
+﻿var SumFormulaNode = CompoundFormulaNode.extend(
   {
     init: function(parentNode, pos, nte)
 		{

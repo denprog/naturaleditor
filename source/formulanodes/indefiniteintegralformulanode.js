@@ -1,20 +1,18 @@
-﻿var DefiniteIntegralFormulaNode = CompoundFormulaNode.extend(
+﻿var IndefiniteIntegralFormulaNode = CompoundFormulaNode.extend(
   {
     init : function(parentNode, pos, nte)
 		{
 			this.drawLib = nte.drawLib;
 			
 			this.levelClasses = {};
-			this.levelClasses[NodeLevel.NORMAL] = "normalDefiniteIntegralFormulaNode";
-			this.levelClasses[NodeLevel.LESS] = "lessDefiniteIntegralFormulaNode";
-			this.levelClasses[NodeLevel.STILL_LESS] = "stillLessDefiniteIntegralFormulaNode";
+			this.levelClasses[NodeLevel.NORMAL] = "normalIndefiniteIntegralFormulaNode";
+			this.levelClasses[NodeLevel.LESS] = "lessIndefiniteIntegralFormulaNode";
+			this.levelClasses[NodeLevel.STILL_LESS] = "stillLessIndefiniteIntegralFormulaNode";
 			
 			this._super(parentNode, pos, nte);
-			this.className = "DefiniteIntegralFormulaNode";
+			this.className = "IndefiniteIntegralFormulaNode";
 
 			this.shape = this.addShapeNode();
-			this.lowerLimit = null;
-			this.upperLimit = null;
 			this.expression = null;
 			this.dSymbol = null;
 			this.differencial = null;
@@ -24,24 +22,15 @@
 
 		insertChildNode : function(childNode, pos)
 		{
-			if (pos == 1)
-				return;
-			
 			this._super(childNode, pos);
 			
 			switch (pos)
 			{
-			case 0:
-				this.lowerLimit = this.childNodes.get(0);
+			case 1:
+				this.expression = this.childNodes.get(1);
 				break;
 			case 2:
-				this.upperLimit = this.childNodes.get(2);
-				break;
-			case 3:
-				this.expression = this.childNodes.get(3);
-				break;
-			case 4:
-				this.differencial = this.childNodes.get(4);
+				this.differencial = this.childNodes.get(2);
 				break;
 			}
 			
@@ -64,10 +53,6 @@
 				this.render();
 			}
 
-			if (this.lowerLimit)
-				this.lowerLimit.setLevel(this.getLesserLevel());
-			if (this.upperLimit)
-				this.upperLimit.setLevel(this.getLesserLevel());
 			if (this.expression)
 				this.expression.setLevel(level);
 			if (this.differencial)
@@ -78,15 +63,14 @@
 		{
 			this.childNodes.forEach("remake", []);
 
-			if (this.lowerLimit && this.upperLimit && this.expression && this.dSymbol && this.differencial)
+			if (this.shape && this.expression && this.dSymbol && this.differencial)
 			{
-				var i = this.lowerLimit.clientRect.height;
-				var j = this.upperLimit.clientRect.height;
-				var cy = i / 2 + j / 2 + this.expression.clientRect.height * 2 / 3;
-				if (this.expression.baseline > cy / 2)
-					cy = 2 * this.expression.baseline;
-				if (this.expression.clientRect.height - this.expression.baseline > cy / 2)
-					cy = (this.expression.clientRect.height - this.expression.baseline) * 2;
+				var i = Math.max(this.expression.baseline, Math.max(this.differencial.baseline, this.dSymbol.baseline));
+				var cy = i + this.expression.clientRect.height * 2 / 3;
+				if (i > cy / 2)
+					cy = 2 * i;
+				if (this.expression.clientRect.height - i > cy / 2)
+					cy = (this.expression.clientRect.height - i) * 2;
 				if (this.differencial.clientRect.height - i > cy / 2)
 					cy = (this.differencial.clientRect.height - i) * 2;
 				var cx = cy * 5 / 20;
@@ -140,18 +124,26 @@
 
 				this.shape.clientRect.setRect(0, 0, Math.round(cx), Math.round(cy));
 
-				this.shape.move(0, this.upperLimit.clientRect.height / 2);
-				this.upperLimit.move(this.shape.clientRect.width * 11 / 10, 0);
-				this.lowerLimit.move(this.shape.clientRect.width * 11 / 10, 
-					this.upperLimit.clientRect.height / 2 + this.shape.clientRect.height - this.lowerLimit.baseline);
-				i = Math.max(this.upperLimit.clientRect.width, this.lowerLimit.clientRect.width);
-				this.expression.move(i + this.shape.clientRect.width * 12 / 10, 
-					this.upperLimit.clientRect.height / 2 + this.shape.clientRect.height / 2 - this.expression.baseline);
-				this.dSymbol.move(i + this.shape.clientRect.width * 12 / 10 + this.expression.clientRect.width + this.dSymbol.clientRect.height / 5, 
-					this.upperLimit.clientRect.height / 2 + this.shape.clientRect.height / 2 - this.dSymbol.baseline);
-				this.differencial.move(i + this.shape.clientRect.width * 12 / 10 + this.expression.clientRect.width + this.dSymbol.clientRect.width + 
-					this.dSymbol.clientRect.height / 5, 
-					this.upperLimit.clientRect.height / 2 + this.shape.clientRect.height / 2 - this.differencial.baseline);
+				if (this.shape.clientRect.height / 2 > i)
+				{
+					this.shape.move(0, 0);
+					this.expression.move(this.shape.clientRect.width * 12 / 10, this.shape.clientRect.height / 2 - this.expression.baseline);
+					this.dSymbol.move(this.shape.clientRect.width * 12 / 10 + this.expression.clientRect.width + this.dSymbol.clientRect.height / 5, 
+						this.shape.clientRect.height / 2 - this.dSymbol.baseline);
+					this.differencial.move(this.shape.clientRect.width * 12 / 10 + this.expression.clientRect.width + this.dSymbol.clientRect.height / 5 + 
+						this.dSymbol.clientRect.width, 
+						this.shape.clientRect.height / 2 - this.differencial.baseline);
+				}
+				else
+				{
+					this.shape.move(0, 0);
+					this.expression.move(this.shape.clientRect.width * 12 / 10, this.shape.clientRect.height / 2 - this.expression.baseline);
+					this.dSymbol.move(this.shape.clientRect.width * 12 / 10 + this.expression.clientRect.width + this.dSymbol.clientRect.height / 5, 
+						this.shape.clientRect.height / 2 - this.dSymbol.baseline);
+					this.differencial.move(this.shape.clientRect.width * 12 / 10 + this.expression.clientRect.width + this.dSymbol.clientRect.height / 5 + 
+						this.dSymbol.clientRect.width, 
+						this.shape.clientRect.height / 2 - this.differencial.baseline);
+				}
 			}
 			
 			this.updateClientRect();
@@ -161,8 +153,8 @@
 		{
 			this.childNodes.forEach("update", []);
 
-			if (this.upperLimit && this.shape)
-				this.baseline = this.upperLimit.clientRect.height / 2 + this.shape.clientRect.height / 2;
+			if (this.shape)
+				this.baseline = this.shape.clientRect.height / 2;
 		},
 
 		createChildNode : function(nodeClassType, pos)
@@ -171,21 +163,15 @@
 			switch (pos)
 			{
 			case 0:
-				this.lowerLimit = new nodeClassType(this, 0, this.nte);
-				return this.lowerLimit;
-			case 1:
-				this.upperLimit = new nodeClassType(this, 2, this.nte);
-				return this.upperLimit;
-			case 2:
-				this.expression = new nodeClassType(this, 3, this.nte);
+				this.expression = new nodeClassType(this, 1, this.nte);
 				return this.expression;
-			case 3:
+			case 1:
 				if (!this.dSymbol)
 				{
-					this.dSymbol = this.createTextNode(4, false);
+					this.dSymbol = this.createTextNode(2, false);
 					this.dSymbol.setText("d");
 				}
-				this.differencial = new nodeClassType(this, 5, this.nte);
+				this.differencial = new nodeClassType(this, 3, this.nte);
 				return this.differencial;
 			}
 			
@@ -213,11 +199,9 @@
 
 		dublicate : function(parent)
 		{
-			var resNode = new DefiniteIntegralFormulaNode(parent, this.parentNode == null ? 0 : this.parentNode.getChildPos(this), this.nte);
+			var resNode = new IndefiniteIntegralFormulaNode(parent, this.parentNode == null ? 0 : this.parentNode.getChildPos(this), this.nte);
 			
 			resNode.caretState = this.caretState;
-			this.lowerLimit.dublicate(resNode);
-			this.upperLimit.dublicate(resNode);
 			this.expression.dublicate(resNode);
 			this.differencial.dublicate(resNode);
 			
