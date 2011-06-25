@@ -426,7 +426,7 @@ function EventsHandler(nte)
 
 	this.oncharshortcut = function(event)
 	{
-		if (event.cancelBubble)
+		if (event.cancelBubble || (this.nte.isGecko && !event.isChar))
 			return;
 		
 		var key;

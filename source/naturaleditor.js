@@ -84,6 +84,7 @@ var DEBUG_LEVEL = true;
 		include('formulanodes/multiplyformulanode.js');
 		include('formulanodes/divisionformulanode.js');
 		include('formulanodes/exponentiationformulanode.js');
+		include('formulanodes/subscriptformulanode.js');
 		include('formulanodes/squarerootformulanode.js');
 		include('formulanodes/nthrootformulanode.js');
 		include('formulanodes/emptyformulanode.js');

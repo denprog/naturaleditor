@@ -587,7 +587,7 @@ var ForeignFormulaTextNode = TextNode.extend(
 			
 			if (this._super(pos, nodeEvent, command))
 			{
-				this.parentNode.parentNode.remake();
+				this.parentNode.groupNode.remake();
 				return true;
 			}
 			

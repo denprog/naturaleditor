@@ -100,23 +100,38 @@ function Theme(nte, parentElement, cx, cy)
 						}
 				},
 			"MultiplyFormulaNode" : 
-			{
-				1 : 
-					{
-						"width" : 10,
-						"height" : 10
-					}, 
-				2 : 
-					{
-						"width" : 8, 
-						"height" : 8
-					}, 
-				3 : 
-					{
-						"width" : 6, 
-						"height" : 6
-					}
-			}
+				{
+					1 : 
+						{
+							"width" : 10,
+							"height" : 10
+						}, 
+					2 : 
+						{
+							"width" : 8, 
+							"height" : 8
+						}, 
+					3 : 
+						{
+							"width" : 6, 
+							"height" : 6
+						}
+				},
+			"SubscriptFormulaNode" : 
+				{
+					1 : 
+						{
+							"subscriptOffset" : -10
+						},
+					2 : 
+						{
+							"subscriptOffset" : -8
+						},
+					3 : 
+						{
+							"subscriptOffset" : -5
+						}
+				}
 		};
 	
 	this.init = function(parentElement, cx, cy)
