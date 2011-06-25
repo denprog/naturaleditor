@@ -101,7 +101,7 @@ function EventsHandler(nte)
 		for (var i in this.nte.shortcuts)
 		{
 			var p = this.nte.shortcuts[i];
-			if (p.combination.key == k.key && p.combination.ctrl == k.ctrl && p.combination.shift == k.shift && k.alt == k.alt)
+			if (p.combination.key == k.key && p.combination.ctrl == k.ctrl && p.combination.shift == k.shift && p.combination.alt == k.alt)
 			{
 				p.handler = handler;
 				return;
@@ -208,6 +208,42 @@ function EventsHandler(nte)
 		{
 			if (--h.refs <= 0)
 				this.detach("onshortcut");
+		}
+	};
+
+	this.addCharShortcut = function(key, handler)
+	{
+		this.nte.shortcuts.push({});
+		var p = this.nte.shortcuts[this.nte.shortcuts.length - 1];
+		p.combination = {};
+		p.combination.key = key;
+		p.handler = handler;
+
+		var h = this.eventHandlers["oncharshortcut"];
+		if (h.refs == 0)
+			this.attach("oncharshortcut");
+		++h.refs;
+	};
+
+	this.removeCharShortcut = function(key)
+	{
+		for (var i = 0; i < this.nte.shortcuts.length;)
+		{
+			var p = this.nte.shortcuts[i];
+			if (p.combination.key == key && !p.combination.ctrl && !p.combination.shift && !p.combination.alt)
+			{
+				this.nte.shortcuts.splice(i, 1);
+				break;
+			}
+			else
+				++i;
+		}
+		
+		var h = this.eventHandlers["oncharshortcut"];
+		if (h.refs > 0)
+		{
+			if (--h.refs == 0)
+				this.detach("oncharshortcut");
 		}
 	};
 
@@ -388,6 +424,54 @@ function EventsHandler(nte)
 		}
 	};
 
+	this.oncharshortcut = function(event)
+	{
+		if (event.cancelBubble)
+			return;
+		
+		var key;
+		
+		if (event.keyCode != 0)
+		{
+			if (specialKeys[event.keyCode])
+				key = specialKeys[event.keyCode];
+			else
+				key = String.fromCharCode(event.keyCode).toLowerCase();
+
+			for (var i in this.nte.shortcuts)
+			{
+				var s = this.nte.shortcuts[i];
+
+				if (s.combination.key == key)
+				{
+					if (s.handler.apply(this.nte, []))
+					{
+						this.preventDefault(event);
+						return;
+					}
+				}
+			}
+		}
+		else
+		{
+			key = String.fromCharCode(event.charCode).toLowerCase();
+
+			for (var i in this.nte.shortcuts)
+			{
+				var s = this.nte.shortcuts[i];
+
+				if (s.combination.key == key)
+				{
+					if (s.handler.apply(this.nte, []))
+					{
+						this.preventDefault(event);
+						return;
+					}
+				}
+			}
+		}
+	};
+
 	this.onshortcut = function(event)
 	{
 		if (event.cancelBubble)
@@ -458,6 +542,7 @@ function EventsHandler(nte)
 				"onkeypress" : {event: "keypress", handler: this.onkeypress, refs: 0}, 
 				"onglobalshortcut" : {event: "keypress", handler: this.onglobalshortcut, refs: 0}, 
 				"onshortcut" : {event: "keypress", handler: this.onshortcut, refs: 0}, 
+				"oncharshortcut" : {event: "keypress", handler: this.oncharshortcut, refs: 0}, 
 				"onchar" : {event: "keypress", handler: this.onchar, refs: 0}, 
 				"onclick" : {event: "click", handler: this.onclick, refs: 0}, 
 				"ondoubleclick" : {event: "dblclick", handler: this.ondoubleclick, refs: 0}
@@ -472,6 +557,7 @@ function EventsHandler(nte)
 				"onkeypress" : {event: "keypress", handler: this.onkeypress, refs: 0}, 
 				"onglobalshortcut" : {event: "keydown", handler: this.onglobalshortcut, refs: 0}, 
 				"onshortcut" : {event: "keypress", handler: this.onshortcut, refs: 0}, 
+				"oncharshortcut" : {event: "keypress", handler: this.oncharshortcut, refs: 0}, 
 				"onchar" : {event: "keypress", handler: this.onchar, refs: 0}, 
 				"onclick" : {event: "click", handler: this.onclick, refs: 0}, 
 				"ondoubleclick" : {event: "dblclick", handler: this.ondoubleclick, refs: 0}

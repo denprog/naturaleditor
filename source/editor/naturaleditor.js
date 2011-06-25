@@ -117,29 +117,24 @@ var NaturalEditor = Class.extend(
 			this.eventsHandler.addGlobalShortcut("Home", this.onHome);
 			this.eventsHandler.addGlobalShortcut("End", this.onEnd);
 			
-//			this.eventsHandler.addGlobalShortcut("Ctrl+Left", this.onCtrlLeft);
-//			this.eventsHandler.addGlobalShortcut("Ctrl+Right", this.onCtrlRight);
-//			this.eventsHandler.addGlobalShortcut("Shift+Left", this.onShiftLeft);
-//			this.eventsHandler.addGlobalShortcut("Shift+Right", this.onShiftRight);
-
-			this.eventsHandler.addShortcut(this, "Ctrl+Z", this.onUndo);
-			this.eventsHandler.addShortcut(this, "Ctrl+Y", this.onRedo);
-
-			this.eventsHandler.addEvent(this, "onchar", this.onChar);
-			this.eventsHandler.addEvent(this, "onclick", this.onClick);
+			this.eventsHandler.addGlobalShortcut("Ctrl+Z", this.onUndo);
+			this.eventsHandler.addGlobalShortcut("Ctrl+Y", this.onRedo);
 
 			this.eventsHandler.addGlobalShortcut("Enter", this.onEnter);
 
-			this.eventsHandler.addGlobalShortcut("+", this.onPlus);
-			this.eventsHandler.addGlobalShortcut("-", this.onMinus);
-			this.eventsHandler.addGlobalShortcut("*", this.onMultiply);
-			this.eventsHandler.addGlobalShortcut("/", this.onDivision);
-			this.eventsHandler.addGlobalShortcut("^", this.onCircumflex);
-			this.eventsHandler.addGlobalShortcut("(", this.onLeftBracket);
-			this.eventsHandler.addGlobalShortcut(")", this.onRightBracket);
+			this.eventsHandler.addCharShortcut("+", this.onPlus);
+			this.eventsHandler.addCharShortcut("-", this.onMinus);
+			this.eventsHandler.addCharShortcut("*", this.onMultiply);
+			this.eventsHandler.addCharShortcut("/", this.onDivision);
+			this.eventsHandler.addCharShortcut("^", this.onCircumflex);
+			this.eventsHandler.addCharShortcut("(", this.onLeftBracket);
+			this.eventsHandler.addCharShortcut(")", this.onRightBracket);
 			
 			this.eventsHandler.addGlobalShortcut("Backspace", this.onBackspace);
 			this.eventsHandler.addGlobalShortcut("Delete", this.onDelete);
+
+			this.eventsHandler.addEvent(this, "onchar", this.onChar);
+			this.eventsHandler.addEvent(this, "onclick", this.onClick);
 		},
 		
 		unregisterEvents : function()
@@ -150,11 +145,6 @@ var NaturalEditor = Class.extend(
 			this.eventsHandler.removeGlobalShortcut("Down");
 			this.eventsHandler.removeGlobalShortcut("Home");
 			this.eventsHandler.removeGlobalShortcut("End");
-			
-//			this.eventsHandler.removeGlobalShortcut("Ctrl+Left");
-//			this.eventsHandler.removeGlobalShortcut("Ctrl+Right");
-//			this.eventsHandler.removeGlobalShortcut("Shift+Left");
-//			this.eventsHandler.removeGlobalShortcut("Shift+Right");
 
 			this.eventsHandler.removeShortcut(this, "Ctrl+Z");
 			this.eventsHandler.removeShortcut(this, "Ctrl+Y");
@@ -163,13 +153,13 @@ var NaturalEditor = Class.extend(
 
 			this.eventsHandler.removeGlobalShortcut("Enter");
 
-			this.eventsHandler.removeGlobalShortcut("+");
-			this.eventsHandler.removeGlobalShortcut("-");
-			this.eventsHandler.removeGlobalShortcut("*");
-			this.eventsHandler.removeGlobalShortcut("/");
-			this.eventsHandler.removeGlobalShortcut("^");
-			this.eventsHandler.removeGlobalShortcut("(");
-			this.eventsHandler.removeGlobalShortcut(")");
+			this.eventsHandler.removeCharShortcut("+");
+			this.eventsHandler.removeCharShortcut("-");
+			this.eventsHandler.removeCharShortcut("*");
+			this.eventsHandler.removeCharShortcut("/");
+			this.eventsHandler.removeCharShortcut("^");
+			this.eventsHandler.removeCharShortcut("(");
+			this.eventsHandler.removeCharShortcut(")");
 			
 			this.eventsHandler.removeGlobalShortcut("Backspace");
 			this.eventsHandler.removeGlobalShortcut("Delete");
