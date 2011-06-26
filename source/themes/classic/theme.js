@@ -117,6 +117,24 @@ function Theme(nte, parentElement, cx, cy)
 							"height" : 6
 						}
 				},
+			"DivisionFormulaNode" : 
+				{
+					1 : 
+						{
+							"sideOffset" : 3, 
+							"shapeOffset" : 3
+						},
+					2 :
+						{
+							"sideOffset" : 2, 
+							"shapeOffset" : 2
+						},
+					3 : 
+						{
+							"sideOffset" : 1, 
+							"shapeOffset" : 1
+						}
+				},
 			"SubscriptFormulaNode" : 
 				{
 					1 : 
@@ -130,6 +148,21 @@ function Theme(nte, parentElement, cx, cy)
 					3 : 
 						{
 							"subscriptOffset" : -5
+						}
+				}, 
+			"DifferentialFormulaNode" : 
+				{
+					1 : 
+						{
+							"expressionOffset" : 6
+						},
+					2: 
+						{
+							"expressionOffset" : 3
+						},
+					3: 
+						{
+							"expressionOffset" : 2
 						}
 				}
 		};

@@ -74,8 +74,6 @@ var HtmlNode = Class.extend(
 
 			this.level = NodeLevel.NORMAL;
 
-			this.canSetCaret = true;
-
 			this.tempRect = new Rectangle();
 			
 			if (element)	
@@ -243,7 +241,12 @@ var HtmlNode = Class.extend(
 			for (var i = 0; i < this.childNodes.count(); ++i)
 				this.childNodes.get(i).clearCaretState();
 		},
-		
+
+		canSetCaret : function()
+		{
+			return true;
+		},
+				
 		hasClass : function(name)
 		{
 			var s = this.element.className;

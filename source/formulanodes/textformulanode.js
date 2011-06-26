@@ -21,7 +21,7 @@ var TextFormulaNode = FormulaNode.extend(
 
 			if (typeof(activeState) == "undefined")
 				activeState = true;
-			this.canSetCaret = activeState;
+			this.activeState = activeState;
 		},
 		
 		createChildNode : function(nodeClassType, pos)
@@ -205,21 +205,21 @@ var TextFormulaNode = FormulaNode.extend(
 		
 		getFirstPosition : function()
 		{
-			if (this.canSetCaret && this.childNodes.count() > 0)
+			if (this.canSetCaret() && this.childNodes.count() > 0)
 				return this.childNodes.getFirst().getFirstPosition();
 			return null;
 		},
 		
 		getLastPosition : function()
 		{
-			if (this.canSetCaret && this.childNodes.count() > 0)
+			if (this.canSetCaret() && this.childNodes.count() > 0)
 				return this.childNodes.getLast().getLastPosition();
 			return null;
 		},
 
 		getNextPosition : function(relativeState, params)
 		{
-			if (!this.canSetCaret)
+			if (!this.canSetCaret())
 				return null;
 			if (this.childNodes.count() > 0 && this.childNodes.get(0).isEmpty())
 				return null;
@@ -230,7 +230,7 @@ var TextFormulaNode = FormulaNode.extend(
 
 		getPreviousPosition : function(relativeState, params)
 		{
-			if (!this.canSetCaret)
+			if (!this.canSetCaret())
 				return null;
 			if (this.childNodes.count() > 0 && this.childNodes.get(0).isEmpty())
 				return null;
@@ -243,6 +243,11 @@ var TextFormulaNode = FormulaNode.extend(
 			return this._super(relativeState, params);
 		},
 		
+		canSetCaret : function()
+		{
+			return this.activeState;
+		},
+
 		setLevel : function(level)
 		{
 			if (this.level != level)

@@ -172,7 +172,7 @@ var SvgFormulaNode = FormulaNode.extend(
 				{
 					var n = this.childNodes.get(i + 1);
 					res = n.getNextPosition(relativeState, params);
-					if (!res && n.canSetCaret)
+					if (!res && n.canSetCaret())
 						res = new CaretState(this, i + 1);
 				}
 				else if (i == this.childNodes.count() - 1 && !relativeState.isEqual(this.getLastPosition()))

@@ -60,21 +60,18 @@ var DivisionFormulaNode = CompoundFormulaNode.extend(
 			
 			if (this.dividend && this.divisor)
 			{
-				var w = Math.max(this.dividend.clientRect.width, this.divisor.clientRect.width);
-				w = Math.round(w + w / 5);
-				var h = this.dividend.clientRect.height + this.divisor.clientRect.height;
-				
-				this.divisor.move(Math.round((w - this.divisor.clientRect.width) / 2), Math.round(this.dividend.clientRect.height + h / 10));
-				
-				this.shape.clearShapes();
-				if (h / 100 > 1)
-					this.shape.addFillRect(0, 0, w, Math.round(h / 100), "black");
-				else
-					this.shape.addLine(0, 0, w, 0, "black");
-				
-				this.shape.move(0, Math.round(this.dividend.clientRect.height + h / 20));
+				var i = this.nte.theme.getNodeProperty("DivisionFormulaNode", this.level, "sideOffset");
+				var j = this.nte.theme.getNodeProperty("DivisionFormulaNode", this.level, "sideOffset");
 
-				this.dividend.move(Math.round((w - this.dividend.clientRect.width) / 2), 0);
+				var w = Math.max(this.dividend.clientRect.width, this.divisor.clientRect.width);
+				w += i * 2;
+
+				this.shape.clearShapes();
+				this.shape.addLine(0, 0, w, 0, "black");
+
+				this.dividend.move((w - this.dividend.clientRect.width) / 2, 0);
+				this.shape.move(0, this.dividend.clientRect.height + j);
+				this.divisor.move((w - this.divisor.clientRect.width) / 2, this.dividend.clientRect.height + 2 * j + 1);
 			}
 			
 			this.updateClientRect();

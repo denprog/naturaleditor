@@ -20,7 +20,7 @@ var ForeignTextFormulaNode = ForeignObjectFormulaNode.extend(
 
 			if (typeof(activeState) == "undefined")
 				activeState = true;
-			this.canSetCaret = activeState;
+			this.activeState = activeState;
 		},
 
 		createChildNode : function(nodeClassType, pos)
@@ -124,7 +124,7 @@ var ForeignTextFormulaNode = ForeignObjectFormulaNode.extend(
 		
 		getNextPosition : function(relativeState, params)
 		{
-			if (!this.canSetCaret)
+			if (!this.canSetCaret())
 				return null;
 			if (this.childNodes.count() > 0 && this.childNodes.get(0).childNodes.get(0).empty)
 				return null;
@@ -133,11 +133,16 @@ var ForeignTextFormulaNode = ForeignObjectFormulaNode.extend(
 
 		getPreviousPosition : function(relativeState, params)
 		{
-			if (!this.canSetCaret)
+			if (!this.canSetCaret())
 				return null;
 			if (this.childNodes.count() > 0 && this.childNodes.get(0).childNodes.get(0).empty)
 				return null;
 			return this._super(relativeState, params);
+		},
+
+		canSetCaret : function()
+		{
+			return this.activeState;
 		},
 
 		//command functions

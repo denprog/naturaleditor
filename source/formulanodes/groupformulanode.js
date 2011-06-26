@@ -107,7 +107,17 @@ var GroupFormulaNode = FormulaNode.extend(
 		{
 			if (this.childNodes.count() > 0)
 			{
-				var n = this.childNodes.getFirst();
+				var n = null;
+				for (var i = 0; i < this.childNodes.count(); ++i)
+				{
+					n = this.childNodes.get(i);
+					if (n.canSetCaret())
+						break;
+				}
+				
+				if (!n)
+					return null;
+
 				if (n instanceof CompoundFormulaNode)
 					return new CaretState(this, 0);
 				var res = n.getFirstPosition();
@@ -182,7 +192,7 @@ var GroupFormulaNode = FormulaNode.extend(
 					{
 						var n = this.childNodes.get(i + 1);
 						res = n.getNextPosition(null, params);
-						if (!res && n.canSetCaret)
+						if (!res && n.canSetCaret())
 							res = new CaretState(this, i + 1);
 					}
 					else if (i == this.childNodes.count() - 1 && !relativeState.isEqual(this.getLastPosition()))
@@ -245,6 +255,11 @@ var GroupFormulaNode = FormulaNode.extend(
 			return res;
 		},
 		
+		canSetCaret : function()
+		{
+			return true;
+		},
+
 		mergeWithNextNode : function(nodeEvent, command)
 		{
 			return false;
