@@ -83,6 +83,7 @@ var DEBUG_LEVEL = true;
 		include('formulanodes/minusformulanode.js');
 		include('formulanodes/multiplyformulanode.js');
 		include('formulanodes/divisionformulanode.js');
+		include('formulanodes/commaformulanode.js');
 		include('formulanodes/exponentiationformulanode.js');
 		include('formulanodes/subscriptformulanode.js');
 		include('formulanodes/squarerootformulanode.js');

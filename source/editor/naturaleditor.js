@@ -257,6 +257,7 @@ var NaturalEditor = Class.extend(
 						'formula_minus' : 'MinusFormulaNode', 
 						'formula_multiply' : 'MultiplyFormulaNode', 
 						'formula_division' : 'DivisionFormulaNode', 
+						'formula_comma' : 'CommaFormulaNode', 
 						'formula_exponentiation' : 'ExponentiationFormulaNode', 
 						'formula_subscript' : 'SubscriptFormulaNode', 
 						'formula_squareroot' : 'SquareRootFormulaNode', 

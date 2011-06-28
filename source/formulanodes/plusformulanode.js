@@ -33,16 +33,11 @@ var PlusFormulaNode = ShapeFormulaNode.extend(
 
 		update : function()
 		{
-			//var s = this.nte.window.getComputedStyle(this.element, null);
-			//this.baseline = parseInt(s.getPropertyValue("max-height"));
 			this.baseline = this.nte.theme.getNodeProperty("PlusFormulaNode", this.level, "height");
 		},
 
 		updateClientRect : function()
 		{
-			//var s = this.nte.window.getComputedStyle(this.element, null);
-			//var w = parseInt(s.getPropertyValue("max-width"));
-			//var h = parseInt(s.getPropertyValue("max-height"));
 			var w = this.nte.theme.getNodeProperty("PlusFormulaNode", this.level, "width");
 			var h = this.nte.theme.getNodeProperty("PlusFormulaNode", this.level, "height");
 			
@@ -52,17 +47,11 @@ var PlusFormulaNode = ShapeFormulaNode.extend(
 		move : function(x, y)
 		{
 			this.element.setAttribute("transform", "translate(" + x + ", " + y + ")");
-			//this.boundingRect.setRect(x, y - this.baseline, this.clientRect.width, this.clientRect.height + this.baseline);
-			//this.boundingRect.setRect(x, y, this.clientRect.width, this.clientRect.height + this.baseline / 2);
 			this.boundingRect.setRect(x, y, this.clientRect.width, this.clientRect.height);
-			//this.updateBoundingRect();
 		}, 
 
 		render : function()
 		{
-			//var s = this.nte.window.getComputedStyle(this.element, null);
-			//var w = parseInt(s.getPropertyValue("max-width"));
-			//var h = parseInt(s.getPropertyValue("max-height"));
 			var w = this.nte.theme.getNodeProperty("PlusFormulaNode", this.level, "width");
 			var h = this.nte.theme.getNodeProperty("PlusFormulaNode", this.level, "height");
 			

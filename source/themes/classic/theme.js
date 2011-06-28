@@ -135,6 +135,24 @@ function Theme(nte, parentElement, cx, cy)
 							"shapeOffset" : 1
 						}
 				},
+			"CommaFormulaNode" : 
+				{
+					1 : 
+						{
+							"width" : 6,
+							"height" : 10
+						}, 
+					2 : 
+						{
+							"width" : 4, 
+							"height" : 8
+						}, 
+					3 : 
+						{
+							"width" : 3, 
+							"height" : 6
+						}
+				},
 			"SubscriptFormulaNode" : 
 				{
 					1 : 
