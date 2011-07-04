@@ -91,11 +91,11 @@ var DEBUG_LEVEL = true;
 		include('formulanodes/emptyformulanode.js');
 		include('formulanodes/bracketsformulanode.js');
 		include('formulanodes/modulusformulanode.js');
-		include('formulanodes/iterateformulanode.js');
 		include('formulanodes/sumformulanode.js');
 		include('formulanodes/definiteintegralformulanode.js');
 		include('formulanodes/indefiniteintegralformulanode.js');
 		include('formulanodes/differentialformulanode.js');
+		include('formulanodes/equationformulanode.js');
 		include('util/toolbar.js');
 		include('themes/classic/theme.js');
 	}

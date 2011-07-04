@@ -212,6 +212,24 @@ function Theme(nte, parentElement, cx, cy)
 						{
 							"expressionOffset" : 2
 						}
+				},
+			"EquationFormulaNode" : 
+				{
+					1 : 
+						{
+							"width" : 10,
+							"height" : 10
+						}, 
+					2 : 
+						{
+							"width" : 8, 
+							"height" : 8
+						}, 
+					3 : 
+						{
+							"width" : 6, 
+							"height" : 6
+						}
 				}
 		};
 	
