@@ -651,45 +651,8 @@ var FormulaNode = HtmlNode.extend(
 			
 			cx = Math.round(cx) + 1;
 			cy = Math.round(cy);
-			
-//			this.groupNode.updateBoundingRect();
-//			
-//			cx += this.groupNode.boundingRect.left;
-//			if (pos == this.childNodes.count())
-//				cx += n.clientRect.width;
-//			//cx -= r.left;
-//			cy += this.groupNode.boundingRect.top;
-
-			//var s = nte.window.getComputedStyle(this.groupNode.parentNode.element, null);
-			//var h = parseInt(s.getPropertyValue("outline-width"));
-
-			//s = nte.window.getComputedStyle(this.groupNode.element, null);
-			//h = parseInt(s.getPropertyValue("padding-left"));
-
-			//var r = new Rectangle();
-			//this.groupNode.getNodeBounds(r);
-			
-			//this.groupNode.updateBoundingRect();
-			//var r = this.groupNode.boundingRect;
-
-			//cx += r.left - this.groupNode.leftOffset;
-			//cx += r.left;
-			//cy += r.top;
-			//cy += h;
 
 			posRect.setRect(cx, cy, pos == this.childNodes.count() ? 1 : n.clientRect.width, n.boundingRect.height);
-
-//			posRect.setRect(cx + this.nte.editor.scrollLeft, 
-//				cy + this.nte.editor.scrollTop, 
-//				pos == this.childNodes.count() ? 1 : n.clientRect.width, 
-//				n.boundingRect.height);
-
-//			posRect.setRect(cx + this.nte.editor.scrollLeft, 
-//				cy + this.nte.editor.scrollTop, 
-//				pos == this.childNodes.count() ? 1 : n.clientRect.width, 
-//				//n.clientRect.height - parseInt(this.groupNode.element.style.verticalAlign));
-//				n.boundingRect.height);
-//				//n.clientRect.height);
 		},
 
 		getRelativePosBounds : function(pos, rect)

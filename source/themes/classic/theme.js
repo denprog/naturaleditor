@@ -153,6 +153,36 @@ function Theme(nte, parentElement, cx, cy)
 							"height" : 6
 						}
 				},
+			"BracketsFormulaNode" : 
+				{
+					1 : 
+						{
+							"offset" : 3
+						}, 
+					2 : 
+						{
+							"offset" : 2
+						}, 
+					3 : 
+						{
+							"offset" : 1
+						}
+				},
+			"ModulusFormulaNode" : 
+				{
+					1 : 
+						{
+							"offset" : 3
+						}, 
+					2 : 
+						{
+							"offset" : 2
+						}, 
+					3 : 
+						{
+							"offset" : 1
+						}
+				},
 			"SubscriptFormulaNode" : 
 				{
 					1 : 

@@ -17,7 +17,7 @@ var BracketsFormulaNode = CompoundFormulaNode.extend(
 			this._super(parentNode, pos, nte);
 			this.className = "BracketsFormulaNode";
 			
-			this.shape = this.addShapeNode();
+			this.leftShape = this.addShapeNode();
 			this.rightShape = this.addShapeNode();
 		},
 		
@@ -28,7 +28,7 @@ var BracketsFormulaNode = CompoundFormulaNode.extend(
 			switch (pos)
 			{
 			case 0:
-				this.shape = this.childNodes.get(0);
+				this.leftShape = this.childNodes.get(0);
 				break;
 			case 1:
 				this.nested = this.childNodes.get(1);
@@ -46,19 +46,20 @@ var BracketsFormulaNode = CompoundFormulaNode.extend(
 		{
 			this.childNodes.forEach("remake", []);
 			
-			if (this.nested && this.shape && this.rightShape)
+			if (this.nested && this.leftShape && this.rightShape)
 			{
-				this.shape.clearShapes();
+				this.leftShape.clearShapes();
 				this.rightShape.clearShapes();
 				
 				var cx = Math.round(1 + this.nested.clientRect.height / 5);
 				var cy = Math.round((1 + 2 * 1 / 10) * this.nested.clientRect.height);
+				var offset = this.nte.theme.getNodeProperty("BracketsFormulaNode", this.level, "offset");
 				
 				this.clientRect.setRectEmpty();
 				
 				if (this.left)
 				{
-					this.shape.addBezier(
+					this.leftShape.addBezier(
 						"M " + cx + "," + cy + " " +  
 						"C " + 
 						cx * 0.59 + "," + cy * 0.941 + " " + 
@@ -83,11 +84,11 @@ var BracketsFormulaNode = CompoundFormulaNode.extend(
 						cx + "," + cy, 
 						"black");
 					
-					this.shape.boundingRect.setRect(this.shape.boundingRect.left, this.shape.boundingRect.top, cx + this.nested.clientRect.width, cy);
-					this.shape.clientRect.setRect(0, 0, cx, cy);
-					this.clientRect.setRect(0, 0, cx + this.nested.clientRect.width, cy);
+					this.leftShape.boundingRect.setRect(this.leftShape.boundingRect.left, this.leftShape.boundingRect.top, cx + this.nested.clientRect.width, cy);
+					this.leftShape.clientRect.setRect(0, 0, cx, cy);
+					this.clientRect.setRect(0, 0, cx + this.nested.clientRect.width + offset, cy);
 					
-					this.nested.move(cx, 0);
+					this.nested.move(cx + offset, 0);
 				}
 				
 				if (this.right)
@@ -117,10 +118,10 @@ var BracketsFormulaNode = CompoundFormulaNode.extend(
 						"0," + cy, 
 						"black");
 					
-					this.rightShape.move(cx + this.nested.clientRect.width, 0);
+					this.rightShape.move(cx + this.nested.clientRect.width + offset * 2, 0);
 					this.rightShape.boundingRect.setRect(this.rightShape.boundingRect.left, this.rightShape.boundingRect.top, cx, cy);
 					this.rightShape.clientRect.setRect(0, 0, cx, cy);
-					this.clientRect.setRect(0, 0, this.clientRect.width + cx, cy);
+					this.clientRect.setRect(0, 0, this.clientRect.width + cx + offset * 2, cy);
 				}
 			}
 			
@@ -145,6 +146,13 @@ var BracketsFormulaNode = CompoundFormulaNode.extend(
 			}
 			
 			return null;
+		},
+
+		//caret functions
+		
+		getLastPosition : function()
+		{
+			return new CaretState(this, 2);
 		},
 		
 		//command functions
