@@ -230,6 +230,24 @@ function Theme(nte, parentElement, cx, cy)
 							"width" : 6, 
 							"height" : 6
 						}
+				},
+			"LimitFormulaNode" : 
+				{
+					1 : 
+						{
+							"expressionOffset" : 5,
+							"limitExpressionOffset" : 0
+						}, 
+					2 : 
+						{
+							"expressionOffset" : 4,
+							"limitExpressionOffset" : 0
+						}, 
+					3 : 
+						{
+							"expressionOffset" : 3,
+							"limitExpressionOffset" : 0
+						}
 				}
 		};
 	

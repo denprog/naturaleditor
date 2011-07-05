@@ -96,6 +96,7 @@ var DEBUG_LEVEL = true;
 		include('formulanodes/indefiniteintegralformulanode.js');
 		include('formulanodes/differentialformulanode.js');
 		include('formulanodes/equationformulanode.js');
+		include('formulanodes/limitformulanode.js');
 		include('util/toolbar.js');
 		include('themes/classic/theme.js');
 	}
