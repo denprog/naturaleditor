@@ -265,10 +265,10 @@ function Theme(nte, parentElement, cx, cy)
 					"<td id='t1'>" + 
 					"</td>" + 
 				"</tr>" + 
-				"<tr>" + 
-					"<td id='t2'>" + 
-					"</td>" + 
-				"</tr>" + 
+//				"<tr>" + 
+//					"<td id='t2'>" + 
+//					"</td>" + 
+//				"</tr>" + 
 				"<tr>" + 
 					"<td id='nte'>" + 
 						"<div id='naturaleditor' style='overflow:auto; position:relative; width:" + cx + "px; height:" + cy + "px'></div>" + 
@@ -297,12 +297,12 @@ function Theme(nte, parentElement, cx, cy)
 		if (this.nte.isIE)
 		{
 			var t1 = new Toolbar(this.nte, "basic", this.name, frame.document.getElementById("t1"));
-			var t2 = new Toolbar(this.nte, "math", this.name, frame.document.getElementById("t2"));
+			//var t2 = new Toolbar(this.nte, "math", this.name, frame.document.getElementById("t2"));
 		}
 		else
 		{
 			var t1 = new Toolbar(this.nte, "basic", this.name, frame.ownerDocument.getElementById("t1"));
-			var t2 = new Toolbar(this.nte, "math", this.name, frame.ownerDocument.getElementById("t2"));
+			//var t2 = new Toolbar(this.nte, "math", this.name, frame.ownerDocument.getElementById("t2"));
 		}
 		
 		t1.addButton("bold", "Ctrl+B", this.nte.onBold);
@@ -325,29 +325,29 @@ function Theme(nte, parentElement, cx, cy)
 
 		this.toolbars.push(t1);
 
-		t2.addButton("formula", "Ctrl+F", this.nte.onFormula);
+//		t2.addButton("formula", "Ctrl+F", this.nte.onFormula);
 
-		t2.addMenu("math", 5, 4);
+//		t2.addMenu("math", 5, 4);
 
-		t2.addMenuButton("math", "plus", this.nte.onPlus, 0, 0);
-		t2.addMenuButton("math", "minus", this.nte.onMinus, 0, 1);
-		t2.addMenuButton("math", "multiply", this.nte.onMultiply, 0, 2);
-		t2.addMenuButton("math", "division", this.nte.onDivision, 0, 3);
-		t2.addMenuButton("math", "squareroot", this.nte.onSquareRoot, 1, 0);
-		t2.addMenuButton("math", "nthroot", this.nte.onNthRoot, 1, 1);
-		t2.addMenuButton("math", "exponentation", this.nte.onCircumflex, 1, 2);
-		t2.addMenuButton("math", "subscript", this.nte.onSubscript, 1, 3);
-		t2.addMenuButton("math", "sum", this.nte.onSum, 2, 0);
-		t2.addMenuButton("math", "product", this.nte.onProduct, 2, 1);
-		t2.addMenuButton("math", "definiteintegral", this.nte.onDefiniteIntegral, 2, 2);
-		t2.addMenuButton("math", "differential", this.nte.onDifferential, 2, 3);
-		t2.addMenuButton("math", "factorial", this.nte.onFactorial, 3, 0);
-		t2.addMenuButton("math", "brackets", this.nte.onBrackets, 3, 1);
-		t2.addMenuButton("math", "squarebrackets", this.nte.onBrackets, 3, 2);
-		t2.addMenuButton("math", "comma", this.nte.onComma, 3, 3);
-		t2.addMenuButton("math", "equation", this.nte.onEquation, 4, 0);
+//		t2.addMenuButton("math", "plus", this.nte.onPlus, 0, 0);
+//		t2.addMenuButton("math", "minus", this.nte.onMinus, 0, 1);
+//		t2.addMenuButton("math", "multiply", this.nte.onMultiply, 0, 2);
+//		t2.addMenuButton("math", "division", this.nte.onDivision, 0, 3);
+//		t2.addMenuButton("math", "squareroot", this.nte.onSquareRoot, 1, 0);
+//		t2.addMenuButton("math", "nthroot", this.nte.onNthRoot, 1, 1);
+//		t2.addMenuButton("math", "exponentation", this.nte.onCircumflex, 1, 2);
+//		t2.addMenuButton("math", "subscript", this.nte.onSubscript, 1, 3);
+//		t2.addMenuButton("math", "sum", this.nte.onSum, 2, 0);
+//		t2.addMenuButton("math", "product", this.nte.onProduct, 2, 1);
+//		t2.addMenuButton("math", "definiteintegral", this.nte.onDefiniteIntegral, 2, 2);
+//		t2.addMenuButton("math", "differential", this.nte.onDifferential, 2, 3);
+//		t2.addMenuButton("math", "factorial", this.nte.onFactorial, 3, 0);
+//		t2.addMenuButton("math", "brackets", this.nte.onBrackets, 3, 1);
+//		t2.addMenuButton("math", "squarebrackets", this.nte.onBrackets, 3, 2);
+//		t2.addMenuButton("math", "comma", this.nte.onComma, 3, 3);
+//		t2.addMenuButton("math", "equation", this.nte.onEquation, 4, 0);
 
-		this.toolbars.push(t2);
+//		this.toolbars.push(t2);
 
 		this.editor.nte = this.nte;
 	};
