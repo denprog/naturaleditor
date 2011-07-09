@@ -29,28 +29,13 @@
 			nte = new NaturalEditor(document.getElementById("frame"), "themes/classic/theme.js", 600, 200);
 			if (nte.inited)
 			{
+				/*nte.parse(
+					"<p>Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text </p>"
+					);*/
+
 				nte.parse(
-					"<p>Text " + 
-						"<span class='formula_plus'></span>" + 
-							"<span class='formula_exponentiation'>" + 
-								"<span class='formula_group'>" + 
-									"<span class='formula_text'>123</span>" + 
-								"</span>" + 
-								"<span class='formula_group'>" + 
-									"<span class='formula_text'>456</span>" + 
-								"</span>" + 
-							"</span>" + 
-							"<span class='formula_text'>Tgh</span>" + 
-							"<span class='formula_division'>" + 
-								"<span class='formula_group'>" + 
-									"<span class='formula_text'>Yg12</span>" + 
-								"</span>" + 
-								"<span class='formula_group'>" + 
-									"<span class='formula_text'>y267</span>" + 
-								"</span>" + 
-							"</span>" + 
-						"</span>" + 
-					"Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text </p>"
+					"<p>Text <b>Text</b> Text " + 
+					"Text Text Text <i>Text</i> Text Text Text </p>"
 					);
 
 				/*nte.parse(

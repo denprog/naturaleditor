@@ -223,6 +223,13 @@ var SvgFormulaNode = FormulaNode.extend(
 			return res;
 		},
 
+		dublicate : function(parent)
+		{
+			var resNode = this._super(parent == null ? this.parentNode : parent);
+			resNode.groupNode = this.groupNode;
+			return resNode;
+		},
+
 		//command functions
 		
 		mergeWithNextNode : function(nodeEvent, command)

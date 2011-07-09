@@ -252,6 +252,7 @@ var NaturalEditor = Class.extend(
 					{
 						'' : 'SpanNode',
 						'formula' : 'SvgFormulaNode', 
+						'formula_empty' : 'EmptyFormulaNode', 
 						'formula_text' : (this.isIE ? 'TextFormulaNode' : 'ForeignTextFormulaNode'), 
 						'formula_plus' : 'PlusFormulaNode', 
 						'formula_minus' : 'MinusFormulaNode', 
@@ -372,12 +373,14 @@ var NaturalEditor = Class.extend(
 		{
 			this.registerEvents();
 			this.caret.show();
+			this.theme.update();
 		},
 		
 		killFocus : function()
 		{
 			this.unregisterEvents();
 			this.caret.hide();
+			this.theme.update();
 		},
 		
 		resetContent : function()
@@ -466,13 +469,14 @@ var NaturalEditor = Class.extend(
 			var iNode = node.hasTag("i");
 			var uNode = node.hasTag("u");
 
-			if (this.theme.toolbar)
+			var t = this.theme.getToolbar("basic");
+			if (t)
 			{
-				var b = this.theme.toolbar.getButton("bold");
+				var b = t.getButton("bold");
 				var bButton = b.pressed;
-				b = this.theme.toolbar.getButton("italic");
+				b = t.getButton("italic");
 				var iButton = b.pressed;
-				b = this.theme.toolbar.getButton("underline");
+				b = t.getButton("underline");
 				var uButton = b.pressed;
 			}
 			
@@ -520,9 +524,10 @@ var NaturalEditor = Class.extend(
 				return true;
 			}
 
-			if (this.theme.toolbar)
+			var t = this.theme.getToolbar("basic");
+			if (t)
 			{
-				var r = this.theme.toolbar.parentElement.getBoundingClientRect();
+				var r = t.parentElement.getBoundingClientRect();
 				if (x > r.left && x < r.right && y > r.top && y < r.bottom)
 				{
 					this.setFocus();
@@ -543,62 +548,254 @@ var NaturalEditor = Class.extend(
 			this.caret.render();
 			return true;
 		},
-		
+
+		onFormula : function()
+		{
+			if (!this.caret.getFormula())
+			{
+				var str = 
+					"<span class='formula'>" + 
+						"<span class='formula_group'>" + 
+							"<span class='formula_empty'></span>" + 
+						"</span>" + 
+					"</span>";
+				var n = this.parseHtml(str);
+				if (!this.commandManager.insert(n))
+					return false;
+				this.caret.setState(n.getLastPosition());
+				this.caret.show();
+			}
+
+			return true;
+		},
+				
 		onPlus : function()
 		{
-			if (this.caret.getFormula())
+			if (!this.caret.getFormula())
+			{
+				var str = 
+					"<span class='formula'>" + 
+						"<span class='formula_group'>" + 
+							"<span class='formula_plus'></span>" + 
+						"</span>" + 
+					"</span>";
+				var n = this.parseHtml(str);
+				if (!this.commandManager.insert(n))
+					return false;
+				this.caret.setState(n.getLastPosition());
+			}
+			else
 			{
 				this.commandManager.insert(new PlusFormulaNode(null, 0, this));
-				this.caret.render();
-				return true;
 			}
-			return false;
+
+			this.caret.show();
+
+			return true;
 		},
 		
 		onMinus : function()
 		{
-			if (this.caret.getFormula())
+			if (!this.caret.getFormula())
+			{
+				var str = 
+					"<span class='formula'>" + 
+						"<span class='formula_group'>" + 
+							"<span class='formula_minus'></span>" + 
+						"</span>" + 
+					"</span>";
+				var n = this.parseHtml(str);
+				if (!this.commandManager.insert(n))
+					return false;
+				this.caret.setState(n.getLastPosition());
+			}
+			else
 			{
 				this.commandManager.insert(new MinusFormulaNode(null, 0, this));
-				this.caret.render();
-				return true;
 			}
-			return false;
+
+			this.caret.show();
+
+			return true;
 		},
 		
 		onMultiply : function()
 		{
-			if (this.caret.getFormula())
+			if (!this.caret.getFormula())
+			{
+				var str = 
+					"<span class='formula'>" + 
+						"<span class='formula_group'>" + 
+							"<span class='formula_multiply'></span>" + 
+						"</span>" + 
+					"</span>";
+				var n = this.parseHtml(str);
+				if (!this.commandManager.insert(n))
+					return false;
+				this.caret.setState(n.getLastPosition());
+			}
+			else
 			{
 				this.commandManager.insert(new MultiplyFormulaNode(null, 0, this));
-				this.caret.render();
-				return true;
 			}
-			return false;
+
+			this.caret.show();
+
+			return true;
 		},
 		
 		onDivision : function()
 		{
 			var n = this.caret.getFormula();
-			if (n)
+			if (!n)
+			{
+				var str = 
+					"<span class='formula'>" + 
+						"<span class='formula_division'>" + 
+							"<span class='formula_group'>" + 
+								"<span class='formula_empty'></span>" + 
+							"</span>" + 
+							"<span class='formula_group'>" + 
+								"<span class='formula_empty'></span>" + 
+							"</span>" + 
+						"</span>" + 
+					"</span>";
+				var n = this.parseHtml(str);
+				if (!this.commandManager.insert(n))
+					return false;
+				this.caret.setState(n.getLastPosition());
+			}
+			else
 			{
 				this.commandManager.insert(null, this.caret.currentState.getNode().createDivisionFormulaNode);
-				this.caret.render();
-				return true;
 			}
-			return false;
+
+			this.caret.show();
+
+			return true;
+		},
+
+		onSquareRoot : function()
+		{
+			var n = this.caret.getFormula();
+			if (!n)
+			{
+				var str = 
+					"<span class='formula'>" + 
+						"<span class='formula_squareroot'>" + 
+							"<span class='formula_group'>" + 
+								"<span class='formula_empty'></span>" + 
+							"</span>" + 
+						"</span>" + 
+					"</span>";
+				var n = this.parseHtml(str);
+				if (!this.commandManager.insert(n))
+					return false;
+				this.caret.setState(n.getLastPosition());
+			}
+			else
+			{
+				this.commandManager.insert(null, this.caret.currentState.getNode().createSquareRootFormulaNode);
+			}
+
+			this.caret.show();
+
+			return true;
+		},
+
+		onNthRoot : function()
+		{
+			var n = this.caret.getFormula();
+			if (!n)
+			{
+				var str = 
+					"<span class='formula'>" + 
+						"<span class='formula_nthroot'>" + 
+							"<span class='formula_group'>" + 
+								"<span class='formula_empty'></span>" + 
+							"</span>" + 
+						"</span>" + 
+					"</span>";
+				var n = this.parseHtml(str);
+				if (!this.commandManager.insert(n))
+					return false;
+				this.caret.setState(n.getLastPosition());
+			}
+			else
+			{
+				this.commandManager.insert(null, this.caret.currentState.getNode().createNthRootFormulaNode);
+			}
+
+			this.caret.show();
+
+			return true;
 		},
 		
 		onCircumflex : function()
 		{
 			var n = this.caret.getFormula();
-			if (n)
+			if (!n)
+			{
+				var str = 
+					"<span class='formula'>" + 
+						"<span class='formula_exponentiation'>" + 
+							"<span class='formula_group'>" + 
+								"<span class='formula_empty'></span>" + 
+							"</span>" + 
+							"<span class='formula_group'>" + 
+								"<span class='formula_empty'></span>" + 
+							"</span>" + 
+						"</span>" + 
+					"</span>";
+				var n = this.parseHtml(str);
+				if (!this.commandManager.insert(n))
+					return false;
+				this.caret.setState(n.getLastPosition());
+			}
+			else
 			{
 				this.commandManager.insert(null, this.caret.currentState.getNode().createExponentationFormulaNode);
-				this.caret.render();
-				return true;
 			}
-			return false;
+
+			this.caret.show();
+
+			return true;
+		},
+
+		onSubscript : function()
+		{
+		},
+
+		onSum : function()
+		{
+		},
+
+		onProduct : function()
+		{
+		},
+
+		onDefiniteIntegral : function()
+		{
+		},
+
+		onDifferential : function()
+		{
+		},
+
+		onFactorial : function()
+		{
+		},
+
+		onBrackets : function()
+		{
+		},
+
+		onComma : function()
+		{
+		},
+
+		onEquation : function()
+		{
 		},
 
 		onLeftBracket : function()
@@ -649,19 +846,19 @@ var NaturalEditor = Class.extend(
 		
 		onBold : function()
 		{
-			this.theme.toolbar.pressButton("bold", true);
+			this.theme.getToolbar("basic").pressButton("bold", true);
 			this.caret.render();
 		},
 
 		onItalic : function()
 		{
-			this.theme.toolbar.pressButton("italic", true);
+			this.theme.getToolbar("basic").pressButton("italic", true);
 			this.caret.render();
 		},
 
 		onUnderline : function()
 		{
-			this.theme.toolbar.pressButton("underline", true);
+			this.theme.getToolbar("basic").pressButton("underline", true);
 			this.caret.render();
 		},
 		

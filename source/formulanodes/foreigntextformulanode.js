@@ -77,7 +77,7 @@ var ForeignTextFormulaNode = ForeignObjectFormulaNode.extend(
 					this.element.setAttribute("width", w);
 					this.element.setAttribute("height", r.height);
 					
-					if (this.groupNode.element.width.baseVal.value < w)
+					if (this.groupNode && this.groupNode.element.width.baseVal.value < w)
 						this.groupNode.size(w, this.groupNode.element.height.baseVal.value);
 				}
 			}
@@ -456,6 +456,16 @@ var ForeignFormulaSpanNode = HtmlNode.extend(
 		createExponentationFormulaNode : function(nodeEvent, command)
 		{
 			return this.parentNode.createExponentationFormulaNode(nodeEvent, command);
+		},
+
+		createSquareRootFormulaNode : function(nodeEvent, command)
+		{
+			return this.parentNode.createSquareRootFormulaNode(nodeEvent, command);
+		},
+
+		createNthRootFormulaNode : function(nodeEvent, command)
+		{
+			return this.parentNode.createNthRootFormulaNode(nodeEvent, command);
 		},
 
 		mergeNode : function(caretState)

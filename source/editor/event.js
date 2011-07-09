@@ -22,7 +22,10 @@ function EventsHandler(nte)
 	{
 		var h = this.eventHandlers[type];
 		if (--h.refs <= 0)
+		{
 			this.detach(type);
+			h.refs = 0;
+		}
 
 		node.eventHandlers[type] = null;
 	};

@@ -30,6 +30,8 @@ function CaretState(node, pos, length)
 	{
 		clearSelectedNodes.apply(this);
 		var p = node.getLastPosition();
+		if (!p)
+			p = node.parentNode.getLastPosition();
 		this.selectedNodes = p.selectedNodes;
 		this.updateSelectedNodes();
 	};

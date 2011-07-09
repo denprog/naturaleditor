@@ -252,18 +252,14 @@ var ParagraphNode = TextBaseNode.extend(
 				for (var i = 0; i < c; ++i)
 					this.insertChildNode(node.childNodes.get(i), pos + i);
 				
-				//nodeEvent.caretState.setToNodeEnd(node.childNodes.getLast());
 				var c = nodeEvent.caretState.dublicate();
 				c.setToNodeEnd(node.childNodes.getLast());
 				this.caret.setNextState(c);
 
-				//nodeEvent.caretState.store();
 				this.normilize(command);
-				//nodeEvent.caretState.restore();
 				nodeEvent.caretState = this.caret.getNextState();
 
 				nodeEvent.changedNode = this;
-				//nodeEvent.undoActionNodePos = this.getCaretPosition();
 			}
 			else
 			{

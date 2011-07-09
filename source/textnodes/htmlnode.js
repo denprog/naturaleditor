@@ -102,7 +102,7 @@ var HtmlNode = Class.extend(
 			this.storeTime = 0;
 			this.storedItems = new Array();
 
-			if (parentNode)
+			if (parentNode && pos != -1)
 				parentNode.insertChildNode(this, pos);
 		}, 
 		
@@ -1415,6 +1415,7 @@ var HtmlNode = Class.extend(
 			var p = this.parentNode.getChildPos(this);
 			if (this.parentNode.doInsert(pos == 0 ? p : p + 1, nodeEvent, command))
 			{
+				this.parentNode.parentNode.remake();
 				nodeEvent.undoActionNodePos = this.getCaretPosition();
 
 				return true;
