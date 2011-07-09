@@ -93,6 +93,7 @@ var DEBUG_LEVEL = true;
 		include('formulanodes/bracketsformulanode.js');
 		include('formulanodes/modulusformulanode.js');
 		include('formulanodes/sumformulanode.js');
+		include('formulanodes/productformulanode.js');
 		include('formulanodes/definiteintegralformulanode.js');
 		include('formulanodes/indefiniteintegralformulanode.js');
 		include('formulanodes/differentialformulanode.js');

@@ -267,6 +267,7 @@ var NaturalEditor = Class.extend(
 						'formula_brackets' : 'BracketsFormulaNode', 
 						'formula_modulus' : 'ModulusFormulaNode', 
 						'formula_sum' : 'SumFormulaNode', 
+						'formula_product' : 'ProductFormulaNode', 
 						'formula_definiteintegral' : 'DefiniteIntegralFormulaNode', 
 						'formula_indefiniteintegral' : 'IndefiniteIntegralFormulaNode', 
 						'formula_differential' : 'DifferentialFormulaNode', 
