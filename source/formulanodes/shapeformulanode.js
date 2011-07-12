@@ -126,6 +126,13 @@ var ShapeFormulaNode = GroupFormulaNode.extend(
 			f.htmlNode = this.parentNode;
 			this.updateClientRect();
 		},
+
+		addFillCircle : function(x, y, radius, color)
+		{
+			var f = this.drawLib.fillCircle(x, y, radius, color, this.element);
+			f.htmlNode = this.parentNode;
+			this.updateClientRect();
+		},
 		
 		addPolygon : function(points, color)
 		{

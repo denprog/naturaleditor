@@ -99,6 +99,7 @@ var DEBUG_LEVEL = true;
 		include('formulanodes/differentialformulanode.js');
 		include('formulanodes/equationformulanode.js');
 		include('formulanodes/limitformulanode.js');
+		include('formulanodes/factorialformulanode.js');
 		include('util/toolbar.js');
 		include('themes/classic/theme.js');
 	}

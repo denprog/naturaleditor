@@ -273,6 +273,7 @@ var NaturalEditor = Class.extend(
 						'formula_differential' : 'DifferentialFormulaNode', 
 						'formula_equation' : 'EquationFormulaNode', 
 						'formula_limit' : 'LimitFormulaNode', 
+						'formula_factorial' : 'FactorialFormulaNode', 
 						'formula_group' : 'GroupFormulaNode'
 					},
 				'foreignobject' : 'ForeignObjectFormulaNode', 

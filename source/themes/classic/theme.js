@@ -249,6 +249,21 @@ function Theme(nte, parentElement, cx, cy)
 							"expressionOffset" : 3,
 							"limitExpressionOffset" : 0
 						}
+				},
+			"FactorialFormulaNode" : 
+				{
+					1 : 
+						{
+							"shapeOffset" : 3
+						}, 
+					2 : 
+						{
+							"shapeOffset" : 2
+						}, 
+					3 : 
+						{
+							"shapeOffset" : 1
+						}
 				}
 		};
 	
