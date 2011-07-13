@@ -90,7 +90,7 @@ var CompoundFormulaNode = GroupFormulaNode.extend(
 					if (!res && this.parentNode)
 						res = this.parentNode.getNextPosition(relativeState, params);
 				}
-				else if (relativeState.checkAtLast())
+				else if (relativeState.checkAtLast(this))
 				{
 					res = this.parentNode.getNextPosition(relativeState, params);
 				}

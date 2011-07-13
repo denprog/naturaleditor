@@ -236,7 +236,7 @@ function Caret(nte)
 		var node = caretState.getNode();
 		if (node.childNodes.count() > 0)
 		{
-			var n = node.getChildNode(caretState.getPos() == node.childNodes.count() ? node.childNodes.count() - 1 : caret.getPos());
+			var n = node.getChildNode(caretState.getPos() == node.childNodes.count() ? node.childNodes.count() - 1 : caretState.getPos());
 			//var n = node.getChildNode(caretState.getPos());
 			n.nextCaretPos = true;
 			this.nextNode = n;

@@ -353,8 +353,8 @@ var NaturalEditor = Class.extend(
 				if (element)
 				{
 					if (parentNode && parentNode.createChildNode)
-						return parentNode.createChildNode(t, pos);
-					return new t(parentNode, pos, this);
+						return parentNode.createChildNode(t, pos, element);
+					return new t(parentNode, pos, this, element);
 				}
 				
 				if (typeof(t) != "undefined")

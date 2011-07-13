@@ -26,6 +26,7 @@ var FormulaNode = HtmlNode.extend(
 			this.baseline = 0;
 			
 			this._super(nodeType, element, parentNode, pos, nte);
+			this.className = "FormulaNode";
 		}, 
 
 		insertChildNode : function(childNode, pos, caretState)

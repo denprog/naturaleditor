@@ -74,6 +74,8 @@
 														"<span class='formula_text'>6.5</span>" + 
 														"<span class='formula_plus'></span>" + 
 														"<span class='formula_text'>87</span>" + 
+														"<span class='formula_minus'></span>" + 
+														"<span class='formula_text'>7</span>" + 
 													"</span>" + 
 												"</span>" + 
 											"</span>" + 
@@ -161,7 +163,7 @@
 
 						nte.moveCaretDown(1);
 						nte.moveCaretRight(14);
-						ok(testCaretPosition(22));
+						ok(testCaretPosition(21));
 						
 						nte.moveCaretUp(1);
 						ok(testCaretPosition(3));
@@ -224,6 +226,8 @@
 														"<span class='formula_text'>6.5</span>" + 
 														"<span class='formula_plus'></span>" + 
 														"<span class='formula_text'>87</span>" + 
+														"<span class='formula_minus'></span>" + 
+														"<span class='formula_text'>7</span>" + 
 													"</span>" + 
 												"</span>" + 
 											"</span>" + 
@@ -374,7 +378,7 @@
 							ok(testCaretPosition(29));
 						
 						nte.moveCaretDown(1);
-						ok(testCaretPosition(nte.isIE ? 3 : 1));
+						ok(testCaretPosition(nte.isIE ? 0 : 2));
 						
 						nte.moveCaretRight(8);
 						nte.moveCaretUp(1);
