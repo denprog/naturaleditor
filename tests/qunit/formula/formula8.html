@@ -1,0 +1,86 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<html>
+
+<head>
+	<title>Formula test</title>
+	<link rel="stylesheet" href="../../../source/lib/unit.css" type="text/css" />
+	<!--<link rel="stylesheet" href="../../../styles.css" type="text/css" />-->
+	<script type="text/javascript" src="../../../source/lib/jquery.js"></script>
+	<script type="text/javascript" src="../../../source/lib/qunit.js"></script>
+	<script type="text/javascript" src="../../../source/naturaleditor.js"></script>
+	<script type="text/javascript" src="../tool.js"></script>
+
+	<style>
+		p
+		{
+			font-family: 'trebuchet ms', verdana, arial;
+			font-size: 16px;
+		}
+	</style>
+</head>
+
+<body>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+
+	<span id = "frame"></span>
+
+	<script type="text/javascript">
+		var nte;
+		
+		$(document).ready(function()
+		  {
+		    nte = new NaturalEditor(document.getElementById("frame"), "themes/classic/theme.js", 600, 200);
+
+				test("Formula 1", function()
+					{
+						nte.parse(
+							"<p>" + 
+								"Text " + 
+								"<span class='formula'>" + 
+									"<span class='formula_division'>" + 
+										"<span class='formula_group'>" + 
+											"<span class='formula_text'>d</span>" + 
+										"</span>" + 
+										"<span class='formula_group'>" + 
+											"<span class='formula_text'>d</span>" + 
+											"<span class='formula_text'>x</span>" + 
+										"</span>" + 
+									"</span>" + 
+									"<span class='formula_division'>" + 
+										"<span class='formula_group'>" + 
+											"<span class='formula_nthroot'>" + 
+												"<span class='formula_group'>" + 
+													"<span class='formula_text'>3</span>" + 
+												"</span>" + 
+												"<span class='formula_group'>" + 
+													"<span class='formula_text'>x</span>" + 
+												"</span>" + 
+											"</span>" + 
+										"</span>" + 
+										"<span class='formula_group'>" + 
+											"<span class='formula_exponentiation'>" + 
+												"<span class='formula_group'>" + 
+													"<span class='formula_text'>sum</span>" + 
+												"</span>" +
+												"<span class='formula_group'>" + 
+													"<span class='formula_text'>x</span>" + 
+													"<span class='formula_plus'></span>" + 
+													"<span class='formula_text'>88</span>" + 
+												"</span>" +
+											"</span>" + 
+										"</span>" + 
+									"</span>" + 
+								"</span>" + 
+								"Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text " + 
+							"</p>"
+							);
+					}
+					);
+		  }
+		);
+	</script>
+</body>
+
+</html>

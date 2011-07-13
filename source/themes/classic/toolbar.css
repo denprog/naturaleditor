@@ -1,0 +1,188 @@
+.classic .nte_toolbar
+{
+	height: 24px;
+}
+
+.classic .nte_toolbar_button
+{
+	display:block;
+	border:1px solid #F0F0EE;
+	width:20px;
+	height:20px;
+}
+
+.classic .nte_toolbar_button_enabled:hover
+{
+	border:1px solid #0A246A;
+	background-color:#B2BBD0;
+}
+
+.classic .nte_toolbar_button_disabled
+{
+	opacity:0.3;
+	-ms-filter:'alpha(opacity=30)';
+	filter:alpha(opacity=30);
+}
+
+.classic .nte_toolbar_button_pressed
+{
+	border:1px solid #0A246A;
+	background-color:#C2CBE0;
+}
+
+span.nte_toolbar_icon
+{
+	border:1px solid #FFFFFF;
+	display:block;
+	width:20px;
+	height:20px;
+}
+
+.classic.nte_toolbar_icon
+{
+	background:url(icons.gif) no-repeat 20px 20px;
+}
+
+span.classic.nte_toolbar_icon.nte_bold
+{
+	background-position: 0 0;
+}
+
+span.classic.nte_toolbar_icon.nte_italic
+{
+	background-position: -60px 0;
+}
+
+.classic span.nte_underline
+{
+	background-position: -140px 0;
+}
+
+.classic span.nte_undo
+{
+	background-position: -160px 0;
+}
+
+.classic span.nte_redo
+{
+	background-position: -100px 0;
+}
+
+.classic span.nte_math
+{
+	background-position: -180px 0;
+}
+
+span.nte_toolbar_math_icon
+{
+	border:1px solid #FFFFFF;
+	display:block;
+	width:20px;
+	height:20px;
+}
+
+.nte_toolbar_menu
+{
+	border-color: #000000;
+	border-style: solid;
+	border-width: 1px;
+	overflow: hidden;
+	position: absolute;
+	background: none repeat scroll 0 0 #FFFFFF;
+	z-index: 200;
+}
+
+.classic.nte_toolbar_math_icon
+{
+	background:url(math.gif) no-repeat 21px 20px;
+}
+
+span.classic.nte_toolbar_icon.nte_formula
+{
+	background-position: -200px 0;
+}
+
+span.classic.nte_toolbar_math_icon.nte_plus
+{
+	background-position: 0 0;
+}
+
+span.classic.nte_toolbar_math_icon.nte_minus
+{
+	background-position: -21px 0;
+}
+
+span.classic.nte_toolbar_math_icon.nte_multiply
+{
+	background-position: -42px 0;
+}
+
+span.classic.nte_toolbar_math_icon.nte_division
+{
+	background-position: -63px 0;
+}
+
+span.classic.nte_toolbar_math_icon.nte_squareroot
+{
+	background-position: -84px 0;
+}
+
+span.classic.nte_toolbar_math_icon.nte_nthroot
+{
+	background-position: -105px 0;
+}
+
+span.classic.nte_toolbar_math_icon.nte_exponentation
+{
+	background-position: -126px 0;
+}
+
+span.classic.nte_toolbar_math_icon.nte_subscript
+{
+	background-position: -147px 0;
+}
+
+span.classic.nte_toolbar_math_icon.nte_sum
+{
+	background-position: -168px 0;
+}
+
+span.classic.nte_toolbar_math_icon.nte_product
+{
+	background-position: -189px 0;
+}
+
+span.classic.nte_toolbar_math_icon.nte_definiteintegral
+{
+	background-position: -210px 0;
+}
+
+span.classic.nte_toolbar_math_icon.nte_differential
+{
+	background-position: -231px 0;
+}
+
+span.classic.nte_toolbar_math_icon.nte_factorial
+{
+	background-position: -315px 0;
+}
+
+span.classic.nte_toolbar_math_icon.nte_brackets
+{
+	background-position: -252px 0;
+}
+
+span.classic.nte_toolbar_math_icon.nte_squarebrackets
+{
+	background-position: -271px 0;
+}
+
+span.classic.nte_toolbar_math_icon.nte_comma
+{
+	background-position: -294px 0;
+}
+
+span.classic.nte_toolbar_math_icon.nte_equation
+{
+	background-position: -336px 0;
+}

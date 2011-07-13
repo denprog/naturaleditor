@@ -4,10 +4,10 @@
 
 <head>
 	<title>Caret moving test</title>
-	<link rel="stylesheet" href="../../../lib/unit.css" type="text/css" />
-	<script type="text/javascript" src="../../../lib/jquery.js"></script>
-	<script type="text/javascript" src="../../../lib/qunit.js"></script>
-	<script type="text/javascript" src="../../../naturaleditor.js"></script>
+	<link rel="stylesheet" href="../../../source/lib/unit.css" type="text/css" />
+	<script type="text/javascript" src="../../../source/lib/jquery.js"></script>
+	<script type="text/javascript" src="../../../source/lib/qunit.js"></script>
+	<script type="text/javascript" src="../../../source/naturaleditor.js"></script>
 	<script type="text/javascript" src="../tool.js"></script>
 
 	<style>
@@ -74,6 +74,8 @@
 														"<span class='formula_text'>6.5</span>" + 
 														"<span class='formula_plus'></span>" + 
 														"<span class='formula_text'>87</span>" + 
+														"<span class='formula_minus'></span>" + 
+														"<span class='formula_text'>7</span>" + 
 													"</span>" + 
 												"</span>" + 
 											"</span>" + 
@@ -161,7 +163,7 @@
 
 						nte.moveCaretDown(1);
 						nte.moveCaretRight(14);
-						ok(testCaretPosition(22));
+						ok(testCaretPosition(21));
 						
 						nte.moveCaretUp(1);
 						ok(testCaretPosition(3));
@@ -224,6 +226,8 @@
 														"<span class='formula_text'>6.5</span>" + 
 														"<span class='formula_plus'></span>" + 
 														"<span class='formula_text'>87</span>" + 
+														"<span class='formula_minus'></span>" + 
+														"<span class='formula_text'>7</span>" + 
 													"</span>" + 
 												"</span>" + 
 											"</span>" + 
@@ -374,7 +378,7 @@
 							ok(testCaretPosition(29));
 						
 						nte.moveCaretDown(1);
-						ok(testCaretPosition(nte.isIE ? 3 : 1));
+						ok(testCaretPosition(nte.isIE ? 0 : 2));
 						
 						nte.moveCaretRight(8);
 						nte.moveCaretUp(1);
@@ -384,7 +388,175 @@
 							ok(testCaretPosition(29));
 					}
 					);
-		  }
+
+				test("Caret moving 3", function()
+					{
+						nte.setSize(600, 500);
+						nte.parse(
+							"<p>This is a simple text with formulas. A formula with numbers, pluses: " + 
+							"<span class='formula'>" + 
+								"<span class='formula_text'>78</span>" + 
+								"<span class='formula_plus'></span>" + 
+								"<span class='formula_exponentiation'>" + 
+									"<span class='formula_group'>" + 
+										"<span class='formula_text'>123</span>" + 
+									"</span>" + 
+									"<span class='formula_group'>" + 
+										"<span class='formula_text'>456</span>" + 
+										"<span class='formula_plus'></span>" + 
+										"<span class='formula_text'>sum</span>" + 
+									"</span>" + 
+								"</span>" + 
+								"<span class='formula_plus'></span>" + 
+								"<span class='formula_text'>55</span>" + 
+							"</span>" + 
+							" You can move inside the formula and edit it with keyboard. There are usual keys: letters and digits, backspace and delete, cursor keys. Use 'Ctrl-Z' for undo and 'Ctrl-Y' for redo.</p>" + 
+							"<p>Also, there are <b>bold</b>, <i>italic</i> and <u>underline</u> text possibilities. Edit its. A formula with text, pluses, minuses, divisions and exponentation: " + 
+							"<span class='formula'>" + 
+								"<span class='formula_text'>555</span>" + 
+								"<span class='formula_minus'></span>" + 
+								"<span class='formula_division'>" + 
+									"<span class='formula_group'>" + 
+										"<span class='formula_text'>88</span>" + 
+									"</span>" + 
+									"<span class='formula_group'>" + 
+										"<span class='formula_text'>567</span>" + 
+										"<span class='formula_plus'></span>" + 
+										"<span class='formula_division'>" + 
+											"<span class='formula_group'>" + 
+												"<span class='formula_exponentiation'>" + 
+													"<span class='formula_text'>2</span>" + 
+													"<span class='formula_group'>" + 
+														"<span class='formula_text'>6.5</span>" + 
+														"<span class='formula_plus'></span>" + 
+														"<span class='formula_text'>87</span>" + 
+													"</span>" + 
+												"</span>" + 
+											"</span>" + 
+											"<span class='formula_group'>" + 
+												"<span class='formula_text'>267</span>" + 
+											"</span>" + 
+										"</span>" + 
+									"</span>" + 
+								"</span>" + 
+							"</span>" + 
+							"</p>" + 
+							"<p>" + 
+							"This is the formula with braces and the root " + 
+							"<span class='formula'>" + 
+								"<span class='formula_brackets' left='true' right='true'>" + 
+									"<span class='formula_nthroot'>" + 
+										"<span class='formula_division'>" + 
+											"<span class='formula_group'>" + 
+												"<span class='formula_text'>678</span>" + 
+											"</span>" + 
+											"<span class='formula_group'>" + 
+												"<span class='formula_text'>23</span>" + 
+											"</span>" + 
+										"</span>" + 
+										"<span class='formula_group'>" + 
+											"<span class='formula_text'>567</span>" + 
+											"<span class='formula_plus'></span>" + 
+											"<span class='formula_division'>" + 
+												"<span class='formula_group'>" + 
+													"<span class='formula_exponentiation'>" + 
+														"<span class='formula_text'>2</span>" + 
+														"<span class='formula_group'>" + 
+															"<span class='formula_text'>6.5</span>" + 
+															"<span class='formula_plus'></span>" + 
+															"<span class='formula_text'>87</span>" + 
+														"</span>" + 
+													"</span>" + 
+												"</span>" + 
+												"<span class='formula_group'>" + 
+													"<span class='formula_text'>267</span>" + 
+												"</span>" + 
+											"</span>" + 
+										"</span>" + 
+									"</span>" + 
+								"</span>" + 
+							"</span>" + 
+							". And another complex formula " + 
+							"<span class='formula'>" + 
+								"<span class='formula_division'>" + 
+									"<span class='formula_group'>" + 
+										"<span class='formula_text'>88</span>" + 
+									"</span>" + 
+									"<span class='formula_group'>" + 
+										"<span class='formula_squareroot'>" + 
+											"<span class='formula_group'>" + 
+												"<span class='formula_text'>55</span>" + 
+												"<span class='formula_plus'></span>" + 
+												"<span class='formula_text'>123</span>" + 
+											"</span>" + 
+										"</span>" + 
+									"</span>" + 
+								"</span>" + 
+								"<span class='formula_plus'></span>" + 
+								"<span class='formula_squareroot'>" + 
+									"<span class='formula_group'>" + 
+										"<span class='formula_squareroot'>" + 
+											"<span class='formula_group'>" + 
+												"<span class='formula_exponentiation'>" + 
+													"<span class='formula_text'>123</span>" + 
+													"<span class='formula_group'>" + 
+														"<span class='formula_text'>456</span>" + 
+														"<span class='formula_plus'></span>" + 
+														"<span class='formula_text'>sum</span>" + 
+													"</span>" + 
+												"</span>" + 
+											"</span>" + 
+										"</span>" + 
+										"<span class='formula_multiply'></span>" + 
+										"<span class='formula_exponentiation'>" + 
+											"<span class='formula_text'>1.23</span>" + 
+											"<span class='formula_group'>" + 
+												"<span class='formula_squareroot'>" + 
+													"<span class='formula_group'>" + 
+														"<span class='formula_text'>123</span>" + 
+													"</span>" + 
+												"</span>" + 
+												"<span class='formula_plus'></span>" + 
+												"<span class='formula_squareroot'>" + 
+													"<span class='formula_group'>" + 
+														"<span class='formula_division'>" + 
+															"<span class='formula_group'>" + 
+																"<span class='formula_text'>333</span>" + 
+															"</span>" + 
+															"<span class='formula_group'>" + 
+																"<span class='formula_division'>" + 
+																	"<span class='formula_group'>" + 
+																		"<span class='formula_text'>678888</span>" + 
+																	"</span>" + 
+																	"<span class='formula_group'>" + 
+																		"<span class='formula_text'>23456777</span>" + 
+																	"</span>" + 
+																"</span>" + 
+															"</span>" + 
+														"</span>" + 
+													"</span>" + 
+												"</span>" + 
+											"</span>" + 
+										"</span>" + 
+									"</span>" + 
+								"</span>" + 
+							"</span>" + 
+							".</p>"
+							);
+							
+							nte.moveCaretDown(1);
+							ok(testCaretPosition(0));
+							
+							nte.moveCaretDown(1);
+							nte.onHome();
+							nte.moveCaretUp(1);
+							ok(testCaretPosition(0));
+		
+							nte.moveCaretUp(1);
+							ok(testCaretPosition(1));
+						}
+						);
+			}
 			);
 	</script>
 </body>
