@@ -100,6 +100,7 @@ var DEBUG_LEVEL = true;
 		include('formulanodes/equationformulanode.js');
 		include('formulanodes/limitformulanode.js');
 		include('formulanodes/factorialformulanode.js');
+		include('formulanodes/systembraceformulanode.js');
 		include('util/toolbar.js');
 		include('themes/classic/theme.js');
 	}

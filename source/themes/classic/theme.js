@@ -264,6 +264,24 @@ function Theme(nte, parentElement, cx, cy)
 						{
 							"shapeOffset" : 1
 						}
+				},
+			"SystemBraceFormulaNode" : 
+				{
+					1 : 
+						{
+							"shapeOffset" : 3,
+							"expressionOffset" : 3
+						}, 
+					2 : 
+						{
+							"shapeOffset" : 2,
+							"expressionOffset" : 2
+						}, 
+					3 : 
+						{
+							"shapeOffset" : 1,
+							"expressionOffset" : 1
+						}
 				}
 		};
 	

@@ -274,6 +274,7 @@ var NaturalEditor = Class.extend(
 						'formula_equation' : 'EquationFormulaNode', 
 						'formula_limit' : 'LimitFormulaNode', 
 						'formula_factorial' : 'FactorialFormulaNode', 
+						'formula_systembrace' : 'SystemBraceFormulaNode', 
 						'formula_group' : 'GroupFormulaNode'
 					},
 				'foreignobject' : 'ForeignObjectFormulaNode', 
