@@ -1,0 +1,45 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<html>
+
+<head>
+	<title>Site example test</title>
+	<script type="text/javascript" src="../../source/naturaleditor.js"></script>
+</head>
+
+<body>
+	<span id = "frame"></span>
+	
+	<script type="text/javascript">
+		var nte;
+		
+		document.addEventListener("DOMContentLoaded", function()
+			{
+				ready();
+			}, false);
+		
+		var called = false;
+		
+		function ready()
+		{
+			if (called)
+				return;
+			called = true;
+			
+			nte = new NaturalEditor(document.getElementById("frame"), "themes/classic/theme.js", 800, 500);
+			if (nte.inited)
+			{
+				nte.parse(
+					"<p>This is a example text with formulas.</p>" + 
+					"<span class='formula'>" + 
+						"<span class='formula_text'>123</span>" + 
+						"<span class='formula_plus'></span>" + 
+						"<span class='formula_text'>456</span>" + 
+					"</span>"
+					);
+			}
+		}
+	</script>
+</body>
+
+</html>
