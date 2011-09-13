@@ -1,7 +1,7 @@
 /**
  * @define {boolean}
  */
-var DEBUG_LEVEL = true;
+var DEBUG_LEVEL = false;
 
 (function()
 {
