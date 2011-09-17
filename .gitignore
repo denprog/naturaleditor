@@ -1,4 +1,3 @@
-
 build/eclipse/.settings/.jsdtscope
 build/eclipse/.settings/org.eclipse.core.resources.prefs
 build/eclipse/.settings/org.eclipse.wst.jsdt.ui.superType.container
@@ -7,6 +6,4 @@ build/vc2008/NaturalEditor.suo
 build/vc2010/NaturalEditor.suo
 release/naturaleditor.js
 Web.config
-release/icons.gif
 .gitignore
-release/icons.gif
