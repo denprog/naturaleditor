@@ -7,3 +7,6 @@ build/vc2008/NaturalEditor.suo
 build/vc2010/NaturalEditor.suo
 release/naturaleditor.js
 Web.config
+release/icons.gif
+.gitignore
+release/icons.gif

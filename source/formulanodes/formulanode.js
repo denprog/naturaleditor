@@ -202,14 +202,26 @@ var FormulaNode = HtmlNode.extend(
 		
 		getUpperPosition : function(relativeState)
 		{
-			//by default the formula node has only one row
-			return this.parentNode.getUpperPosition(relativeState);
+			var n = relativeState.getNode();
+			if (n == this || this.isChild(n))
+			{
+				//by default the formula node has only one row
+				return this.parentNode.getUpperPosition(relativeState);
+			}
+
+			return this._super(relativeState);
 		},
 		
 		getLowerPosition : function(relativeState)
 		{
-			//by default the formula node has only one row, get the end of this node and continue
-			return this.parentNode.getLowerPosition(relativeState);
+			var n = relativeState.getNode();
+			if (n == this || this.isChild(n))
+			{
+				//by default the formula node has only one row, get the end of this node and continue
+				return this.parentNode.getLowerPosition(relativeState);
+			}
+
+			return this._super(relativeState);
 		},
 		
 		getNextPosition : function(relativeState, params)
@@ -658,7 +670,8 @@ var FormulaNode = HtmlNode.extend(
 
 		getRelativePosBounds : function(pos, rect)
 		{
-			this.getPosBounds(pos, rect);
+			var t = new Rectangle();
+			this.getPosBounds(pos, t);
 			
 			this.groupNode.updateBoundingRect();
 			var r = this.groupNode.boundingRect;
@@ -667,10 +680,10 @@ var FormulaNode = HtmlNode.extend(
 //				rect.top + this.nte.editor.scrollTop + r.top, 
 //				pos == this.childNodes.count() ? 1 : this.clientRect.width, 
 //				this.boundingRect.height);
-			rect.setRect(rect.left + r.left, 
-				rect.top + r.top, 
-				pos == this.childNodes.count() ? 1 : rect.width, 
-				rect.height);
+			rect.setRect(t.left + r.left, 
+				t.top + r.top, 
+				pos == this.childNodes.count() ? 1 : t.width, 
+				t.height);
 				//pos == this.childNodes.count() ? 1 : this.clientRect.width, 
 				//this.boundingRect.height);
 		},

@@ -223,6 +223,16 @@ var SvgFormulaNode = FormulaNode.extend(
 			return res;
 		},
 
+		getLineBegin : function(caretState)
+		{
+			return this.getFirstPosition();
+		},
+
+		getLineEnd : function(caretState)
+		{
+			return this.getLastPosition();
+		},
+
 		dublicate : function(parent)
 		{
 			var resNode = this._super(parent == null ? this.parentNode : parent);
